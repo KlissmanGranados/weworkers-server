@@ -1,0 +1,37 @@
+{
+  "name": "weworkers-server",
+  "version": "1.0.0",
+  "description": "Desarrollo de servicio rest para weworkers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon src/routes/index.js",
+    "startDev": "node src/routes/index.js",
+    "lint": "npx eslint .  --ext .js",
+    "lint-fix": "eslint . --ext .js --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KlissmanGranados/weworkers-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GNU GENERAL PUBLIC LICENSE",
+  "bugs": {
+    "url": "https://github.com/KlissmanGranados/weworkers-server/issues"
+  },
+  "homepage": "https://github.com/KlissmanGranados/weworkers-server#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-jwt": "^6.1.0",
+    "expressjs-routes-loader": "^1.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-google": "^0.14.0",
+    "nodemon": "^2.0.12"
+  }
+}
