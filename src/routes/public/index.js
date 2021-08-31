@@ -1,17 +1,8 @@
-/**
- *
- * @param {request} req
- * @param {response} res
- */
-function main(req, res) {
-  res.send('Hola mundo');
-}
+// eslint-disable-next-line max-len
+const presentacionRoutes = require('../../microServices/public/presentacion/presentacionRouter');
 
-module.exports = [
-  {
-    method: 'get',
-    url: '/',
-    handler: main,
-    middelwares: [],
-  },
-];
+let routes = [];
+
+routes = routes.concat(presentacionRoutes);
+
+module.exports = routes;
