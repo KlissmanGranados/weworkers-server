@@ -1,5 +1,5 @@
 const makeResponse = (message, data)=>{
-  return ({message,data});
+  return ({message, data});
 };
 
 const SUCCESS = 'operación realizada exitosamente';
