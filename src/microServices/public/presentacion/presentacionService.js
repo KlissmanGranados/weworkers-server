@@ -6,7 +6,7 @@ exports.main = (req, res) => {
       pokemon: 'sergio',
     },
     {
-      pokemon: 'sergio',
+      pokemon: 'otro',
     },
   ]);
 };
