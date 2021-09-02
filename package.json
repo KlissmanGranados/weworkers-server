@@ -8,7 +8,8 @@
     "dev": "npx nodemon src/routes/index.js",
     "start": "node src/routes/index.js",
     "lint": "npx eslint .  --ext .js",
-    "lint-fix": "eslint . --ext .js --fix"
+    "lint-fix": "eslint . --ext .js --fix",
+    "create-microservice": "node src/utils/createMicroServices.js"
   },
   "repository": {
     "type": "git",
