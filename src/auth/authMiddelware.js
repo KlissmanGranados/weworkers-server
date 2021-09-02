@@ -41,5 +41,9 @@ exports.validityRegedit = (req, res, next)=>{
 };
 
 exports.validityLogout = (req, res, next) => {
+  /**
+   * TODO
+   * - verificar si el token es valido
+   */
   next();
 };

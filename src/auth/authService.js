@@ -11,6 +11,10 @@ exports.login = (req, res)=>{
 };
 
 exports.logout = (req, res) => {
+  /**
+   * TODO
+   * - revocar token
+   */
   response.success(res, []);
 };
 exports.regedit = (req, res)=>{
