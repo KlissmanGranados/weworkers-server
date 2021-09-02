@@ -5,8 +5,8 @@ const guards = require('../guards');
 const auth = require('../guards/authGuard');
 
 const apiVersion = process.env.VERSION;
-const serverHost = process.env.SERVER_HOST || 'http://localhost';
-const serverPort = process.env.SERVER_PORT || 3000;
+const serverHost = process.env.HOST || 'http://localhost';
+const serverPort = process.env.PORT || 3000;
 
 const multipleDirs = [
   [path.join(__dirname, './', 'auth'), `${apiVersion}/auth`],
@@ -31,6 +31,7 @@ routes.forEach((route) => {
   }
 });
 
-app.listen(serverPort, ()=>{
+app.listen(serverPort, err => {
+  if(err) throw err;
   console.log(`server running on : ${serverHost}:${serverPort}${apiVersion}`);
 });

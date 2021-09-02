@@ -1,4 +1,4 @@
-const presentacionMiddelware = require('./presentacionMiddelware');
+const presentacionMiddelware = require('./presentacionMiddleware');
 const presentacionService = require('./presentacionService');
 
 module.exports = [
