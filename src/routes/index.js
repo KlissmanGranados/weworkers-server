@@ -31,7 +31,7 @@ routes.forEach((route) => {
   }
 });
 
-app.listen(serverPort, err => {
-  if(err) throw err;
+app.listen(serverPort, (err) => {
+  if (err) throw err;
   console.log(`server running on : ${serverHost}:${serverPort}${apiVersion}`);
 });
