@@ -1,4 +1,4 @@
-const app = require('../../index');
+const {app} = require('../../index');
 const path = require('path');
 const loader = require('expressjs-routes-loader')({useNameFolder: true});
 const guards = require('../guards');
