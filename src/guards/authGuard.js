@@ -1,5 +1,6 @@
 const privateKey = process.env.PRIVATE_KEY;
 const response = require('../response');
+const jwt = require('jsonwebtoken');
 
 module.exports = [
   (req, res, next)=>{

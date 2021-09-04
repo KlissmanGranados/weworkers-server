@@ -1,5 +1,7 @@
 const utils = require('../utils');
 const response = require('../response');
+const jwt = require('jsonwebtoken');
+const privateKey = process.env.PRIVATE_KEY;
 
 exports.validityLogin = (req, res, next)=>{
   const requireInputs = ['usuario', 'clave'];
@@ -44,6 +46,29 @@ exports.validityLogout = (req, res, next) => {
   /**
    * TODO
    * - verificar si el token es valido
+   * Nota: verificación realizada, con el mensaje de error guardado
+   * como res.error, requiere testeo en postman
    */
+
+  jwt.verify(req.token, privateKey, (error, decoded) =>{
+    if (error) {
+      switch (error.name) {
+        case 'TokenExpiredError':
+          res.error = {
+            'message': 'Token expirado',
+            'fechaExpiracion': error.expiredAt,
+          };
+          break;
+
+        case 'JsonWebTokenError':
+          res.error = {
+            'message': 'Token no válido',
+            'description': error.message,
+          };
+          break;
+      }
+    }
+  });
+
   next();
 };
