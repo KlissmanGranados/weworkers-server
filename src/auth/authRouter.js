@@ -1,5 +1,5 @@
 const authService = require('./authService');
-const authMiddelwares = require('./authMiddelware');
+const authMiddelwares = require('./authMiddleware');
 
 module.exports = [
   {

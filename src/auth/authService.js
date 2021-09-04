@@ -1,5 +1,6 @@
 const response = require('../response');
 const jwt = require('jsonwebtoken');
+const authRepository = require('./authRepository');
 
 exports.login = (req, res)=>{
   const inputs = req.body;
@@ -17,6 +18,16 @@ exports.logout = (req, res) => {
    */
   response.success(res, []);
 };
-exports.regedit = (req, res)=>{
-  response.success(res, []);
+
+/**
+ * @param{Request} req
+ * @param{Response} res
+ * @return {Promise<void>}
+ */
+exports.regedit = async (req, res)=>{
+  try {
+    await authRepository.insertUsuario(req.body);
+  } catch (e) {
+    return;
+  }
 };

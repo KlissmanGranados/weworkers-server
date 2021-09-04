@@ -10,8 +10,16 @@ const SUCCESS_LOGIN = 'Bienvenido';
 const WARNING_NOT_FOUND = 'Sin datos para mostrar';
 const WARNING_EMAIL_NOT_AVAILABLE = 'El correo no está disponible';
 const WARNING_USER_NOT_AVAILABLE = 'El usuario no está disponible';
+const WARNING_IDENTIFICATION_NOT_AVAILABLE = 'La identificación está en uso';
 const WARNING_REQUIRED_FIELDS = 'Los campos solicitados son obligatorios';
 const WARNING_INVALID_MAIL = 'Correo inválido';
+const WARNING_ROL_NOT_FOUND = 'El rol proporcionado no existe';
+const WARNING_REQUEST_JSON = 'Asegurese de estar enviando la estructura de' +
+  ' datos correcta en el json';
+const WARNING_IDENTIFICATION_NOT_FOUND = 'Tipo de identificación inválida';
+const WARNING_IDENTIFICATION_NOT_INTEGER = 'Debe de ingresar solo valores' +
+  ' numéricos para registrar la identificacion y no puede enviar espacios en' +
+  ' blanco';
 
 const FORBIDDEN = 'No está autorizado';
 const FORBIDDEN_NOT_LOGIN = 'Debe iniciar sessión';
@@ -44,6 +52,22 @@ exports.warning_required_fields = (res, data = null)=>{
 };
 exports.warning_invalid_mail = (res, data = null) => {
   res.status(200).json(makeResponse(WARNING_INVALID_MAIL, data));
+};
+exports.warning_rol_not_found = (res, data = null) => {
+  res.status(200).json(makeResponse(WARNING_ROL_NOT_FOUND, data));
+};
+exports.warning_request_json = (res, data = null) => {
+  res.status(200).json(makeResponse(WARNING_REQUEST_JSON, data));
+};
+exports.warning_identification_not_found = (res, data = null) => {
+  res.status(200).json(makeResponse(WARNING_IDENTIFICATION_NOT_FOUND, data));
+};
+exports.warning_identification_not_integer = (res, data = null) => {
+  res.status(200).json(makeResponse(WARNING_IDENTIFICATION_NOT_INTEGER, data));
+};
+exports.warning_identification_not_available = (res, data =null) =>{
+  res.status(200).json(
+      makeResponse(WARNING_IDENTIFICATION_NOT_AVAILABLE, data));
 };
 
 exports.forbidden = (res, data = null)=>{

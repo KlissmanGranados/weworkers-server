@@ -1,6 +1,7 @@
 const utils = require('../utils');
 const response = require('../response');
 const authRepository = require('./authRepository');
+const authDTO = require('./authDTO');
 /**
  * Verifica los campos para autenticarse en el sistema
  * @param {Request} req
@@ -34,67 +35,32 @@ exports.validityRegedit = async (req, res, next)=>{
   /**
    * En caso de que el json no cumpla con atributos necesarios
    * se atrapa la exepción al intentar acceder a ese atributo
-   * y se sugiere una estructura para los cada rol.
    */
   try {
-    params = {
-      persona: {
-        identificacion: persona.identificacion,
-        primerNombre: persona.primerNombre,
-        segundoNombre: persona.segundoNombre || null,
-        primerApellido: persona.primerApellido,
-        segundoApellido: persona.segundoApellido || null,
-        idTipoIdentificacion: persona.idTipoIdentificacion,
-      },
-      usuario: {
-        usuario: usuario.usuario,
-        clave: usuario.clave,
-        personaId: 0,
-        rolesId: usuario.rolesId,
-      },
-      correo: {
-        usuarioId: 0,
-        direccion: correo.direccion,
-      },
-    };
+    params = new authDTO.Auth(
+        new authDTO.Persona(
+            persona.identificacion,
+            persona.primerNombre,
+            persona.segundoNombre || null,
+            persona.primerApellido,
+            persona.segundoApellido || null,
+            persona.idTipoIdentificacion,
+        ),
+        new authDTO.Usuario(
+            usuario.usuario,
+            usuario.clave,
+            usuario.rolesId,
+        ),
+        new authDTO.Correo(correo.direccion),
+    );
   } catch (e) {
-    const JsonExample = function() {
-      this.persona = {
-        identificacion: '',
-        primerNombre: '',
-        segundoNombre: '',
-        primerApellido: '',
-        segundoApellido: '',
-        idTipoIdentificacion: '',
-      };
-      this.usuario = {
-        usuario: '',
-        clave: '',
-        rolesId: '',
-      };
-      this.correo = {
-        direccion: '',
-      };
-    };
-
-    const registroCaptador = new JsonExample();
-    registroCaptador.empresa = {
-      rif: '',
-      razonSocial: '',
-    };
-
-    const registroCaptado = new JsonExample();
-    registroCaptado.trabajador = {
-      usuarioId: '',
-    };
-
-    response.warning_request_json(res, {registroCaptador, registroCaptado});
+    response.warning_request_json(res);
     return;
   }
 
   // se valida que la persona no tenga datos nulos
   let requireInputs = Object.keys(params.persona);
-  let excludes = ['segundoNombre', 'segundoApellido'];
+  let excludes = ['_segundoNombre', '_segundoApellido', '_id'];
   let body = params.persona;
   let fills = utils.requiredFields({requireInputs, body, excludes});
 
@@ -131,7 +97,7 @@ exports.validityRegedit = async (req, res, next)=>{
   // comprobar que no hay campos vacios en el atributo usuario
   requireInputs = Object.keys(params.usuario);
   body = params.usuario;
-  excludes = ['personaId'];
+  excludes = ['_personaId', '_rolesId', '_id'];
   fills = utils.requiredFields({requireInputs, body, excludes});
 
   if (fills.length > 0) {
@@ -148,7 +114,7 @@ exports.validityRegedit = async (req, res, next)=>{
   // verificar atributos del correo
   requireInputs = Object.keys(params.correo);
   body = params.correo;
-  excludes = ['usuarioId'];
+  excludes = ['_usuarioId'];
   fills = utils.requiredFields({requireInputs, body, excludes});
 
   if (fills.length > 0) {
@@ -176,34 +142,18 @@ exports.validityRegedit = async (req, res, next)=>{
     response.warning_rol_not_found(res);
     return;
   }
-
   /**
-   * 1: captado
-   * 2: captador
-   *
-   * Dependiendo del rol la estructura de los parametros es modificada
+   * ID = 2 = captador
    */
-  if (rol.id === 1) {
-    params.trabajador = {
-      usuarioId: 0,
-    };
-  }
-
   if (rol.id === 2) {
-    // verificar que el atributo empresa sea accesible
+    // verificar que el cliente esté enviando la empresa
     if (!empresa) {
-      const empresa = {rif: '', razonSocial: ''};
-      response.warning_request_json(res, empresa);
+      response.warning_request_json(res);
       return;
     }
-    params.reclutador = {
-      usuarioId: 0,
-      empresaId: 0,
-    };
-    params.empresa = {
-      rif: empresa.rif,
-      razonSocial: empresa.razonSocial,
-    };
+    params.empresa.rif = empresa.rif;
+    params.empresa.razonSocial = empresa.razonSocial;
+
     // verificar que la empresa no tenga campos vacios
     requireInputs = Object.keys(params.empresa);
     body = params.empresa;
@@ -213,9 +163,7 @@ exports.validityRegedit = async (req, res, next)=>{
       return;
     }
   }
-
   req.body = params;
-
   next();
 };
 /**
