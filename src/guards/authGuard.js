@@ -7,6 +7,23 @@ const jwt = require('jsonwebtoken');
 
 module.exports = [
   (req, res, next)=>{
+    jwt.verify(req.token, privateKey, (error, decoded) =>{
+      if (error) {
+        switch (error.name) {
+          case 'TokenExpiredError':
+
+            response.forbidden(res);
+            break;
+
+          case 'JsonWebTokenError':
+            response.forbidden(res);
+            break;
+        }
+      } else {
+        req.user = decoded;
+        next();
+      }
+    });
     /**
      * TODO
      * - verificar si el token que se recibe es válido
@@ -15,6 +32,5 @@ module.exports = [
      * Por ejemplo: req.user = {(id,nombre,email.apellido,rol)};
      * response.forbidden_not_login();
      */
-    next();
   },
 ];

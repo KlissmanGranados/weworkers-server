@@ -90,7 +90,7 @@ class Auth {
 
   valueToArray(atributo) {
     return Object.values(this[atributo])
-    .filter((value) => typeof value != 'undefined');
+        .filter((value) => typeof value != 'undefined');
   }
 }
 module.exports = Auth;

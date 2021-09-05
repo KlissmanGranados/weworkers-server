@@ -182,25 +182,20 @@ exports.validityLogout = (req, res, next) => {
    * como res.error, requiere testeo en postman
    */
 
-  jwt.verify(req.token, privateKey, (error, decoded) =>{
+   jwt.verify(req.token, privateKey, (error) =>{
     if (error) {
       switch (error.name) {
         case 'TokenExpiredError':
-          res.error = {
-            'message': 'Token expirado',
-            'fechaExpiracion': error.expiredAt,
-          };
+
+          response.forbidden(res);
           break;
 
         case 'JsonWebTokenError':
-          res.error = {
-            'message': 'Token no válido',
-            'description': error.message,
-          };
+          response.forbidden(res);
           break;
       }
+    } else {
+      next();
     }
   });
-
-  next();
 };

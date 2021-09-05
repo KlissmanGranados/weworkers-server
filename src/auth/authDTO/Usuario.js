@@ -34,11 +34,11 @@ class Usuario {
    * @param{BigInteger} id
    */
   constructor(
-    usuario = null,
-    clave= null,
-    rolesId= null,
-    personaId = null,
-    id = undefined,
+      usuario = null,
+      clave= null,
+      rolesId= null,
+      personaId = null,
+      id = undefined,
   ) {
     this._id = id;
     this._usuario = usuario.toLowerCase();

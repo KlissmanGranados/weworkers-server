@@ -46,13 +46,13 @@ class Persona {
    * @param{BigInteger} id
    */
   constructor(
-    identificacion,
-    primerNombre,
-    segundoNombre,
-    primerApellido,
-    segundoApellido,
-    idTipoIdentificacion,
-    id = undefined,
+      identificacion,
+      primerNombre,
+      segundoNombre,
+      primerApellido,
+      segundoApellido,
+      idTipoIdentificacion,
+      id = undefined,
   ) {
     this._id = id;
     this._identificacion = identificacion;

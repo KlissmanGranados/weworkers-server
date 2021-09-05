@@ -2,7 +2,7 @@
  * @class Dto
  * @description Objeto que engloba metodos en comun para todos los Dto
  */
-module.exports = class Dto{
+module.exports = class Dto {
   constructor() {
   }
   /**
@@ -11,6 +11,6 @@ module.exports = class Dto{
    */
   valueToArray(atributo) {
     return Object.values(this[atributo])
-    .filter((value) => typeof value != 'undefined');
+        .filter((value) => typeof value != 'undefined');
   }
-}
+};
