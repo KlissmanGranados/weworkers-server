@@ -45,7 +45,6 @@ class Persona {
    * @param{BigInteger} idTipoIdentificacion
    * @param{BigInteger} id
    */
-
   constructor(
       identificacion,
       primerNombre,
@@ -228,7 +227,7 @@ class Correo {
    * @param{String} direccion
    * @param{BigInteger} usuarioId
    */
-  constructor(direccion,usuarioId = null) {
+  constructor(direccion, usuarioId = null) {
     this._usuarioId = usuarioId;
     this._direccion = direccion.toLowerCase();
   }
@@ -328,7 +327,7 @@ class Empresa {
    * @param{String} rif
    * @param{String} razonSocial
    */
-  constructor(rif = null,razonSocial = null) {
+  constructor(rif = null, razonSocial = null) {
     this._rif = rif;
     this._razonSocial = razonSocial?
       razonSocial.toLowerCase() : razonSocial;
@@ -390,36 +389,35 @@ class Auth {
   }
 
   /**
-   * @type {String}
-   * @param atributo
-   * @returns {Array}
+   * @param {String} atributo
+   * @return {Array}
    */
-  valueToArray(atributo){
+  valueToArray(atributo) {
     return Object.values(this[atributo])
-      .filter(value => typeof value != "undefined");
+        .filter((value) => typeof value != 'undefined');
   }
 
-  set trabajador(trabajador){
+  set trabajador(trabajador) {
     this._trabajador = trabajador;
   }
 
-  get trabajador(){
+  get trabajador() {
     return this._trabajador;
   }
 
-  set reclutador(reclutador){
+  set reclutador(reclutador) {
     this._reclutador = reclutador;
   }
 
-  get reclutador (){
+  get reclutador() {
     return this._reclutador;
   }
 
-  set empresa(empresa){
+  set empresa(empresa) {
     this._empresa = empresa;
   }
 
-  get empresa(){
+  get empresa() {
     return this._empresa;
   }
 

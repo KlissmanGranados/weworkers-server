@@ -7,16 +7,16 @@ const authRepository = require('./authRepository');
  * @param{Response} res
  * @return {Promise<void>}
  */
-exports.getRoles = async (req,res)=>{
+exports.getRoles = async (req, res)=>{
   const {id} = req.params;
   response.success(res, await authRepository.getRolesById(id));
-}
+};
 /**
  * @param {Request} req
  * @param {Response} res
  * @return {Promise<void>}
  */
-exports.getIposIdentificacion = async (req,res)=>{
+exports.getIposIdentificacion = async (req, res)=>{
   const {id} = req.params;
   response.success(res, await authRepository.getTipoIdentificacion(id));
 };
@@ -29,11 +29,11 @@ exports.getIposIdentificacion = async (req,res)=>{
 exports.login = async (req, res)=>{
   const inputs = req.body;
   const checkLogin = await authRepository.login(inputs);
-  if(!checkLogin){
+  if (!checkLogin) {
     response.forbidden_invalid_login(res);
     return;
   }
-  response.success_login(res,  makeToken(checkLogin));
+  response.success_login(res, makeToken(checkLogin));
 };
 /**
  *
@@ -53,14 +53,12 @@ exports.logout = (req, res) => {
  * @return {Promise<void>}
  */
 exports.regedit = async (req, res)=>{
-
   /** @type {Auth} */
   const auth = req.body;
   /** @type {true|void} **/
   const regedit = await authRepository.insertUsuario(auth);
 
-  if(regedit){
-
+  if (regedit) {
     auth.persona.id = undefined;
     auth.usuario.id = undefined;
     auth.usuario.clave = undefined;
@@ -71,19 +69,17 @@ exports.regedit = async (req, res)=>{
       usuario: auth.usuario,
     };
 
-    response.success(res,makeToken(token));
-
-  }else{
+    response.success(res, makeToken(token));
+  } else {
     response.error(res);
   }
-
 };
 /**
  * @param {Objet} data
- * @returns {String}
+ * @return {String}
  */
-function makeToken(data){
+function makeToken(data) {
   return jwt.sign(data,
-    process.env.PRIVATE_KEY,
-    {algorithm: 'HS256', expiresIn: '1h'});
+      process.env.PRIVATE_KEY,
+      {algorithm: 'HS256', expiresIn: '1h'});
 }

@@ -1,5 +1,5 @@
 const {Pool} = require('pg');
-/*
+
 const pool = new Pool(
     {
       ssl: {
@@ -7,8 +7,14 @@ const pool = new Pool(
       },
     },
 );
-*/
-const pool = new Pool();
+
+/**
+ * TODO Configurar para cambiar entre entorno local y remoto
+ *
+ * const pool = new Pool();
+ *
+ */
+
 /**
  * Notifica los errores por inactividad dentro del pool
  * @param{event}error
@@ -22,7 +28,7 @@ pool.on('error', (err, client) => {
 
 /**
  * Conecta con la base de datos
- * @returns {Promise<*|null>}
+ * @return {Promise<*|null>}
  */
 const connect = async ()=>{
   try {
@@ -36,8 +42,8 @@ const connect = async ()=>{
 };
 /**
  * Ejecuta las consultas a las bases de datos
- * @param {function(*): number|[]|SQLResultSetRowList|number|HTMLCollectionOf<HTMLTableRowElement>|string|*} updateRows
- * @returns {Boolean}
+ * @param {updateRowsCallback} updateRows
+ * @return {Boolean}
  */
 exports.execute = async (updateRows) =>{
   return await (async () => {
@@ -55,14 +61,14 @@ exports.execute = async (updateRows) =>{
 /**
  * Ejecuta una transacción
  * @param {updateRowsCallback} updateRows
- * @returns {Boolean}
+ * @return {Boolean}
  */
 exports.transaction = async (updateRows) =>{
   return await (async (updateRows) => {
     const client = await connect();
     try {
       await client.query('BEGIN');
-      const results =  await updateRows(client);
+      const results = await updateRows(client);
       await client.query('COMMIT');
       return results;
     } catch (e) {

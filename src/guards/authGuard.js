@@ -1,5 +1,9 @@
+// eslint-disable-next-line no-unused-vars
 const privateKey = process.env.PRIVATE_KEY;
+// eslint-disable-next-line no-unused-vars
 const response = require('../response');
+// eslint-disable-next-line no-unused-vars
+const jwt = require('jsonwebtoken');
 
 module.exports = [
   (req, res, next)=>{
