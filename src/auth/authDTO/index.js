@@ -1,5 +1,5 @@
 exports.Auth = require('./Auth');
-exports.Correo = require('./Empresa');
+exports.Correo = require('./Correo');
 exports.Empresa = require('./Empresa');
 exports.Persona = require('./Persona');
 exports.Reclutador = require('./Reclutador');

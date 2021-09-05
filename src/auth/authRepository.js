@@ -1,9 +1,6 @@
 const {db} = require('../../index');
 
 exports.login = async (paramns) => {
-  /**
-   * TODO Encriptar clave
-   */
   return db.execute(async (conn) => {
     const sqlLogin = {
       text: `SELECT 
@@ -59,7 +56,6 @@ exports.getRolesById = async (id = null)=>{
  * @param {BigInteger}id
  * @return {Array}
  *
- * TODO hacer la consulta a la base de datos
  */
 exports.getTipoIdentificacion = async (id = null) =>{
   if (!id) {

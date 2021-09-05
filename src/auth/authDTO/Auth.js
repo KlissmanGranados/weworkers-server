@@ -2,6 +2,9 @@
  * @class Auth
  * @description Objeto que recibe los datos del nuevo registro
  */
+const Trabajador = require('./Trabajador');
+const Reclutador = require('./Reclutador');
+
 class Auth {
   /**
    * @name {_persona}

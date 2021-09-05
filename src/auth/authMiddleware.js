@@ -57,6 +57,7 @@ exports.validityRegedit = async (req, res, next)=>{
     );
   } catch (e) {
     response.warning_request_json(res);
+    console.log(e);
     return;
   }
 
@@ -155,7 +156,6 @@ exports.validityRegedit = async (req, res, next)=>{
     }
     params.empresa.rif = empresa.rif;
     params.empresa.razonSocial = empresa.razonSocial;
-
     // verificar que la empresa no tenga campos vacios
     requireInputs = Object.keys(params.empresa);
     body = params.empresa;

@@ -10,7 +10,7 @@
     "start": "node src/routes/index.js",
     "lint": "npx eslint .  --ext .js",
     "lint-fix": "eslint . --ext .js --fix",
-    "create-microservice": "node src/utils/createMicroServices.js"
+    "create-microservice": "node src/cli/createMicroServices.js"
   },
   "repository": {
     "type": "git",
