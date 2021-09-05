@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-local": "PROFILE=.env.local npx nodemon src/routes/index.js",
     "dev": "npx nodemon src/routes/index.js",
     "start": "node src/routes/index.js",
     "lint": "npx eslint .  --ext .js",

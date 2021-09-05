@@ -1,6 +1,10 @@
 const {Pool} = require('pg');
-
-const pool = new Pool(
+/**
+ * @name pool
+ * @type {PG.Pool}
+ * @description instancia del pool
+ */
+const pool = process.env.PROFILE == '.env.local'? new Pool() : new Pool(
     {
       ssl: {
         rejectUnauthorized: false,
@@ -9,16 +13,9 @@ const pool = new Pool(
 );
 
 /**
- * TODO Configurar para cambiar entre entorno local y remoto
- *
- * const pool = new Pool();
- *
- */
-
-/**
- * Notifica los errores por inactividad dentro del pool
  * @param{event}error
  * @param{handler} callBack
+ * @description Notifica los errores por inactividad dentro del pool
  */
 pool.on('error', (err, client) => {
   console.error(
@@ -27,8 +24,8 @@ pool.on('error', (err, client) => {
 });
 
 /**
- * Conecta con la base de datos
  * @return {Promise<*|null>}
+ * @description Conecta con la base de datos
  */
 const connect = async ()=>{
   try {
@@ -41,9 +38,9 @@ const connect = async ()=>{
   }
 };
 /**
- * Ejecuta las consultas a las bases de datos
  * @param {updateRowsCallback} updateRows
  * @return {Boolean}
+ * @description Ejecuta las consultas a las bases de datos
  */
 exports.execute = async (updateRows) =>{
   return await (async () => {
@@ -59,9 +56,9 @@ exports.execute = async (updateRows) =>{
   });
 };
 /**
- * Ejecuta una transacción
  * @param {updateRowsCallback} updateRows
  * @return {Boolean}
+ * @description Ejecuta una transacción
  */
 exports.transaction = async (updateRows) =>{
   return await (async (updateRows) => {
