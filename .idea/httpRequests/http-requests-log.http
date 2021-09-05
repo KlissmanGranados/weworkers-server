@@ -1,0 +1,308 @@
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T224617.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+<> 2021-09-04T224614.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+<> 2021-09-04T224503.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+<> 2021-09-04T224502.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+<> 2021-09-04T224251.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+<> 2021-09-04T224218.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+<> 2021-09-04T223933.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/2
+Accept: application/json
+
+<> 2021-09-04T223929.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/1
+Accept: application/json
+
+<> 2021-09-04T223922.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles/1
+Accept: application/json
+
+<> 2021-09-04T223919.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223849.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/21
+Accept: application/json
+
+<> 2021-09-04T223843.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/2
+Accept: application/json
+
+<> 2021-09-04T223838.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223831.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles
+Accept: application/json
+
+<> 2021-09-04T223813.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles
+Accept: application/json
+
+<> 2021-09-04T223804.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/roles
+Accept: application/json
+
+<> 2021-09-04T223747-1.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/
+Accept: application/json
+
+<> 2021-09-04T223747.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/
+Accept: application/json
+
+<> 2021-09-04T223745.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223732.404.html
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223730.404.html
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223700.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223621.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223541.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223415.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223414.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/
+Accept: application/json
+
+<> 2021-09-04T223408.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-04T223349.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion
+Accept: application/json
+
+<> 2021-09-04T223305.404.html
+
+###
+

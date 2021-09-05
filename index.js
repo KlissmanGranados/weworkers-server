@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const db = require('./src/database/db');
 const express = require('express');
 const app = express();
@@ -12,7 +13,4 @@ app.use(function(req, res, next) {
 });
 
 app.use(express.json());
-
 module.exports = ({app, db});
-
-

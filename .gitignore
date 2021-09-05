@@ -1,3 +1,5 @@
+.env.local
+.env.remote
 # Logs
 logs
 *.log

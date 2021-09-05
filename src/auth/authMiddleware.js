@@ -10,16 +10,15 @@ const authDTO = require('./authDTO');
  * @return {Promise<void>}
  */
 exports.validityLogin = async (req, res, next)=>{
+
   const requireInputs = ['usuario', 'clave'];
   const body = req.body;
-
   const fill = utils.requiredFields({requireInputs, body});
 
   if (fill.length > 0) {
     response.warning_required_fields(res, fill);
     return;
   }
-
   next();
 };
 /**
@@ -87,7 +86,7 @@ exports.validityRegedit = async (req, res, next)=>{
   }
   // verificar disponibilidad de la identificación
   const identificacionInUse = await authRepository
-      .getIdentificacion(params.persona.idTipoIdentificacion,
+      .checkIdentificacion(params.persona.idTipoIdentificacion,
           params.persona.identificacion);
 
   if (identificacionInUse.length > 0) {
@@ -146,7 +145,7 @@ exports.validityRegedit = async (req, res, next)=>{
    * ID = 2 = captador
    */
   if (rol.id === 2) {
-    // verificar que el cliente esté enviando la empresa
+    // verificar que el cliente esté enviando los datos de la empresa
     if (!empresa) {
       response.warning_request_json(res);
       return;
@@ -172,10 +171,12 @@ exports.validityRegedit = async (req, res, next)=>{
  * @param {NextFunction} next
  * @return {Promise<void>}
  */
-exports.validityLogout = async (req, res, next) => {
+exports.validityLogout = async (
+  req,
+  res,
+  next) => {
   /**
-   * TODO
-   * - verificar si el token es valido
+   * TODO - verificar si el token es valido
    */
   next();
 };

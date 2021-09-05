@@ -1,54 +1,134 @@
 const {db} = require('../../index');
 
-exports.getRolesById = async (id)=>{
-  const rows = [
-    {
-      id: 1,
-      nombre: 'captado',
-    },
-    {
-      id: 2,
-      nombre: 'captador',
-    },
-    {
-      id: 3,
-      nombre: 'public',
-    },
-  ];
-  return rows.filter( (rol) =>
-    rol.id == id )[0];
+exports.login = async (paramns) => {
+  /**
+   * TODO Encriptar clave
+   */
+  return db.execute(async conn => {
+    const sqlLogin = {
+      text:`SELECT 
+              personas.identificacion as _identificacion, 
+              personas.primer_nombre as _primerNombre, 
+              personas.segundo_nombre as _segundoNombre,
+              personas.primer_apellido as _primerApellido, 
+              personas.segundo_apellido as _segundoApellido,
+              personas.id_tipo_identificacion as _idTipoIdentificacion,
+              usuarios.usuario as _usuario, 
+              usuarios.roles_id as _rolesId
+            FROM 
+              usuarios 
+              inner join personas on (personas.id = usuarios.persona_id)
+              where usuarios.usuario=$1 and usuarios.clave=$2`,
+      values: [paramns.usuario,paramns.clave],
+    };
+    const results = await conn.query(sqlLogin);
+    return results.rows.length > 0? results.rows[0]:false;
+  });
+}
+/**
+ * @param {BigInteger}id
+ * @returns {Rol}
+ *
+ */
+exports.getRolesById = async (id = null)=>{
+
+  if(!id){
+
+    const rows = await db.execute(async conn => {
+      const rows =  await conn.query(`SELECT id, nombre FROM roles `);
+      return rows.rows;
+    });
+
+    return rows;
+  }
+
+  const rows = await db.execute( async conn => {
+    const sqlRoles = {
+      text:`SELECT id, nombre FROM roles WHERE id=$1`,
+      values: [id],
+    }
+    const rows = await conn.query(sqlRoles);
+    return rows.rows[0]
+  });
+
+  return rows;
 };
 
-exports.getTipoIdentificacion = async (id) =>{
-  const tipoIdentificaciones = [
-    {
-      id: 1,
-      tipo: 'p',
-    },
-    {
-      id: 2,
-      tipo: 'v',
-    },
-    {
-      id: 3,
-      tipo: 'e',
-    },
-  ];
+/**
+ *
+ * @param {BigInteger}id
+ * @returns {Array}
+ *
+ * TODO hacer la consulta a la base de datos
+ */
+exports.getTipoIdentificacion = async (id = null) =>{
 
-  return tipoIdentificaciones.filter(
-      (tipo) => tipo.id == id );
+  if(!id){
+    const rows = await db.execute(async conn =>{
+      const rows = await conn.query(
+        `SELECT id, tipo FROM tipos_identificacion`
+      );
+      return rows.rows;
+    })
+    return rows;
+  }
+
+  const rows = await db.execute(async conn => {
+    const sqlTipoIdentificacion = {
+      text: `SELECT id, tipo FROM tipos_identificacion WHERE id=$1`,
+      values:[id],
+    };
+    const rows = await conn.query(sqlTipoIdentificacion);
+    return rows.rows;
+  });
+
+  return rows;
 };
 
-exports.getIdentificacion = async (idTipo, identificacion) => {
-  return [];
+/**
+ *
+ * @param{BigInteger} idTipo
+ * @param{String} identificacion
+ * @returns {Promise<Boolean>}
+ */
+exports.checkIdentificacion = async (idTipo,
+  identificacion) => {
+  return db.execute(async (conn) => {
+    const result = await conn.query(`SELECT id FROM personas WHERE 
+            id_tipo_identificacion=$1 AND identificacion=$2`
+      ,[idTipo,identificacion])
+    return result.rows;
+  })
 };
+/**
+ *
+ * @param{String} email
+ * @returns {Promise<*[]>}
+ */
 exports.getEmail = async (email) => {
-  return [];
+  return db.execute(async (conn) =>{
+    const results = await conn.query
+      (`SELECT id FROM correos WHERE direccion = $1`, [email]);
+    return results.rows;
+  })
 };
+/**
+ *
+ * @param{String} usuario
+ * @returns {Promise<Boolean>}
+ */
 exports.getUsuario = async (usuario) => {
-  return [];
+  return db.execute(async (conn) => {
+    const results = await conn.query(
+      `SELECT * FROM usuarios where usuario = $1`,[usuario]);
+    return results.rows;
+  });
 };
-
+/**
+ * crea un nuevo usuario
+ * @param {Auth} data
+ * @returns {Promise<true|void>}
+ */
 exports.insertUsuario = async (data) =>{
   const {reclutador} = data;
   if (reclutador) {
@@ -62,7 +142,7 @@ exports.insertUsuario = async (data) =>{
  * @param{Auth} auth
  * @return {Promise<void>}
  */
-async function crearUsuario(auth) {
+async function crearUsuario(auth,conn) {
   const insertPersona = {
     text: `INSERT INTO personas 
             (identificacion, primer_nombre, 
@@ -73,10 +153,9 @@ async function crearUsuario(auth) {
   };
 
   // se inserta la persona
-  const idPersona = await 1;
-
-  auth.persona.id = idPersona;
-  auth.usuario.personaId = idPersona;
+  const idPersona = await conn.query(insertPersona);
+  auth.persona.id = idPersona.rows[0].id;
+  auth.usuario.personaId = idPersona.rows[0].id;
 
   const insertUsuario = {
     text: `INSERT INTO usuarios 
@@ -86,57 +165,81 @@ async function crearUsuario(auth) {
   };
 
   // se inserta el usuario
-  const idUsuario = await 5;
+  const idUsuario = await conn.query(insertUsuario);
 
-  auth.usuario.id = idUsuario;
-  auth.correo.usuarioId = idUsuario;
+  auth.usuario.id = idUsuario.rows[0].id;
+  auth.correo.usuarioId = idUsuario.rows[0].id;
 
   const insertCorreo = {
     text: `INSERT INTO correos 
-        (direccion, usuarios_id) VALUES($1, $2)`,
+        (usuarios_id,direccion) VALUES($1, $2)`,
     values: auth.valueToArray('_correo'),
   };
+
   // insertar el correo
+  await conn.query(insertCorreo);
 }
 
 /**
- *
- * @param {Auth} captador
- * @return {Promise<void>}
+ * Inserta un captador
+ * @param{Captador} captador
+ * @returns {Promise<true>}
  */
 async function insertCaptador(captador) {
-  await crearUsuario(captador);
+  return db.transaction(async (conn) => {
 
-  const insertEmpresa = {
-    text: `INSERT INTO empresas (rif, razon_social) 
-             VALUES($1, $2) RETURNING ID`,
-    values: captador.valueToArray('_empresa'),
-  };
+      await crearUsuario(captador, conn);
 
-  // se inserta la empresa
-  const idEmpresa = await 8;
+      const insertEmpresa = {
+        text: `INSERT INTO empresas (rif, razon_social) 
+               VALUES($1, $2) RETURNING ID`,
+        values: captador.valueToArray('_empresa'),
+      };
 
-  captador.reclutador.empresaId = idEmpresa;
-  captador.reclutador.usuarioId = captador.usuario.id;
+      // verificar si la empresa ya está registrada
+      const checkEmpresa = await conn.query(`SELECT id FROM empresas 
+                            WHERE rif=$1`, [captador.empresa.rif]);
+      let idEmpresa;
 
-  const insertReclutador = {
-    text: `INSERT INTO reclutadores (usuarios_id, empresas_id) VALUES($1, $2)`,
-    values: captador.valueToArray('_reclutador'),
-  };
+      if (checkEmpresa.rowCount > 0) {
+        idEmpresa = checkEmpresa;
+      } else {
+        // se inserta la empresa en caso de que no este registrada
+        idEmpresa = await conn.query(insertEmpresa);
+      }
+
+      captador.reclutador.empresaId = idEmpresa.rows[0].id;
+      captador.reclutador.usuarioId = captador.usuario.id;
+
+      const insertReclutador = {
+        text: `INSERT INTO reclutadores (usuarios_id, empresas_id) 
+                    VALUES($1, $2)`,
+        values: captador.valueToArray('_reclutador'),
+      };
+
+      await conn.query(insertReclutador);
+      return true;
+    }
+  );
 }
 
 /**
- *
+ * Inserta un captado
  * @param {Auth} captado
  * @return {Promise<void>}
  */
 async function insertCaptado(captado) {
-  await crearUsuario(captado);
+  return db.transaction(async (conn)=>{
 
-  captado.trabajador.usuarioId = captado.usuario.id();
-  const insertTrabajador = {
-    text: `INSERT INTO trabajadores (usuarios_id) VALUES($1);`,
-    values: captado.valueToArray('_trabajador'),
-  };
-  // insertar trabajador
+    await crearUsuario(captado,conn);
+    captado.trabajador.usuarioId = captado.usuario.id;
+
+    const insertTrabajador = {
+      text: `INSERT INTO trabajadores (usuarios_id) VALUES($1);`,
+      values: captado.valueToArray('_trabajador'),
+    };
+    // insertar trabajador
+    conn.query(insertTrabajador);
+    return true;
+  })
 }

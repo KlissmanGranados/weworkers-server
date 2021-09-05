@@ -26,4 +26,16 @@ module.exports = [
       authMiddelwares.validityRegedit,
     ],
   },
+  {
+    method: 'get',
+    url: '/roles/:id?',
+    handler: authService.getRoles,
+    middelwares: [],
+  },
+  {
+    method: 'get',
+    url: '/tiposIdentificacion/:id?',
+    handler: authService.getIposIdentificacion,
+    middelwares: [],
+  },
 ];

@@ -134,6 +134,7 @@ class Usuario {
    *
    * @name {_clave}
    * @type {String}
+   * TODO criptar la clave
    * @private
    *
    * @name {_personaId}
@@ -165,7 +166,7 @@ class Usuario {
       id = undefined,
   ) {
     this._id = id;
-    this._usuario = usuario;
+    this._usuario = usuario.toLowerCase();
     this._clave = clave;
     this._personaId = personaId;
     this._rolesId = rolesId;
@@ -192,7 +193,7 @@ class Usuario {
   }
 
   set usuario(value) {
-    this._usuario = value;
+    this._usuario = value.toLowerCase();
   }
 
   get clave() {

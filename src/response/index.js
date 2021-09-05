@@ -24,6 +24,9 @@ const WARNING_IDENTIFICATION_NOT_INTEGER = 'Debe de ingresar solo valores' +
 const FORBIDDEN = 'No está autorizado';
 const FORBIDDEN_NOT_LOGIN = 'Debe iniciar sessión';
 const FORBIDDEN_INVALID_TOKEN = 'Token invalido';
+const FORBIDDEN_INVALID_LOGIN = 'Las credenciales son incorrectas';
+
+const ERROR = 'Ha ocurrido un error al intentar hacer la operación';
 
 exports.success = (res, data = null)=>{
   res.status(200).json(makeResponse(SUCCESS, data));
@@ -78,4 +81,11 @@ exports.forbidden_not_login = (res, data = null)=>{
 };
 exports.forbidden_invalid_token = (res, data = null) => {
   res.status(400).json(makeResponse(FORBIDDEN_INVALID_TOKEN, data));
+};
+exports.forbidden_invalid_login = (res ,data = null) => {
+  res.status(400).json(makeResponse(FORBIDDEN_INVALID_LOGIN,data));
+};
+
+exports.error = (res,data = null)=>{
+  res.status(200).json(makeResponse(ERROR,data));
 };
