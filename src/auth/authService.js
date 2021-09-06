@@ -1,18 +1,73 @@
 const response = require('../response');
 const jwt = require('jsonwebtoken');
+const authRepository = require('./authRepository');
 
-exports.login = (req, res)=>{
+/**
+ * @param{Request} req
+ * @param{Response} res
+ * @return {Promise<void>}
+ */
+exports.getRoles = async (req, res)=>{
+  const {id} = req.params;
+  response.success(res, await authRepository.getRolesById(id));
+};
+/**
+ * @param {Request} req
+ * @param {Response} res
+ * @return {Promise<void>}
+ */
+exports.getIposIdentificacion = async (req, res)=>{
+  const {id} = req.params;
+  response.success(res, await authRepository.getTipoIdentificacion(id));
+};
+/**
+ *
+ * @param{Request} req
+ * @param {Response} res
+ * @return {Promise<void>}
+ */
+exports.login = async (req, res)=>{
   const inputs = req.body;
-  const token = jwt.sign({
-    usuario: inputs.usuario,
-    rol: '1',
-  }, process.env.PRIVATE_KEY, {algorithm: 'HS256', expiresIn: '1h'});
-  response.success_login(res, ({token}));
+  const checkLogin = await authRepository.login(inputs);
+  if (!checkLogin) {
+    response.forbidden_invalid_login(res);
+    return;
+  }
+  response.success_login(res, makeToken(checkLogin));
 };
+/**
+ * @param{Request} req
+ * @param{Response} res
+ * @return {Promise<void>}
+ */
+exports.regedit = async (req, res)=>{
+  /** @type {Auth} */
+  const auth = req.body;
+  /** @type {true|void} **/
+  const regedit = await authRepository.insertUsuario(auth);
 
-exports.logout = (req, res) => {
-  response.success(res, []);
+  if (regedit) {
+    auth.persona.id = undefined;
+    auth.usuario.id = undefined;
+    auth.usuario.clave = undefined;
+    auth.usuario.personaId = undefined;
+
+    const token = {
+      persona: auth.persona,
+      usuario: auth.usuario,
+    };
+
+    response.success(res, makeToken(token));
+  } else {
+    response.error(res);
+  }
 };
-exports.regedit = (req, res)=>{
-  response.success(res, []);
-};
+/**
+ * @param {Objet} data
+ * @return {String}
+ */
+function makeToken(data) {
+  return jwt.sign(data,
+      process.env.PRIVATE_KEY,
+      {algorithm: 'HS256', expiresIn: '1h'});
+}

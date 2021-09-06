@@ -1,8 +1,9 @@
 exports.requiredFields = (fields) => {
   const {requireInputs, body} = fields;
+  const excludes = fields.excludes || [];
   const nullsInputs = [];
   requireInputs.forEach((input) => {
-    if (!body[input]) {
+    if (!body[input] && excludes.indexOf(input) <0 ) {
       nullsInputs.push(input);
     }
   });

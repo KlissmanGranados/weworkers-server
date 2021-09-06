@@ -23,7 +23,7 @@ function main() {
           route = route + '/' + folder;
           readline.question(
               'Ingrese el nombre del microservicio' +
-               '( en ${path.basename(route)} ):', (name) => {
+               `( en ${path.basename(route)} ):`, (name) => {
                 if (name.match(/[A-Za-z]/)) {
                   if (!fs.existsSync(`${route}/${name}`)) {
                     newMicroService(route, name);

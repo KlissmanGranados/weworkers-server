@@ -1,5 +1,5 @@
 const authService = require('./authService');
-const authMiddelwares = require('./authMiddelware');
+const authMiddelwares = require('./authMiddleware');
 
 module.exports = [
   {
@@ -12,18 +12,22 @@ module.exports = [
   },
   {
     method: 'post',
-    url: '/logout',
-    handler: authService.logout,
-    middelwares: [
-      authMiddelwares.validityLogout,
-    ],
-  },
-  {
-    method: 'post',
     url: '/registrar',
     handler: authService.regedit,
     middelwares: [
       authMiddelwares.validityRegedit,
     ],
+  },
+  {
+    method: 'get',
+    url: '/roles/:id?',
+    handler: authService.getRoles,
+    middelwares: [],
+  },
+  {
+    method: 'get',
+    url: '/tiposIdentificacion/:id?',
+    handler: authService.getIposIdentificacion,
+    middelwares: [],
   },
 ];

@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-local": "PROFILE=.env.local npx nodemon src/routes/index.js",
     "dev": "npx nodemon src/routes/index.js",
     "start": "node src/routes/index.js",
     "lint": "npx eslint .  --ext .js",
     "lint-fix": "eslint . --ext .js --fix",
-    "create-microservice": "node src/utils/createMicroServices.js"
+    "create-microservice": "node src/cli/createMicroServices.js"
   },
   "repository": {
     "type": "git",
@@ -25,12 +26,12 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-jwt": "^6.1.0",
     "expressjs-routes-loader": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.1"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.12"

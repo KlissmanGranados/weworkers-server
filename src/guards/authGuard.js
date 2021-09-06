@@ -1,18 +1,35 @@
-const jwt = require('express-jwt');
 const privateKey = process.env.PRIVATE_KEY;
 const response = require('../response');
+const jwt = require('jsonwebtoken');
 
 module.exports = [
-  jwt(
-      {
-        secret: privateKey,
-        algorithms: ['HS256'],
-      }),
+  /**
+   * @description verifica si el token proporcionado es válido, en caso
+   * de serlo, lo decifra y pasa el objeto de sessión por el request
+   * @param{Request} req
+   * @param{Response} res
+   * @param{NextFunction} next
+   */
   (req, res, next)=>{
-    if (!req.user) {
-      response.forbidden_not_login(res);
+    const token = req.get('token');
+    if (!token) {
+      response.forbidden(res);
       return;
     }
-    next();
+    jwt.verify(token, privateKey, (error, decoded) =>{
+      if (error) {
+        switch (error.name) {
+          case 'TokenExpiredError':
+            response.forbidden(res);
+            break;
+          case 'JsonWebTokenError':
+            response.forbidden(res);
+            break;
+        }
+      } else {
+        req.user = decoded;
+        next();
+      }
+    });
   },
 ];
