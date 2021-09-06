@@ -1,3 +1,242 @@
+POST https://weworkers-server.herokuapp.com/api/v1/auth/login
+Content-Type: application/json
+
+{
+ "usuario":"klissman",
+ "clave":"1234"
+}
+
+<> 2021-09-06T005216.200.json
+
+###
+
+POST https://weworkers-server.herokuapp.com/api/v1/auth/login
+Content-Type: application/json
+
+{
+ "usuario":"admin",
+ "clave":"123123"
+}
+
+<> 2021-09-06T005201.404.json
+
+###
+
+GET https://weworkers-server.herokuapp.com/api/v1/public/owo
+Accept: application/json
+
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+ "usuario":"admin",
+ "clave":"123123"
+}
+
+<> 2021-09-06T005059.200.json
+
+###
+
+GET https://weworkers-server.herokuapp.com/api/v1/public/ejemplo
+Accept: application/json
+
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+ "usuario":"admin",
+ "clave":"123123"
+}
+
+<> 2021-09-06T005027.404.html
+
+###
+
+GET https://weworkers-server.herokuapp.com/api/v1/public/
+Accept: application/json
+
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+ "usuario":"admin",
+ "clave":"123123"
+}
+
+<> 2021-09-06T005015.404.html
+
+###
+
+POST https://weworkers-server.herokuapp.com/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "2705609992",
+    "primerNombre": "KLISStN",
+    "segundoNombre": "",
+    "primerApellido": "GRANtADOS",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "2"
+  },
+  "usuario": {
+    "usuario": "klissman12",
+    "clave": "1234",
+    "rolesId": "2"
+  },
+  "empresa": {
+    "rif": "1231",
+    "razonSocial": "POLAR"
+  },
+  "correo": {
+    "direccion": "kliss22mgg5552n@gmail.com"
+  }
+}
+
+<> 2021-09-06T005000.200.json
+
+###
+
+POST https://weworkers-server.herokuapp.com/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "2705609992",
+    "primerNombre": "KLISStN",
+    "segundoNombre": "",
+    "primerApellido": "GRANtADOS",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "2"
+  },
+  "usuario": {
+    "usuario": "klissman11",
+    "clave": "1234",
+    "rolesId": "1"
+  },
+  "empresa": {
+    "rif": "1231",
+    "razonSocial": "POLAR"
+  },
+  "correo": {
+    "direccion": "www.kliss22mgg5552n@gmail.com"
+  }
+}
+
+<> 2021-09-06T004938.200.json
+
+###
+
+POST https://weworkers-server.herokuapp.com/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "2705609992",
+    "primerNombre": "KLISStMAN",
+    "segundoNombre": "",
+    "primerApellido": "GRANtADOS",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "2"
+  },
+  "usuario": {
+    "usuario": "klissman11",
+    "clave": "1234",
+    "rolesId": "1"
+  },
+  "empresa": {
+    "rif": "1231",
+    "razonSocial": "POLAR"
+  },
+  "correo": {
+    "direccion": "www.kliss22mgg5552n@gmail.com"
+  }
+}
+
+<> 2021-09-06T004927.200.json
+
+###
+
+POST https://weworkers-server.herokuapp.com/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "2705603325522",
+    "primerNombre": "KLISStMAN",
+    "segundoNombre": "",
+    "primerApellido": "GRANtADOS",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "2"
+  },
+  "usuario": {
+    "usuario": "klissman11",
+    "clave": "1234",
+    "rolesId": "1"
+  },
+  "empresa": {
+    "rif": "1231",
+    "razonSocial": "POLAR"
+  },
+  "correo": {
+    "direccion": "www.kliss22mgg5552n@gmail.com"
+  }
+}
+
+<> 2021-09-06T004917.200.json
+
+###
+
+POST https://weworkers-server.herokuapp.com/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "klissman",
+  "clave": "1234"
+}
+
+<> 2021-09-06T004844.200.json
+
+###
+
+GET https://weworkers-server.herokuapp.com/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+<> 2021-09-06T004819.200.json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+###
+
+GET http://localhost:3000/api/v1/auth/tiposIdentificacion/1
+Accept: application/json
+
+###
+
+GET https://weworkers-server.herokuapp.com/api/v1/auth/roles/11
+Accept: application/json
+
+<> 2021-09-06T004750.200.json
+
+###
+
+GET https://weworkers-server.herokuapp.com/api/v1/auth/roles/1
+Accept: application/json
+
+<> 2021-09-06T004743.200.json
+
+###
+
+GET https://weworkers-server.herokuapp.com/api/v1/auth/roles/
+Accept: application/json
+
+<> 2021-09-06T004725.200.json
+
+###
+
 POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
@@ -774,444 +1013,6 @@ Content-Type: application/json
   "correo": {
     "direccion": "www.kliss22mggas22n@gmail.com"
   }
-}
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T155152.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154903.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154856.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "_identificacion": "27056033222",
-    "_primerNombre": "KLISSMAN",
-    "_segundoNombre": "",
-    "_primerApellido": "GRANADOS",
-    "_segundoApellido": "",
-    "_idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "_usuario": "klissman",
-    "_clave": "1234",
-    "_rolesId": "1"
-  },
-  "empresa": {
-    "_rif": "1231",
-    "_razonSocial": "POLAR"
-  },
-  "correo": {
-    "_direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154816.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "_persona": {
-    "_identificacion": "27056033222",
-    "_primerNombre": "KLISSMAN",
-    "_segundoNombre": "",
-    "_primerApellido": "GRANADOS",
-    "_segundoApellido": "",
-    "_idTipoIdentificacion": "1"
-  },
-  "_usuario": {
-    "_usuario": "klissman",
-    "_clave": "1234",
-    "_rolesId": "1"
-  },
-  "_empresa": {
-    "_rif": "1231",
-    "_razonSocial": "POLAR"
-  },
-  "_correo": {
-    "_direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154756.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154712.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154554.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154343.200.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T154238.200.json
-
-###
-
-POST http://localhost:3000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-###
-
-POST http://localhost:3000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "27056033222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mggas22n@gmail.com"
-  }
-}
-
-###
-
-POST http://localhost:3000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "270560222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman222222s",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T153835.200.json
-
-###
-
-POST http://localhost:3000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "270560222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman222222s",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T153834.200.json
-
-###
-
-POST http://localhost:3000/api/v1/auth/registrar
-Content-Type: application/json
-
-{
-  "persona": {
-    "identificacion": "270560222",
-    "primerNombre": "KLISSMAN",
-    "segundoNombre": "",
-    "primerApellido": "GRANADOS",
-    "segundoApellido": "",
-    "idTipoIdentificacion": "1"
-  },
-  "usuario": {
-    "usuario": "klissman222222s",
-    "clave": "1234",
-    "rolesId": "1"
-  },
-  "empresa": {
-    "rif": "1231",
-    "razonSocial": "POLAR"
-  },
-  "correo": {
-    "direccion": "www.kliss22mas22n@gmail.com"
-  }
-}
-
-<> 2021-09-05T153814.200.json
-
-###
-
-POST http://localhost:3000/api/v1/auth/login
-Content-Type: application/json
-
-{
-  "usuario": "klissman222222s",
-  "clave": "1234"
-}
-
-<> 2021-09-05T153738.400.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/login
-Content-Type: application/json
-
-{
-  "usuario": "klissman222222s",
-  "clave": "1234"
 }
 
 ###
