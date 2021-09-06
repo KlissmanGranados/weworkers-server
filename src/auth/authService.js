@@ -36,18 +36,6 @@ exports.login = async (req, res)=>{
   response.success_login(res, makeToken(checkLogin));
 };
 /**
- *
- * @param{Request} req
- * @param{Response} res
- */
-exports.logout = (req, res) => {
-  /**
-   * TODO Revocar token
-   */
-  response.success(res, []);
-};
-
-/**
  * @param{Request} req
  * @param{Response} res
  * @return {Promise<void>}
@@ -66,7 +54,7 @@ exports.regedit = async (req, res)=>{
 
     const token = {
       persona: auth.persona,
-      usuario: auth.usuario
+      usuario: auth.usuario,
     };
 
     response.success(res, makeToken(token));

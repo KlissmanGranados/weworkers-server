@@ -1,7 +1,2 @@
-const prueba = require("../../microServices/captador/prueba/pruebaRouter")
-
-let routes = [];
-
-routes = routes.concat(prueba);
-
+const routes = [];
 module.exports = routes;

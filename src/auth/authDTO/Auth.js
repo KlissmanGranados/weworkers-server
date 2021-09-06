@@ -4,7 +4,7 @@
  */
 const Trabajador = require('./Trabajador');
 const Reclutador = require('./Reclutador');
-const Empresa = require("./Empresa");
+const Empresa = require('./Empresa');
 
 class Auth {
   /**

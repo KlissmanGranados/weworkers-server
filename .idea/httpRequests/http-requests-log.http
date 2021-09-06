@@ -6,6 +6,78 @@ Content-Type: application/json
   "clave": "1234"
 }
 
+<> 2021-09-06T003249.200.json
+
+###
+
+POST http://localhost:3000/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "2705603325522",
+    "primerNombre": "KLISStMAN",
+    "segundoNombre": "",
+    "primerApellido": "GRANtADOS",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "2"
+  },
+  "usuario": {
+    "usuario": "klissman11",
+    "clave": "1234",
+    "rolesId": "1"
+  },
+  "empresa": {
+    "rif": "1231",
+    "razonSocial": "POLAR"
+  },
+  "correo": {
+    "direccion": "www.kliss22mgg5552n@gmail.com"
+  }
+}
+
+<> 2021-09-06T003224.200.json
+
+###
+
+POST http://localhost:3000/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "27056033222",
+    "primerNombre": "KLISSMAN",
+    "segundoNombre": "",
+    "primerApellido": "GRANADOS",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "1"
+  },
+  "usuario": {
+    "usuario": "klissman",
+    "clave": "1234",
+    "rolesId": "1"
+  },
+  "empresa": {
+    "rif": "1231",
+    "razonSocial": "POLAR"
+  },
+  "correo": {
+    "direccion": "www.kliss22mggas22n@gmail.com"
+  }
+}
+
+<> 2021-09-06T003150.200.json
+
+###
+
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "klissman",
+  "clave": "1234"
+}
+
 <> 2021-09-05T160501.200.json
 
 ###
@@ -1131,36 +1203,6 @@ Content-Type: application/json
 }
 
 <> 2021-09-05T153738.400.json
-
-###
-
-POST http://localhost:4000/api/v1/auth/login
-Content-Type: application/json
-
-{
-  "usuario": "klissman222222s",
-  "clave": "1234"
-}
-
-###
-
-POST http://localhost:4000/api/v1/auth/login
-Content-Type: application/json
-
-{
-  "usuario": "klissman222222s",
-  "clave": "1234"
-}
-
-###
-
-POST http://localhost:4000/api/v1/auth/login
-Content-Type: application/json
-
-{
-  "usuario": "klissman222222s",
-  "clave": "1234"
-}
 
 ###
 

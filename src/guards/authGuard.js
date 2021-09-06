@@ -1,23 +1,27 @@
-// eslint-disable-next-line no-unused-vars
 const privateKey = process.env.PRIVATE_KEY;
-// eslint-disable-next-line no-unused-vars
 const response = require('../response');
-// eslint-disable-next-line no-unused-vars
 const jwt = require('jsonwebtoken');
 
 module.exports = [
+  /**
+   * @description verifica si el token proporcionado es válido, en caso
+   * de serlo, lo decifra y pasa el objeto de sessión por el request
+   * @param{Request} req
+   * @param{Response} res
+   * @param{NextFunction} next
+   */
   (req, res, next)=>{
-
-    const token = req.get('token')
-
+    const token = req.get('token');
+    if (!token) {
+      response.forbidden(res);
+      return;
+    }
     jwt.verify(token, privateKey, (error, decoded) =>{
       if (error) {
         switch (error.name) {
           case 'TokenExpiredError':
-
             response.forbidden(res);
             break;
-
           case 'JsonWebTokenError':
             response.forbidden(res);
             break;
@@ -27,6 +31,5 @@ module.exports = [
         next();
       }
     });
-   
   },
 ];

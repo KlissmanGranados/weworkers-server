@@ -12,14 +12,6 @@ module.exports = [
   },
   {
     method: 'post',
-    url: '/logout',
-    handler: authService.logout,
-    middelwares: [
-      authMiddelwares.validityLogout,
-    ],
-  },
-  {
-    method: 'post',
     url: '/registrar',
     handler: authService.regedit,
     middelwares: [

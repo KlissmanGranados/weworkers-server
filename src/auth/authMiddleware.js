@@ -1,7 +1,5 @@
 const utils = require('../utils');
 const response = require('../response');
-const jwt = require('jsonwebtoken');
-const privateKey = process.env.PRIVATE_KEY;
 const authRepository = require('./authRepository');
 const authDTO = require('./authDTO');
 
@@ -16,7 +14,6 @@ exports.validityLogin = async (req, res, next)=>{
   const requireInputs = ['usuario', 'clave'];
   const body = req.body;
   const fill = utils.requiredFields({requireInputs, body});
-
   if (fill.length > 0) {
     response.warning_required_fields(res, fill);
     return;
@@ -167,29 +164,4 @@ exports.validityRegedit = async (req, res, next)=>{
   }
   req.body = params;
   next();
-};
-/**
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
- */
-exports.validityLogout = (req, res, next) => {
-
-  
-   jwt.verify(req.token, privateKey, (error) =>{
-    if (error) {
-      switch (error.name) {
-        case 'TokenExpiredError':
-
-          response.forbidden(res);
-          break;
-
-        case 'JsonWebTokenError':
-          response.forbidden(res);
-          break;
-      }
-    } else {
-      next();
-    }
-  });
 };
