@@ -7,7 +7,10 @@ const jwt = require('jsonwebtoken');
 
 module.exports = [
   (req, res, next)=>{
-    jwt.verify(req.token, privateKey, (error, decoded) =>{
+
+    const token = req.get('token')
+
+    jwt.verify(token, privateKey, (error, decoded) =>{
       if (error) {
         switch (error.name) {
           case 'TokenExpiredError':
@@ -24,13 +27,6 @@ module.exports = [
         next();
       }
     });
-    /**
-     * TODO
-     * - verificar si el token que se recibe es válido
-     * - verificar si el token está expirado
-     * - decifrar token y pasar datos de sessión como atributo {Usuario} en req
-     * Por ejemplo: req.user = {(id,nombre,email.apellido,rol)};
-     * response.forbidden_not_login();
-     */
+   
   },
 ];

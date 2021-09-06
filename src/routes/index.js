@@ -18,6 +18,8 @@ const multipleDirs = [
 
 const routes = loader(multipleDirs);
 
+console.log(routes)
+
 routes.forEach((route) => {
   const routePrefix = route.url.split('/')[3];
   if (routePrefix === 'auth' || routePrefix === 'public') {

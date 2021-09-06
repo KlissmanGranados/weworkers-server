@@ -174,14 +174,8 @@ exports.validityRegedit = async (req, res, next)=>{
  * @param {NextFunction} next
  */
 exports.validityLogout = (req, res, next) => {
-  /**
-   *
-   * TODO verificar si el token es valido
-   *
-   * Nota: verificación realizada, con el mensaje de error guardado
-   * como res.error, requiere testeo en postman
-   */
 
+  
    jwt.verify(req.token, privateKey, (error) =>{
     if (error) {
       switch (error.name) {

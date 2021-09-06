@@ -66,7 +66,7 @@ exports.regedit = async (req, res)=>{
 
     const token = {
       persona: auth.persona,
-      usuario: auth.usuario,
+      usuario: auth.usuario
     };
 
     response.success(res, makeToken(token));
