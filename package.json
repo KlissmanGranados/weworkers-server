@@ -34,6 +34,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-google": "^0.14.0",
+    "get-routes": "^2.1.5",
     "nodemon": "^2.0.12"
   },
   "engines": {

@@ -44,6 +44,12 @@ const WARNING_CODE = 200;
 const SUCCESS_CODE = 200;
 const SERVER_ERROR_CODE = 505;
 
+/**
+* MENSAJES DE DESARROLLO
+*/
+
+const LISTING_ROUTES = 'listando rutas owo, ver mayor detalle en la wiki.';
+
 // PROCESO EXITOSO
 
 exports.success = (res, data = null)=>{
@@ -113,4 +119,12 @@ exports.forbidden_invalid_login = (res, data = null) => {
 
 exports.error = (res, data = null)=>{
   res.status(SERVER_ERROR_CODE).json(makeResponse(ERROR, data));
+};
+
+/**
+ * RESPONSES PARA DESARROLLO
+ */
+
+exports.routes_listing = (res, data = null) => {
+  res.status(SUCCESS_CODE).json(makeResponse(LISTING_ROUTES, data));
 };

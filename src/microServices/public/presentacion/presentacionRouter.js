@@ -4,7 +4,7 @@ const presentacionService = require('./presentacionService');
 module.exports = [
   {
     method: 'get',
-    url: '/owo',
+    url: '/listar-rutas',
     handler: presentacionService.main,
     middelwares: [
       presentacionMiddelware.validityMain,
