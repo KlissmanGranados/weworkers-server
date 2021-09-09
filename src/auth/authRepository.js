@@ -11,7 +11,8 @@ exports.login = async (paramns) => {
               personas.segundo_apellido as _segundoApellido,
               personas.id_tipo_identificacion as _idTipoIdentificacion,
               usuarios.usuario as _usuario, 
-              usuarios.roles_id as _rolesId
+              usuarios.roles_id as _rolesId,
+              usuarios.id
             FROM 
               usuarios 
               inner join personas on (personas.id = usuarios.persona_id)

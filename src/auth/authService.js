@@ -48,13 +48,13 @@ exports.regedit = async (req, res)=>{
 
   if (regedit) {
     auth.persona.id = undefined;
-    auth.usuario.id = undefined;
     auth.usuario.clave = undefined;
     auth.usuario.personaId = undefined;
 
     const token = {
       persona: auth.persona,
       usuario: auth.usuario,
+      id: auth.usuario.id,
     };
 
     response.success(res, makeToken(token));
