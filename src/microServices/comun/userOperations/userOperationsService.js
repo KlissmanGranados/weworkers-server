@@ -1,9 +1,9 @@
 const response = require('../../../response');
 
-exports.updatePerson = () => {};
+exports.updatePerson = (req, res) => {};
 
-exports.updateUser = () => {};
+exports.updateUser = (req, res) => {};
 
-exports.updateState = () => {};
+exports.updateState = (req, res) => {};
 
-exports.userProfile = () => {};
+exports.userProfile = (req, res) => {};
