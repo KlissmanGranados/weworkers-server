@@ -36,6 +36,6 @@ module.exports = [
     method: 'post',
     url: '/user-profile',
     handler: userOperationsService.userProfile,
-    middelwares: [],
+    middelwares: [userOperationsMiddleware.test],
   },
 ];

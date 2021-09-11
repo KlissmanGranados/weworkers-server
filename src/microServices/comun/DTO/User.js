@@ -8,27 +8,27 @@ class User {
      * @type {String}
      * @private
      *
-     * @name {_roles_id}
-     * @type {Number}
+     * @name {_clave}
+     * @type {String}
      * @private
      *
      */
     _id;
     _usuario;
-    _roles_id;
+    _clave;
 
     /**
      * @param{BigInteger} id
      *
      * @param{String} usuario
      *
-     * @param{Number} roles_id
+     * @param{String} clave
      */
 
-    constructor(id, usuario, roles_id) {
+    constructor(id, usuario, clave) {
       this._id = id;
       this._usuario = usuario;
-      this._roles_id = roles_id;
+      this._clave = clave;
     }
 
     get id() {
@@ -47,13 +47,13 @@ class User {
       this._usuario = usuario;
     }
 
-    get roles_id() {
-      return this._roles_id;
+    get clave() {
+      return this._clave;
     }
 
-    set roles_id(roles_id) {
-      this.roles_id = roles_id;
+    set clave(clave) {
+      this._clave = clave;
     }
 }
 
-mosule.exports = User;
+module.exports = User;

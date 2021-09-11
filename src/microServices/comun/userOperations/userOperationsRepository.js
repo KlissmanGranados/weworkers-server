@@ -41,17 +41,38 @@ exports.readUserTable = async (id = null) => {
   return row;
 };
 
-exports.updateUserTable = async (params = {}) => {
-  if (Object.entries(params).length === 0) {
+const usernameExists = async (username = null) =>{
+  if (!username) {
     return false;
   }
 
-  const user = new User(params.id, params.usuario, params.roles_id);
+  const check = await db.execute(async (conn) =>{
+    const row = await conn.query(`SELECT id, usuario
+    FROM usuarios WHERE usuario=$1`, [username]);
+
+    return row.rowCount;
+  });
+
+  return check !== 0;
+};
+
+exports.updateUserTable = async (params = {}, password = null) => {
+  if (Object.entries(params).length === 0 || !password) {
+    return false;
+  }
+
+  const user = new User(params.id, params.usuario, password);
+
+  const checkUsername = await usernameExists(user.usuario);
+
+  if (checkUsername) {
+    return false;
+  }
 
   const update = await db.execute(async (conn) =>{
     const sql = {
       text: `UPDATE usuarios
-      SET usuario=$2, roles_id=$3 WHERE id=$1`,
+      SET usuario=$2, clave=$3 WHERE id=$1`,
       values: Object.entries(user),
     };
 
@@ -82,6 +103,22 @@ exports.readPersonTable = async (id = null) => {
   return row;
 };
 
+const identificacionExists = async (tipo = null, identificacion = null) =>{
+  if (!tipo || !identificacion) {
+    return false;
+  }
+
+  const check = await db.execute(async (conn) =>{
+    const row = conn.query(`SELECT id FROM personas 
+      WHERE id_tipo_identificacion=$1 
+      AND identificacion=$2`, [tipo, identificacion]);
+
+    return row.rowCount;
+  });
+
+  return check !== 0;
+};
+
 exports.updatePersonTable = async (params = {}) => {
   if (Object.entries(params).length === 0) {
     return false;
@@ -94,6 +131,13 @@ exports.updatePersonTable = async (params = {}) => {
       params.segundo_nombre,
       params.primer_apellido,
       params.segundo_apellido);
+
+  // eslint-disable-next-line max-len
+  const checkIdentificacion = await identificacionExists(person.id_tipo_identificacion, person.identificacion);
+
+  if (checkIdentificacion) {
+    return false;
+  }
 
   const update = await db.execute(async (conn) =>{
     const sql = {
