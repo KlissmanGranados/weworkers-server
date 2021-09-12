@@ -1,4 +1,3 @@
-exports.Auth = require('./Auth');
 exports.Correo = require('./Correo');
 exports.Empresa = require('./Empresa');
 exports.Persona = require('./Persona');

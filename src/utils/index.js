@@ -17,3 +17,7 @@ exports.checkEmail = (email) => {
   regexStr += '[^<>()[\\]\\.,;:\\s@\\\"]{2,})$';
   return new RegExp(regexStr).test(email);
 };
+
+exports.checkIntegers = (value) => {
+  return value.split(/[0-9]/).length-1 == value.length;
+};
