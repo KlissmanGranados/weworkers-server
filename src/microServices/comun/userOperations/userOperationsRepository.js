@@ -73,7 +73,7 @@ exports.updateUserTable = async (params = {}, password = null) => {
     const sql = {
       text: `UPDATE usuarios
       SET usuario=$2, clave=$3 WHERE id=$1`,
-      values: Object.entries(user),
+      values: Object.values(user),
     };
 
     const row = await conn.query(sql);
@@ -149,7 +149,7 @@ exports.updatePersonTable = async (params = {}) => {
         segundo_nombre=$6, 
         segundo_apellido=$7
         WHERE id=$1`,
-      values: Object.entries(person),
+      values: Object.values(person),
     };
 
     const row = await conn.query(sql);
