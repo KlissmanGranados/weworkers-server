@@ -1,8 +1,12 @@
 const response = require('../../../response');
 const userOperationsRepository = require('./userOperationsRepository');
 
+/**
+ * TODO usar archivo response
+ * **/
+
 exports.readPerson = async (req, res) =>{
-  const id = req.body.id;
+  const {id} = req.params;
 
   const person = await userOperationsRepository.readPersonTable(id);
 
@@ -22,17 +26,15 @@ exports.updatePerson = async (req, res) => {};
 exports.updateUser = async (req, res) => {};
 
 exports.deactivateUser = async (req, res) => {
-  const id = req.body.id;
-
+  const {id} = req.body;
   const deactivate = await userOperationsRepository.deactivateUser(id);
 
-  const msg = {
-    // eslint-disable-next-line max-len
-    message: deactivate? `Se ha desactivado la cuenta exitosamente`:`Hubo problemas al realizar el cambio`,
-    isUpdated:deactivate,
+  if(deactivate){
+    response.success(res);
+    return;
   }
 
-  response.success(res,msg);
+  response.error(res);
 };
 
 exports.reactivateUser = async (req, res) => {

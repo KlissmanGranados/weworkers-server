@@ -1,6 +1,10 @@
 const {db} = require('../../../../index');
 const User = require('../DTO/User');
 const Person = require('../DTO/Person');
+/**
+ * TODO la logica de negocio va para el servicio
+ * TODO el DTO se carga desde el middleware
+ * */
 
 exports.readProfile = async (id = null) => {
   if (!id) {
@@ -160,11 +164,7 @@ exports.updatePersonTable = async (params = {}) => {
   return update;
 };
 
-exports.deactivateUser = async (id = null) => {
-  if (!id) {
-    return false;
-  }
-
+exports.deactivateUser = async (id) => {
   const check = await db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT estado 
       FROM usuarios WHERE id=$1`, [id]);

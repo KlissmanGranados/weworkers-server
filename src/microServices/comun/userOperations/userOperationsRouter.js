@@ -2,33 +2,36 @@ const userOperationsMiddleware = require('./userOperationsMiddleware');
 const userOperationsService = require('./userOperationsService');
 
 module.exports = [
+  /**
+   * TODO cambiar metodos de rutas : post, put, get ...
+   */
   {
-    method: 'post',
-    url: '/read-person',
+    method: 'get',
+    url: '/person/:id',
     handler: userOperationsService.readPerson,
     middelwares: [],
   },
   {
-    method: 'post',
-    url: '/update-person',
+    method: 'put',
+    url: '/person',
     handler: userOperationsService.updatePerson,
     middelwares: [],
   },
   {
-    method: 'post',
-    url: '/read-user',
+    method: 'get',
+    url: '/user/:id',
     handler: userOperationsService.readUser,
     middelwares: [],
   },
   {
-    method: 'post',
-    url: '/update-user',
+    method: 'put',
+    url: '/user',
     handler: userOperationsService.updateUser,
     middelwares: [],
   },
   {
     method: 'post',
-    url: '/deactivate-user',
+    url: '/deactivate-user/',
     handler: userOperationsService.deactivateUser,
     middelwares: [],
   },
@@ -39,7 +42,7 @@ module.exports = [
     middelwares: [],
   },
   {
-    method: 'post',
+    method: 'get',
     url: '/user-profile',
     handler: userOperationsService.userProfile,
     middelwares: [userOperationsMiddleware.test],
