@@ -28,8 +28,14 @@ module.exports = [
   },
   {
     method: 'post',
-    url: '/change-state',
-    handler: userOperationsService.updateState,
+    url: '/deactivate-user',
+    handler: userOperationsService.deactivateUser,
+    middelwares: [],
+  },
+  {
+    method: 'post',
+    url: '/reactivate-user',
+    handler: userOperationsService.reactivateUser,
     middelwares: [],
   },
   {

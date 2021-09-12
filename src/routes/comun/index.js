@@ -4,6 +4,4 @@ const userOperationsRouter = require('../../microServices/comun/userOperations/u
 let routes = [];
 routes = routes.concat(userOperationsRouter);
 
-console.log(routes)
-
 module.exports = routes;

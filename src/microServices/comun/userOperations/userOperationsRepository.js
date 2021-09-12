@@ -10,7 +10,7 @@ exports.readProfile = async (id = null) => {
   const rowsPerson = await db.execute(async (conn) => {
     const rows = await conn.query(`SELECT id, id_tipo_identificacion, 
     identificacion, primer_nombre, primer_apellido, segundo_nombre, 
-    segundo apellido FROM personas WHERE id=$1 `, [id]);
+    segundo_apellido FROM personas WHERE id=$1 `, [id]);
     return rows.rows[0];
   });
 
@@ -33,7 +33,7 @@ exports.readUserTable = async (id = null) => {
   }
 
   const row = await db.execute(async (conn) =>{
-    const rows = await conn.query(`SELECT id, usuario, roles_id
+    const rows = await conn.query(`SELECT id, usuario, roles_id, estado
     FROM usuarios WHERE id=$1`, [id]);
     return rows.rows[0];
   });
@@ -160,7 +160,7 @@ exports.updatePersonTable = async (params = {}) => {
   return update;
 };
 
-exports.changeState = async (id = null) => {
+exports.deactivateUser = async (id = null) => {
   if (!id) {
     return false;
   }
@@ -172,10 +172,37 @@ exports.changeState = async (id = null) => {
     return rows.rows[0];
   });
 
+  if(!check.estado) return false
+
   const update = await db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
       SET estado=$1
-      WHERE usuario=$2`, [!check.estado, id]);
+      WHERE id=$2`, [!check.estado, id]);
+
+    return true;
+  });
+
+  return update;
+};
+
+exports.reactivateUser = async (id = null) => {
+  if (!id) {
+    return false;
+  }
+
+  const check = await db.execute(async (conn) =>{
+    const rows = await conn.query(`SELECT estado 
+      FROM usuarios WHERE id=$1`, [id]);
+
+    return rows.rows[0];
+  });
+
+  if(check.estado) return false
+
+  const update = await db.execute(async (conn) =>{
+    const rows = await conn.query(`UPDATE usuarios
+      SET estado=$1
+      WHERE id=$2`, [!check.estado, id]);
 
     return true;
   });
