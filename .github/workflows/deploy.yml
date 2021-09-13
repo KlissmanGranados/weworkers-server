@@ -3,7 +3,7 @@ name: Deploy
 on:
   pull_request:
     branches:
-      - develop
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
