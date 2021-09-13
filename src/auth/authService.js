@@ -69,7 +69,7 @@ exports.regedit = async (req, res)=>{
   if (checkIdentificationAvailable.length > 0) {
     response.warning_identification_not_available(
         res,
-        auth.correo.direccion,
+        auth.persona.identificacion,
     );
     return;
   }
