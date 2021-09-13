@@ -20,13 +20,14 @@ class Dto {
     const attributesBody = Object.entries(body);
     const attributesClass = this.getAttributes();
 
-    attributesBody.forEach( (attribute) => {
+    attributesBody.forEach((attribute) => {
       const [key, value] = attribute;
-      if (attributesClass.indexOf(key)>=0 && value) {
+      if (attributesClass.indexOf(key) >= 0 && value) {
         this[key] = value;
       }
     });
   }
+
   /**
    * @description Devuelve los valores de los atributos de un objeto,
    * siempre que estos estén definidos
@@ -34,19 +35,20 @@ class Dto {
    */
   toArray() {
     return Object.values(this)
-        .filter((value) =>
-          typeof value != 'undefined');
+    .filter((value) =>
+      typeof value != 'undefined');
   }
+
   /**
    * @description verifica los campos obligatorios
    * @type {Array}
    * @param inputs
    * @return { Array } Lista de los campos vacios
    */
-  checkRequired( inputs ) {
+  checkRequired(inputs) {
     const attributes = this.getAttributes();
-    return inputs.filter( (input) => {
-      return !this[input] && attributes.indexOf(input)>=0;
+    return inputs.filter((input) => {
+      return !this[input] && attributes.indexOf(input) >= 0;
     });
   }
 
@@ -69,8 +71,8 @@ class Dto {
     attributes.forEach((attribute, index) => {
       if (this[attribute] || this[attribute] === null) {
         columns.push(
-            attribute.replace(/[A-Z]/g, (letter) =>
-              `_${letter.toLowerCase()}`),
+          attribute.replace(/[A-Z]/g, (letter) =>
+            `_${letter.toLowerCase()}`),
         );
       }
     });
@@ -93,21 +95,18 @@ class Dto {
       columnsNumber,
     };
   }
-<<<<<<< Updated upstream
 
   /**
    * @description Clona la instancia actual
    * @return {Object}
    */
-  clone(){
+  clone() {
     const _clone = {...this};
     _clone.__proto__ = this.__proto__;
     return _clone;
   }
-
-=======
->>>>>>> Stashed changes
 }
+
 module.exports = Dto;
 
 
