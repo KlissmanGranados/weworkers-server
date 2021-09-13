@@ -43,8 +43,8 @@ module.exports = [
   },
   {
     method: 'get',
-    url: '/user-profile',
+    url: '/profile/:id',
     handler: userOperationsService.userProfile,
-    middelwares: [userOperationsMiddleware.test],
+    middelwares: [],
   },
 ];

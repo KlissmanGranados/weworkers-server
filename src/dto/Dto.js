@@ -93,6 +93,7 @@ class Dto {
       columnsNumber,
     };
   }
+<<<<<<< Updated upstream
 
   /**
    * @description Clona la instancia actual
@@ -104,6 +105,8 @@ class Dto {
     return _clone;
   }
 
+=======
+>>>>>>> Stashed changes
 }
 module.exports = Dto;
 

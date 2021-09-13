@@ -14,7 +14,7 @@ exports.readPerson = async (req, res) =>{
 };
 
 exports.readUser = async (req, res) => {
-  const id = req.body.id;
+  const {id} = req.params;
 
   const user = await userOperationsRepository.readUserTable(id);
 
@@ -52,7 +52,7 @@ exports.reactivateUser = async (req, res) => {
 };
 
 exports.userProfile = async (req, res) => {
-  const id = req.body.id;
+  const {id} = req.params;
 
   const profile = await userOperationsRepository.readProfile(id);
 

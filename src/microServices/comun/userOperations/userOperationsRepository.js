@@ -6,11 +6,7 @@ const Person = require('../DTO/Person');
  * TODO el DTO se carga desde el middleware
  * */
 
-exports.readProfile = async (id = null) => {
-  if (!id) {
-    return [];
-  }
-
+exports.readProfile = async (id) => {
   const rowsPerson = await db.execute(async (conn) => {
     const rows = await conn.query(`SELECT id, id_tipo_identificacion, 
     identificacion, primer_nombre, primer_apellido, segundo_nombre, 
@@ -31,11 +27,7 @@ exports.readProfile = async (id = null) => {
   return [rowsPerson, rowsUser];
 };
 
-exports.readUserTable = async (id = null) => {
-  if (!id) {
-    return {};
-  }
-
+exports.readUserTable = async (id) => {
   const row = await db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT id, usuario, roles_id, estado
     FROM usuarios WHERE id=$1`, [id]);
@@ -45,11 +37,7 @@ exports.readUserTable = async (id = null) => {
   return row;
 };
 
-const usernameExists = async (username = null) =>{
-  if (!username) {
-    return false;
-  }
-
+const usernameExists = async (username) =>{
   const check = await db.execute(async (conn) =>{
     const row = await conn.query(`SELECT id, usuario
     FROM usuarios WHERE usuario=$1`, [username]);
@@ -60,11 +48,7 @@ const usernameExists = async (username = null) =>{
   return check !== 0;
 };
 
-exports.updateUserTable = async (params = {}, password = null) => {
-  if (Object.entries(params).length === 0 || !password) {
-    return false;
-  }
-
+exports.updateUserTable = async (params, password) => {
   const user = new User(params.id, params.usuario, password);
 
   const checkUsername = await usernameExists(user.usuario);
@@ -88,11 +72,7 @@ exports.updateUserTable = async (params = {}, password = null) => {
   return update;
 };
 
-exports.readPersonTable = async (id = null) => {
-  if (!id) {
-    return {};
-  }
-
+exports.readPersonTable = async (id) => {
   const row = await db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT id_tipo_identificacion,
      identificacion,
@@ -107,11 +87,7 @@ exports.readPersonTable = async (id = null) => {
   return row;
 };
 
-const identificacionExists = async (tipo = null, identificacion = null) =>{
-  if (!tipo || !identificacion) {
-    return false;
-  }
-
+const identificacionExists = async (tipo, identificacion) =>{
   const check = await db.execute(async (conn) =>{
     const row = conn.query(`SELECT id FROM personas 
       WHERE id_tipo_identificacion=$1 
@@ -123,11 +99,7 @@ const identificacionExists = async (tipo = null, identificacion = null) =>{
   return check !== 0;
 };
 
-exports.updatePersonTable = async (params = {}) => {
-  if (Object.entries(params).length === 0) {
-    return false;
-  }
-
+exports.updatePersonTable = async (params) => {
   const person = new Person(params.id,
       params.id_tipo_identificacion,
       params.identificacion,
@@ -136,8 +108,9 @@ exports.updatePersonTable = async (params = {}) => {
       params.primer_apellido,
       params.segundo_apellido);
 
-  // eslint-disable-next-line max-len
-  const checkIdentificacion = await identificacionExists(person.id_tipo_identificacion, person.identificacion);
+  const checkIdentificacion = await identificacionExists(
+      person.id_tipo_identificacion,
+      person.identificacion);
 
   if (checkIdentificacion) {
     return false;
@@ -185,11 +158,7 @@ exports.deactivateUser = async (id) => {
   return update;
 };
 
-exports.reactivateUser = async (id = null) => {
-  if (!id) {
-    return false;
-  }
-
+exports.reactivateUser = async (id) => {
   const check = await db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT estado 
       FROM usuarios WHERE id=$1`, [id]);
@@ -209,3 +178,5 @@ exports.reactivateUser = async (id = null) => {
 
   return update;
 };
+
+const findIdPersona = (idUser) =>{};

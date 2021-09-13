@@ -14,7 +14,7 @@ exports.verifyId = async (req, res, next) =>{
 };
 
 exports.requiredFieldsPerson = async (req, res, next) =>{
-  
+
 };
 
 exports.requiredFieldsUser = async (req, res, next) =>{
