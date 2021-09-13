@@ -55,7 +55,8 @@ class Dto {
    * @return {string[]}
    */
   getAttributes() {
-    return Object.keys(this).map((key) => key.replace('_', ''));
+    return Object.keys(this).map((key) =>
+      key.replace('_', ''));
   }
 
   /**
@@ -68,7 +69,8 @@ class Dto {
     attributes.forEach((attribute, index) => {
       if (this[attribute] || this[attribute] === null) {
         columns.push(
-            attribute.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`),
+            attribute.replace(/[A-Z]/g, (letter) =>
+              `_${letter.toLowerCase()}`),
         );
       }
     });
@@ -90,6 +92,16 @@ class Dto {
       columns: columns.join(','),
       columnsNumber,
     };
+  }
+
+  /**
+   * @description Clona la instancia actual
+   * @return {Object}
+   */
+  clone(){
+    const _clone = {...this};
+    _clone.__proto__ = this.__proto__;
+    return _clone;
   }
 
 }
