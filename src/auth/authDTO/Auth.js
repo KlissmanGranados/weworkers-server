@@ -2,7 +2,7 @@
  * @class Auth
  * @description Objeto que recibe los datos del nuevo registro
  */
-const {Persona, Usuario, Correo, Empresa, Reclutador, Trabajador} = require('../../Dto');
+const {Persona, Usuario, Correo, Empresa, Reclutador, Trabajador} = require('../../dto');
 
 class Auth {
   _persona;

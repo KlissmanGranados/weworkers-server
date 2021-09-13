@@ -1,3 +1,7 @@
+/**
+ * @class Dto
+ * @description Defines las operaciones en comun para todos los Dto
+ */
 class Dto {
   /**
    * @description Carga la data proporcionada y la setea en el objeto,
@@ -71,10 +75,16 @@ class Dto {
     return columns;
   }
 
+  /**
+   * @description Crea un Objeto con las columnas de la tablas del DTO
+   * y enumera los inserts
+   * varlues $1,$2 ...
+   * @return {{columns: string, columnsNumber: string}}
+   */
   getColumns() {
     const columns = this.camelCaseToSnakeCase();
-    const columnsNumber = columns.map((value, index)=>{
-      return `$${index+1}`;
+    const columnsNumber = columns.map((value, index) => {
+      return `$${index + 1}`;
     }).join(',');
     return {
       columns: columns.join(','),
@@ -82,15 +92,7 @@ class Dto {
     };
   }
 
-  getObject() {
-    const entries = Object.entries(this)
-        .filter((entrie) => !!entrie[1])
-        .map((entrie)=>{
-          let [key, value] = entrie;
-          key = key.replace('_', '');
-          return [key, value];
-        });
-    return Object.fromEntries(entries);
-  }
 }
 module.exports = Dto;
+
+

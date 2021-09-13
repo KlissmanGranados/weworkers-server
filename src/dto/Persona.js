@@ -9,12 +9,6 @@ class Persona extends Dto {
   _segundoNombre;
   _segundoApellido;
 
-  constructor() {
-    super();
-    this._segundoApellido = null;
-    this._segundoNombre = null;
-  }
-
   get id() {
     return this._id;
   }

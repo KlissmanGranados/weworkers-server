@@ -1,21 +1,16 @@
 const {db} = require('../../index');
 
+/**
+ *
+ * @param paramns
+ * @return {Promise<Boolean>}
+ */
 exports.login = async (paramns) => {
   return db.execute(async (conn) => {
     const sqlLogin = {
       text: `SELECT 
-              personas.identificacion as _identificacion, 
-              personas.primer_nombre as _primerNombre, 
-              personas.segundo_nombre as _segundoNombre,
-              personas.primer_apellido as _primerApellido, 
-              personas.segundo_apellido as _segundoApellido,
-              personas.id_tipo_identificacion as _idTipoIdentificacion,
-              usuarios.usuario as _usuario, 
-              usuarios.roles_id as _rolesId,
-              usuarios.id
-            FROM 
-              usuarios 
-              inner join personas on (personas.id = usuarios.persona_id)
+              usuarios.id as idUsuario
+            FROM usuarios 
               where usuarios.usuario=$1 and usuarios.clave=$2`,
       values: [paramns.usuario, paramns.clave],
     };
@@ -122,7 +117,11 @@ exports.getUsuario = async (usuario) => {
     return results.rows;
   });
 };
-
+/**
+ *
+ * @param data
+ * @return {Promise<Boolean>}
+ */
 exports.insertUsuario = async (data) =>{
   const {reclutador} = data;
   if (reclutador) {
@@ -131,6 +130,12 @@ exports.insertUsuario = async (data) =>{
   return await insertCaptado(data);
 };
 
+/**
+ * @description Crea un usuario
+ * @param {Auth} auth
+ * @param {Pool} conn
+ * @return {Promise<void>}
+ */
 async function crearUsuario(auth, conn) {
   const columnsPersona = auth.persona.getColumns();
   const insertPersona = {
@@ -169,6 +174,11 @@ async function crearUsuario(auth, conn) {
   await conn.query(insertCorreo);
 }
 
+/**
+ * @description Inserta un captador
+ * @param {Auth} captador
+ * @return {Promise<Boolean>}
+ */
 async function insertCaptador(captador) {
   return db.transaction(async (conn) => {
     await crearUsuario(captador, conn);
@@ -205,6 +215,11 @@ async function insertCaptador(captador) {
   });
 }
 
+/**
+ * @description Inserta un captado
+ * @param {Auth}captado
+ * @return {Promise<Boolean>}
+ */
 async function insertCaptado(captado) {
   return db.transaction(async (conn)=>{
     await crearUsuario(captado, conn);

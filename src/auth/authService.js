@@ -1,17 +1,32 @@
 const response = require('../response');
 const jwt = require('jsonwebtoken');
 const authRepository = require('./authRepository');
-
+/**
+ * @description selecciona los roles
+ * @param {Request}req
+ * @param {Response} res
+ * @return {Promise<void>}
+ */
 exports.getRoles = async (req, res)=>{
   const {id} = req.params;
   response.success(res, await authRepository.getRolesById(id));
 };
-
+/**
+ * @description selecciona los tipos de identificacion
+ * @param {Request} req
+ * @param {Response} res
+ * @return {Promise<void>}
+ */
 exports.getIposIdentificacion = async (req, res)=>{
   const {id} = req.params;
   response.success(res, await authRepository.getTipoIdentificacion(id));
 };
-
+/**
+ * @description Crea un login
+ * @param{Request} req
+ * @param{Response} res
+ * @return {Promise<void>}
+ */
 exports.login = async (req, res)=>{
   const inputs = req.body;
   const checkLogin = await authRepository.login(inputs);
@@ -21,7 +36,12 @@ exports.login = async (req, res)=>{
   }
   response.success_login(res, makeToken(checkLogin));
 };
-
+/**
+ * @description Crea un nuevo registro de usuario
+ * @param{Request} req
+ * @param{Response} res
+ * @return {Promise<void>}
+ */
 exports.regedit = async (req, res)=>{
   const auth = req.body;
 
@@ -79,22 +99,17 @@ exports.regedit = async (req, res)=>{
   const regedit = await authRepository.insertUsuario(auth);
 
   if (regedit) {
-    auth.persona.id = undefined;
-    auth.usuario.clave = undefined;
-    auth.usuario.personaId = undefined;
-
-    const token = {
-      persona: auth.persona.getObject(),
-      usuario: auth.usuario.getObject(),
-      id: auth.usuario.id,
-    };
-
-    response.success(res, makeToken(token));
+    response.success(res, makeToken({idUsuario: auth.usuario.id}));
   } else {
     response.error(res);
   }
 };
 
+/**
+ * @description Crea el token de autenticación
+ * @param {Object}data
+ * @return {*}
+ */
 function makeToken(data) {
   return jwt.sign(data,
       process.env.PRIVATE_KEY,
