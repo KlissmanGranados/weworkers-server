@@ -172,7 +172,7 @@ exports.deactivateUser = async (id) => {
     return rows.rows[0];
   });
 
-  if(!check.estado) return false
+  if (!check.estado) return false;
 
   const update = await db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
@@ -197,7 +197,7 @@ exports.reactivateUser = async (id = null) => {
     return rows.rows[0];
   });
 
-  if(check.estado) return false
+  if (check.estado) return false;
 
   const update = await db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios

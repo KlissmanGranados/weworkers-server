@@ -29,7 +29,7 @@ exports.deactivateUser = async (req, res) => {
   const {id} = req.body;
   const deactivate = await userOperationsRepository.deactivateUser(id);
 
-  if(deactivate){
+  if (deactivate) {
     response.success(res);
     return;
   }
@@ -45,8 +45,8 @@ exports.reactivateUser = async (req, res) => {
   const msg = {
     // eslint-disable-next-line max-len
     message: reactivate? `Se ha reactivado la cuenta exitosamente`:`Hubo problemas al realizar el cambio`,
-    isUpdated:reactivate,
-  }
+    isUpdated: reactivate,
+  };
 
   response.success(res, msg);
 };

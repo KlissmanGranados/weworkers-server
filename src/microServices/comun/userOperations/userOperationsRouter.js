@@ -33,7 +33,7 @@ module.exports = [
     method: 'post',
     url: '/deactivate-user/',
     handler: userOperationsService.deactivateUser,
-    middelwares: [],
+    middelwares: [userOperationsMiddleware.verifyId],
   },
   {
     method: 'post',
