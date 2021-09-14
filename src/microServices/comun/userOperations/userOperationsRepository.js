@@ -8,58 +8,47 @@ const Person = require('../DTO/Person');
 
 exports.readProfile = async (id) => {
 
-  const rowsUser = await db.execute(async (conn) => {
+  const rowsProfile = await db.execute(async (conn) => {
     const rows = await conn.query(`SELECT 
-      id, 
-      usuario, 
-      persona_id, 
-      roles_id, 
-      estado FROM usuarios WHERE id=$1`, [id]);
+      usuarios.id, 
+      usuarios.usuario, 
+      usuarios.persona_id, 
+      usuarios.roles_id, 
+      usuarios.estado,
+      personas.id_tipo_identificacion,
+      personas.identificacion,
+      personas.primer_nombre,
+      personas.primer_apellido,
+      personas.segundo_nombre,
+      personas.segundo_apellido,
+      correos.direccion 
+      FROM usuarios
+      INNER JOIN personas ON (usuarios.persona_id=personas.id)
+      INNER JOIN correos ON (correos.usuarios_id=usuarios.id)
+      WHERE usuarios.id=$1`, [id]);
     return rows.rows[0];
   });
 
-  const rowsPerson = await db.execute(async (conn) => {
-    const rows = await conn.query(`SELECT id,
-    id_tipo_identificacion, 
-    identificacion, 
-    primer_nombre, 
-    primer_apellido, 
-    segundo_nombre, 
-    segundo_apellido FROM personas 
-    WHERE id=$1 `, [rowsUser.persona_id]);
-    return rows.rows[0];
-  });
-
-  const rowsCorreo = await db.execute(async (conn) =>{
-    const rows = await conn.query(`SELECT direccion
-     FROM correos WHERE usuarios_id=$1`, [id]);
-
-     return rows.rows[0].direccion;
-  });
-
-  if(rowsUser.roles_id === 2){
+  if(rowsProfile.roles_id === 2){
    
     const rowsEmpresa = await db.execute(async (conn) =>{
       const rows = await conn.query(`SELECT
       empresas.rif AS rif,
       empresas.razon_social FROM reclutadores
       INNER JOIN empresas ON (empresas.id = reclutadores.empresas_id)
-      WHERE reclutadores.usuarios_id=$1`, [rowsUser.id]);
+      WHERE reclutadores.usuarios_id=$1`, [rowsProfile.id]);
 
       return rows.rows[0];
     });
 
     return {
-      persona: rowsPerson,
-      usuario: rowsUser,
-      correo: rowsCorreo,
+      perfil: rowsProfile,
       empresa: rowsEmpresa,};
   }
 
   return {
-    persona: rowsPerson,
-    usuario: rowsUser,
-    correo: rowsCorreo,};
+    perfil: rowsProfile,
+  };
 };
 
 exports.readUserTable = async (id) => {
@@ -173,7 +162,7 @@ exports.updatePersonTable = async (params) => {
 };
 
 exports.deactivateUser = async (id) => {
-  
+
   const check = await db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT estado 
       FROM usuarios WHERE id=$1`, [id]);
@@ -207,18 +196,19 @@ exports.reactivateUser = async (params) => {
     return rows.rows[0];
   });
 
+
   const conditions = [
     check.estado,
-    check.usuario !== params.usuario,
-    check.clave !== params.clave,
-    check.id_tipo_identificacion !== params.id_tipo_identificacion,
-    check.identificacion !== params.identificacion,
-    check.direccion !== params.direccion
+    check.usuario != params.usuario,
+    check.clave != params.clave,
+    check.id_tipo_identificacion != params.id_tipo_identificacion,
+    check.identificacion != params.identificacion,
+    check.direccion != params.direccion
   ];
 
-  if (conditions.find(item => item === true)) return false;
-
-
+  if (!conditions.every(item => item === false)) {
+    return false;
+  } 
 
   const update = await db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios

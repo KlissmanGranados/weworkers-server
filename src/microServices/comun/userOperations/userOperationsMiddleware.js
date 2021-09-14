@@ -13,7 +13,7 @@ exports.requiredFieldsUser = async (req, res, next) =>{
 exports.requiredFieldsReactivate = async (req, res, next) =>{
   const body = req.body;
 
-  const requiredInputs = [
+  const requireInputs = [
     'id',
     'usuario',
     'clave',
@@ -21,10 +21,15 @@ exports.requiredFieldsReactivate = async (req, res, next) =>{
     'identificacion',
     'direccion']
 
-  const fill = utils.requiredFields({requiredInputs, body});
+  const fill = utils.requiredFields({requireInputs, body});
 
   if(fill.length > 0){
     response.warning_required_fields(res,fill);
+    return;
+  }
+
+  if(!utils.checkEmail(body.direccion)){
+    response.warning_invalid_mail(res)
     return;
   }
 
