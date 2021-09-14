@@ -39,7 +39,7 @@ exports.checkIntegers = (value) => {
  * @param str
  * @return {string}
  */
-exports.snakeToCamel = (str) =>
+const snakeToCamel = (str) =>
   str.toLowerCase().replace(/([-_][a-z])/g, group =>
     group
     .toUpperCase()
@@ -50,6 +50,7 @@ exports.snakeToCamel = (str) =>
  * @description Recibe un objeto y cambia sus keys a camelCase
  * @param{Object} object
  */
+
 exports.snakeToCamelObject = (object) => {
   const table = Object.entries(object);
   const regex = /_/g;
