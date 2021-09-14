@@ -173,6 +173,7 @@ exports.updatePersonTable = async (params) => {
 };
 
 exports.deactivateUser = async (id) => {
+  
   const check = await db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT estado 
       FROM usuarios WHERE id=$1`, [id]);
@@ -193,25 +194,39 @@ exports.deactivateUser = async (id) => {
   return update;
 };
 
-exports.reactivateUser = async (id) => {
+exports.reactivateUser = async (params) => {
   const check = await db.execute(async (conn) =>{
-    const rows = await conn.query(`SELECT estado 
-      FROM usuarios WHERE id=$1`, [id]);
+    const rows = await conn.query(`SELECT usuarios.usuario ,
+     usuarios.clave , usuarios.estado ,
+    personas.id_tipo_identificacion , personas.identificacion ,
+    correos.direccion FROM usuarios
+     INNER JOIN personas ON (usuarios.persona_id = personas.id)
+    INNER JOIN correos on (correos.usuarios_id = usuarios.id)
+     WHERE usuarios.id =$1;`, [params.id]);
 
     return rows.rows[0];
   });
 
-  if (check.estado) return false;
+  const conditions = [
+    check.estado,
+    check.usuario !== params.usuario,
+    check.clave !== params.clave,
+    check.id_tipo_identificacion !== params.id_tipo_identificacion,
+    check.identificacion !== params.identificacion,
+    check.direccion !== params.direccion
+  ];
+
+  if (conditions.find(item => item === true)) return false;
+
+
 
   const update = await db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
       SET estado=$1
-      WHERE id=$2`, [!check.estado, id]);
+      WHERE id=$2`, [!check.estado, params.id]);
 
     return true;
   });
 
   return update;
 };
-
-const findIdPersona = (idUser) =>{};

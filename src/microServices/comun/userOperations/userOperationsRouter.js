@@ -7,39 +7,39 @@ module.exports = [
    */
   {
     method: 'get',
-    url: '/person/:id',
+    url: '/persona/:id',
     handler: userOperationsService.readPerson,
     middelwares: [],
   },
   {
     method: 'put',
-    url: '/person',
+    url: '/persona',
     handler: userOperationsService.updatePerson,
     middelwares: [],
   },
   {
     method: 'get',
-    url: '/user/:id',
+    url: '/usuario/:id',
     handler: userOperationsService.readUser,
     middelwares: [],
   },
   {
     method: 'put',
-    url: '/user',
+    url: '/usuario',
     handler: userOperationsService.updateUser,
     middelwares: [],
   },
   {
     method: 'get',
-    url: '/deactivate-user/:id',
+    url: '/desactivar-usuario/:id',
     handler: userOperationsService.deactivateUser,
     middelwares: [],
   },
   {
-    method: 'get',
-    url: '/reactivate-user/:id',
+    method: 'post',
+    url: '/reactivar-usuario',
     handler: userOperationsService.reactivateUser,
-    middelwares: [],
+    middelwares: [userOperationsMiddleware.requiredFieldsReactivate],
   },
   {
     method: 'get',
