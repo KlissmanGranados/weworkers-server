@@ -56,5 +56,7 @@ exports.userProfile = async (req, res) => {
 
   const profile = await userOperationsRepository.readProfile(id);
 
+  console.log(profile)
+
   response.success(res, profile);
 };

@@ -7,12 +7,6 @@ const Person = require('../DTO/Person');
  * */
 
 exports.readProfile = async (id) => {
-  const rowsPerson = await db.execute(async (conn) => {
-    const rows = await conn.query(`SELECT id, id_tipo_identificacion, 
-    identificacion, primer_nombre, primer_apellido, segundo_nombre, 
-    segundo_apellido FROM personas WHERE id=$1 `, [id]);
-    return rows.rows[0];
-  });
 
   const rowsUser = await db.execute(async (conn) => {
     const rows = await conn.query(`SELECT 
@@ -20,11 +14,52 @@ exports.readProfile = async (id) => {
       usuario, 
       persona_id, 
       roles_id, 
-      estado FROM usuarios WHERE persona_id=$1 `, [rowsPerson.id]);
+      estado FROM usuarios WHERE id=$1`, [id]);
     return rows.rows[0];
   });
 
-  return [rowsPerson, rowsUser];
+  const rowsPerson = await db.execute(async (conn) => {
+    const rows = await conn.query(`SELECT id,
+    id_tipo_identificacion, 
+    identificacion, 
+    primer_nombre, 
+    primer_apellido, 
+    segundo_nombre, 
+    segundo_apellido FROM personas 
+    WHERE id=$1 `, [rowsUser.persona_id]);
+    return rows.rows[0];
+  });
+
+  const rowsCorreo = await db.execute(async (conn) =>{
+    const rows = await conn.query(`SELECT direccion
+     FROM correos WHERE usuarios_id=$1`, [id]);
+
+     return rows.rows[0].direccion;
+  });
+
+  if(rowsUser.roles_id === 2){
+   
+    const rowsEmpresa = await db.execute(async (conn) =>{
+      const rows = await conn.query(`SELECT
+      empresas.rif AS rif,
+      empresas.razon_social FROM reclutadores
+      INNER JOIN empresas ON (empresas.id = reclutadores.empresas_id)
+      WHERE reclutadores.usuarios_id=$1`, [rowsUser.id]);
+
+      return rows.rows[0];
+    });
+
+    return {
+      persona: rowsPerson,
+      usuario: rowsUser,
+      correo: rowsCorreo,
+      empresa: rowsEmpresa,};
+  }
+
+  return {
+    persona: rowsPerson,
+    usuario: rowsUser,
+    correo: rowsCorreo,};
 };
 
 exports.readUserTable = async (id) => {
