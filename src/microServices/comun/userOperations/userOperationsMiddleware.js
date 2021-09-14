@@ -21,7 +21,7 @@ exports.requiredFieldsReactivate = async (req, res, next) =>{
     'identificacion',
     'direccion']
 
-  const fill = utils.requiredFields( requiredInputs, body);
+  const fill = utils.requiredFields({requiredInputs, body});
 
   if(fill.length > 0){
     response.warning_required_fields(res,fill);
