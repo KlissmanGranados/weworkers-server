@@ -1,8 +1,6 @@
 const {snakeToCamelObject} = require('../utils')
 const makeResponse = (message, data)=>{
-  data = data.length? data.map(value=>{
-    return (snakeToCamelObject(value));
-  }):snakeToCamelObject(data);
+  data = snakeToCamelObject(data);
   return ({message, data});
 };
 /**

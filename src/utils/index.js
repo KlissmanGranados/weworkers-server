@@ -46,16 +46,30 @@ const snakeToCamel = (str) =>
     .replace('-', '')
     .replace('_', '')
   );
+
 /**
  * @description Recibe un objeto y cambia sus keys a camelCase
- * @param{Object} object
+ * @param{Object} object , tiene que ser maximo abuelo
  */
-
-exports.snakeToCamelObject = (object) => {
-  const table = Object.entries(object);
-  const regex = /_/g;
-  return Object.fromEntries(table.map((object)=>{
-    const [key,value] = object;
-    return [regex.test(key)?snakeToCamel(key):key,value];
-  }))
+const snakeToCamelObject = (object) => {
+  if(!object || typeof object != 'object'){
+    return object
+  }
+  if(object.length ){
+    return object.map( entrie => snakeToCamelObject(entrie) );
+  }
+  const entries = Object.entries(object);
+  const regex = /_/;
+  return Object.fromEntries(
+    entries.map((entrie)=>{
+      let [key,value] = entrie;
+      if(typeof value === 'object'){
+        value = snakeToCamelObject(value);
+      }
+      key = regex.test(key)? snakeToCamel(key):key;
+      return [key,value];
+    })
+  )
 }
+
+exports.snakeToCamelObject = snakeToCamelObject;
