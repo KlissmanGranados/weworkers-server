@@ -40,11 +40,11 @@ exports.checkIntegers = (value) => {
  * @return {string}
  */
 const snakeToCamel = (str) =>
-  str.toLowerCase().replace(/([-_][a-z])/g, group =>
+  str.toLowerCase().replace(/([-_][a-z])/g, (group) =>
     group
-    .toUpperCase()
-    .replace('-', '')
-    .replace('_', '')
+        .toUpperCase()
+        .replace('-', '')
+        .replace('_', ''),
   );
 
 /**
@@ -52,24 +52,24 @@ const snakeToCamel = (str) =>
  * @param{Object} object
  */
 const snakeToCamelObject = (object) => {
-  if(!object || typeof object != 'object'){
-    return object
+  if (!object || typeof object != 'object') {
+    return object;
   }
-  if(object.length ){
-    return object.map( entrie => snakeToCamelObject(entrie) );
+  if (object.length ) {
+    return object.map( (entrie) => snakeToCamelObject(entrie) );
   }
   const entries = Object.entries(object);
   const regex = /_/;
   return Object.fromEntries(
-    entries.map((entrie)=>{
-      let [key,value] = entrie;
-      if(typeof value === 'object'){
-        value = snakeToCamelObject(value);
-      }
-      key = regex.test(key)? snakeToCamel(key):key;
-      return [key,value];
-    })
-  )
-}
+      entries.map((entrie)=>{
+        let [key, value] = entrie;
+        if (typeof value === 'object') {
+          value = snakeToCamelObject(value);
+        }
+        key = regex.test(key)? snakeToCamel(key):key;
+        return [key, value];
+      }),
+  );
+};
 
 exports.snakeToCamelObject = snakeToCamelObject;

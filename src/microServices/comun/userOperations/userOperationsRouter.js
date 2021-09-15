@@ -7,8 +7,8 @@ module.exports = [
     url: '/persona/:id',
     handler: userOperationsService.updatePerson,
     middelwares: [
-       userOperationsMiddleware.requiredFieldsPerson,
-       userOperationsMiddleware.DTOPerson],
+      userOperationsMiddleware.requiredFieldsPerson,
+      userOperationsMiddleware.updatePerson],
   },
   {
     method: 'get',

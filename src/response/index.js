@@ -1,4 +1,4 @@
-const {snakeToCamelObject} = require('../utils')
+const {snakeToCamelObject} = require('../utils');
 const makeResponse = (message, data)=>{
   data = snakeToCamelObject(data);
   return ({message, data});

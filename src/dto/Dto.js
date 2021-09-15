@@ -10,7 +10,7 @@ class Dto {
    *   clave:valor,
    *   clave:valor, ...
    *  }
-   * @param {Objet} body
+   * @param {Object} body
    * @return void
    */
   loadData(body) {
@@ -22,7 +22,7 @@ class Dto {
 
     attributesBody.forEach((attribute) => {
       const [key, value] = attribute;
-      if (attributesClass.indexOf(key) >= 0 && value) {
+      if (attributesClass.indexOf(key) >= 0 && (value || value === null)) {
         this[key] = value;
       }
     });
@@ -35,8 +35,8 @@ class Dto {
    */
   toArray() {
     return Object.values(this)
-    .filter((value) =>
-      typeof value != 'undefined');
+        .filter((value) =>
+          typeof value != 'undefined');
   }
 
   /**
@@ -71,8 +71,8 @@ class Dto {
     attributes.forEach((attribute, index) => {
       if (this[attribute] || this[attribute] === null) {
         columns.push(
-          attribute.replace(/[A-Z]/g, (letter) =>
-            `_${letter.toLowerCase()}`),
+            attribute.replace(/[A-Z]/g, (letter) =>
+              `_${letter.toLowerCase()}`),
         );
       }
     });

@@ -1,12 +1,7 @@
 const {db} = require('../../../../index');
 const User = require('../DTO/User');
-/**
- * TODO la logica de negocio va para el servicio
- * TODO el DTO se carga desde el middleware
- * */
 
 exports.readProfile = async (id) => {
-
   const rowsProfile = await db.execute(async (conn) => {
     const rows = await conn.query(`SELECT 
       usuarios.id, 
@@ -28,8 +23,7 @@ exports.readProfile = async (id) => {
     return rows.rows[0];
   });
 
-  if(rowsProfile.roles_id === 2){
-   
+  if (rowsProfile.roles_id === 2) {
     const rowsEmpresa = await db.execute(async (conn) =>{
       const rows = await conn.query(`SELECT
       empresas.rif AS rif,
@@ -42,7 +36,7 @@ exports.readProfile = async (id) => {
 
     return {
       perfil: rowsProfile,
-      empresa: rowsEmpresa,};
+      empresa: rowsEmpresa};
   }
 
   return {
@@ -51,13 +45,11 @@ exports.readProfile = async (id) => {
 };
 
 exports.readUserTable = async (id) => {
-  const row = await db.execute(async (conn) =>{
+  return db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT id, usuario, roles_id, estado
     FROM usuarios WHERE id=$1`, [id]);
     return rows.rows[0];
   });
-
-  return row;
 };
 
 const usernameExists = async (username) =>{
@@ -72,15 +64,15 @@ const usernameExists = async (username) =>{
 };
 
 exports.updateUserTable = async (params, password) => {
-  const user = new User(params.id, params.usuario, password);
 
+  const user = new User(params.id, params.usuario, password);
   const checkUsername = await usernameExists(user.usuario);
 
   if (checkUsername) {
     return false;
   }
 
-  const update = await db.execute(async (conn) =>{
+  return db.execute(async (conn) =>{
     const sql = {
       text: `UPDATE usuarios
       SET usuario=$2, clave=$3 WHERE id=$1`,
@@ -88,29 +80,24 @@ exports.updateUserTable = async (params, password) => {
     };
 
     const row = await conn.query(sql);
-
-    return true;
+    return row.rowCount > 0;
   });
 
-  return update;
 };
 
-exports.identificacionIsRepeated = async (tipo, identificacion, id) =>{
+exports.identificacionIsRepeated = async (tipo, identificacion,id) =>{
   const check = await db.execute(async (conn) =>{
     const row = await conn.query(`SELECT id FROM personas 
       WHERE id_tipo_identificacion=$1 
       AND identificacion=$2 AND id!=$3`, [tipo, identificacion, id]);
-
     return row.rowCount;
   });
-
   return check !== 0;
 };
 
 exports.updatePersonTable = async (params) => {
-
-  const update = await db.execute(async (conn) =>{
-    const sql = {
+  return db.execute(async (conn) =>{
+    const updatePersonSql = {
       text: `UPDATE personas
         SET id_tipo_identificacion=$2, 
         identificacion=$3, 
@@ -121,17 +108,12 @@ exports.updatePersonTable = async (params) => {
         WHERE id=$1`,
       values: params,
     };
-
-    const row = await conn.query(sql);
-
-    return true;
+    const row = await conn.query(updatePersonSql);
+    return row.rowCount > 0;
   });
-
-  return update;
 };
 
 exports.deactivateUser = async (id) => {
-
   const check = await db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT estado 
       FROM usuarios WHERE id=$1`, [id]);
@@ -141,15 +123,13 @@ exports.deactivateUser = async (id) => {
 
   if (!check.estado) return false;
 
-  const update = await db.execute(async (conn) =>{
+ return  db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
       SET estado=$1
       WHERE id=$2`, [!check.estado, id]);
 
-    return true;
+    return rows.rowCount > 0;
   });
-
-  return update;
 };
 
 exports.reactivateUser = async (params) => {
@@ -172,20 +152,17 @@ exports.reactivateUser = async (params) => {
     check.clave != params.clave,
     check.id_tipo_identificacion != params.id_tipo_identificacion,
     check.identificacion != params.identificacion,
-    check.direccion != params.direccion
+    check.direccion != params.direccion,
   ];
 
-  if (!conditions.every(item => item === false)) {
+  if (!conditions.every((item) => item === false)) {
     return false;
-  } 
+  }
 
-  const update = await db.execute(async (conn) =>{
+  return db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
       SET estado=$1
       WHERE id=$2`, [!check.estado, params.id]);
-
-    return true;
+    return rows.rowCount > 0;
   });
-
-  return update;
 };
