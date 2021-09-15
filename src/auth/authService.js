@@ -57,7 +57,7 @@ exports.regedit = async (req, res)=>{
   const chekIdentificationType = await authRepository.getTipoIdentificacion(
       auth.persona.idTipoIdentificacion,
   );
-  if (chekIdentificationType.length == 0) {
+  if (!chekIdentificationType) {
     response.warning_identification_not_found(res);
     return;
   }

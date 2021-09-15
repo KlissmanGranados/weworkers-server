@@ -21,60 +21,48 @@ exports.login = async (paramns) => {
   });
 };
 /**
- * @param {BigInteger}id
+ * @description Consulta los roles o selecciona alguno
+ * @param {BigInteger}id : Opcional
  * @return {Rol}
- *
  */
 exports.getRolesById = async (id = null)=>{
-  if (!id) {
-    const rows = await db.execute(async (conn) => {
-      const rows = await conn.query(`SELECT id, nombre FROM roles `);
-      return rows.rows;
-    });
-
-    return rows;
-  }
-  return db.execute( async (conn) => {
-    const sqlRoles = {
-      text: `SELECT 
-               id, nombre 
-             FROM roles WHERE id=$1`,
-      values: [id],
-    };
-    const rows = await conn.query(sqlRoles);
-    return rows.rows[0];
+  return db.execute(async (conn) => {
+    if(!id){
+      return (await conn.query(
+        `SELECT id, nombre FROM roles `
+      )).rows;
+    }
+    return (await conn.query(
+      `SELECT 
+             id, nombre 
+             FROM roles WHERE id=$1`,[id]
+     )).rows[0];
   });
 
 };
 
 /**
- *
+ * @description selecciona o lista los tipos de identificaciones
  * @param {BigInteger}id
  * @return {Array}
  *
  */
 exports.getTipoIdentificacion = async (id = null) =>{
-  if (!id) {
     return db.execute(async (conn) =>{
-      const rows = await conn.query(
+      if(!id){
+        return (await conn.query(
           `SELECT id, tipo FROM tipos_identificacion`,
-      );
-      return rows.rows;
+        )).rows;
+      }
+      return (await conn.query(
+        `SELECT id, tipo FROM tipos_identificacion WHERE id=$1`,
+        [id]
+      )).rows[0];
     });
-  }
-
-  return db.execute(async (conn) => {
-    const sqlTipoIdentificacion = {
-      text: `SELECT id, tipo FROM tipos_identificacion WHERE id=$1`,
-      values: [id],
-    };
-    const rows = await conn.query(sqlTipoIdentificacion);
-    return rows.rows;
-  });
 };
 
 /**
- *
+ * @description verifica la disponibilidad de una identificacion
  * @param{BigInteger} idTipo
  * @param{String} identificacion
  * @return {Promise<[]>}
@@ -82,10 +70,9 @@ exports.getTipoIdentificacion = async (id = null) =>{
 exports.checkIdentificacion = async (idTipo,
     identificacion) => {
   return db.execute(async (conn) => {
-    const result = await conn.query(`SELECT id FROM personas WHERE 
+    return (await conn.query(`SELECT id FROM personas WHERE 
             id_tipo_identificacion=$1 AND identificacion=$2`
-    , [idTipo, identificacion]);
-    return result.rows;
+    , [idTipo, identificacion])).rows;
   });
 };
 /**
@@ -95,11 +82,10 @@ exports.checkIdentificacion = async (idTipo,
  */
 exports.getEmail = async (email) => {
   return db.execute(async (conn) =>{
-    const results = await conn.query(
-        `SELECT id FROM correos WHERE direccion = $1`,
-        [email],
-    );
-    return results.rows;
+    return (await conn.query(
+      `SELECT id FROM correos WHERE direccion = $1`,
+      [email],
+    )).rows;
   });
 };
 /**
@@ -109,9 +95,9 @@ exports.getEmail = async (email) => {
  */
 exports.getUsuario = async (usuario) => {
   return db.execute(async (conn) => {
-    const results = await conn.query(
-        `SELECT * FROM usuarios where usuario = $1`, [usuario]);
-    return results.rows;
+   return(await conn.query(
+        `SELECT * FROM usuarios where usuario = $1`, 
+        [usuario])).rows;
   });
 };
 /**
