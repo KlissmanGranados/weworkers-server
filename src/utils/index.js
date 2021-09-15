@@ -49,7 +49,7 @@ const snakeToCamel = (str) =>
 
 /**
  * @description Recibe un objeto y cambia sus keys a camelCase
- * @param{Object} object , tiene que ser maximo abuelo
+ * @param{Object} object
  */
 const snakeToCamelObject = (object) => {
   if(!object || typeof object != 'object'){
