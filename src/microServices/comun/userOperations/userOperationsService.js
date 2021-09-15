@@ -5,14 +5,6 @@ const userOperationsRepository = require('./userOperationsRepository');
  * TODO usar archivo response
  * **/
 
-exports.readPerson = async (req, res) =>{
-  const {id} = req.params;
-
-  const person = await userOperationsRepository.readPersonTable(id);
-
-  response.success(res, person);
-};
-
 exports.readUser = async (req, res) => {
   const {id} = req.params;
 
@@ -21,7 +13,32 @@ exports.readUser = async (req, res) => {
   response.success(res, user);
 };
 
-exports.updatePerson = async (req, res) => {};
+exports.updatePerson = async (req, res) => {
+  const persona = req.body;
+
+  const check = await userOperationsRepository.identificacionIsRepeated(
+    persona._idTipoIdentificacion,
+    persona._identificacion,
+    req.params.id);
+
+  if (check) {
+    response.error(res);
+    return;
+  }
+
+  const data = persona.toArray();
+  data.unshift(req.params.id);
+
+  const update = await userOperationsRepository.updatePersonTable(data);
+
+  if(update){
+    response.success(res);
+    return;
+  }
+
+  response.error(res);
+
+};
 
 exports.updateUser = async (req, res) => {};
 

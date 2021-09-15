@@ -2,20 +2,13 @@ const userOperationsMiddleware = require('./userOperationsMiddleware');
 const userOperationsService = require('./userOperationsService');
 
 module.exports = [
-  /**
-   * TODO cambiar metodos de rutas : post, put, get ...
-   */
-  {
-    method: 'get',
-    url: '/persona/:id',
-    handler: userOperationsService.readPerson,
-    middelwares: [],
-  },
   {
     method: 'put',
-    url: '/persona',
+    url: '/persona/:id',
     handler: userOperationsService.updatePerson,
-    middelwares: [],
+    middelwares: [
+       userOperationsMiddleware.requiredFieldsPerson,
+       userOperationsMiddleware.DTOPerson],
   },
   {
     method: 'get',

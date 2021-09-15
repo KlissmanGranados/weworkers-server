@@ -1,6 +1,5 @@
 const {db} = require('../../../../index');
 const User = require('../DTO/User');
-const Person = require('../DTO/Person');
 /**
  * TODO la logica de negocio va para el servicio
  * TODO el DTO se carga desde el middleware
@@ -96,26 +95,11 @@ exports.updateUserTable = async (params, password) => {
   return update;
 };
 
-exports.readPersonTable = async (id) => {
-  const row = await db.execute(async (conn) =>{
-    const rows = await conn.query(`SELECT id_tipo_identificacion,
-     identificacion,
-     primer_nombre, 
-     primer_apellido, 
-     segundo_nombre, 
-     segundo_apellido
-    FROM personas WHERE id=$1`, [id]);
-    return rows.rows[0];
-  });
-
-  return row;
-};
-
-const identificacionExists = async (tipo, identificacion) =>{
+exports.identificacionIsRepeated = async (tipo, identificacion, id) =>{
   const check = await db.execute(async (conn) =>{
-    const row = conn.query(`SELECT id FROM personas 
+    const row = await conn.query(`SELECT id FROM personas 
       WHERE id_tipo_identificacion=$1 
-      AND identificacion=$2`, [tipo, identificacion]);
+      AND identificacion=$2 AND id!=$3`, [tipo, identificacion, id]);
 
     return row.rowCount;
   });
@@ -124,21 +108,6 @@ const identificacionExists = async (tipo, identificacion) =>{
 };
 
 exports.updatePersonTable = async (params) => {
-  const person = new Person(params.id,
-      params.id_tipo_identificacion,
-      params.identificacion,
-      params.primer_nombre,
-      params.segundo_nombre,
-      params.primer_apellido,
-      params.segundo_apellido);
-
-  const checkIdentificacion = await identificacionExists(
-      person.id_tipo_identificacion,
-      person.identificacion);
-
-  if (checkIdentificacion) {
-    return false;
-  }
 
   const update = await db.execute(async (conn) =>{
     const sql = {
@@ -150,7 +119,7 @@ exports.updatePersonTable = async (params) => {
         segundo_nombre=$6, 
         segundo_apellido=$7
         WHERE id=$1`,
-      values: Object.values(person),
+      values: params,
     };
 
     const row = await conn.query(sql);
