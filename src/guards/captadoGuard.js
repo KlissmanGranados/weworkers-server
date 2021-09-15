@@ -9,7 +9,7 @@ module.exports = [
    * @param{NextFunction} next
    */
   (req, res, next)=>{
-    if (req.user.usuario._rolesId != 1) {
+    if (req.user.rolesid !== 1) {
       response.forbidden(res);
       return;
     }

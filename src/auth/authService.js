@@ -99,7 +99,11 @@ exports.regedit = async (req, res)=>{
   const regedit = await authRepository.insertUsuario(auth);
 
   if (regedit) {
-    response.success(res, makeToken({idUsuario: auth.usuario.id}));
+    response.success(res, makeToken({
+      idusuario: auth.usuario.id,
+      rolesid: auth.usuario.rolesId,
+      estado: auth.usuario.estado
+    }));
   } else {
     response.error(res);
   }

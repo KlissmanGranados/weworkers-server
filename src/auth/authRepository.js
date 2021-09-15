@@ -9,7 +9,9 @@ exports.login = async (paramns) => {
   return db.execute(async (conn) => {
     const sqlLogin = {
       text: `SELECT 
-              usuarios.id as idUsuario
+              usuarios.id as idUsuario,
+              usuarios.roles_id as rolesId,
+              usuarios.estado as estado
             FROM usuarios 
               where usuarios.usuario=$1 and usuarios.clave=$2`,
       values: [paramns.usuario, paramns.clave],
@@ -101,7 +103,7 @@ exports.getEmail = async (email) => {
   });
 };
 /**
- *
+ *@description consulta un usuario en la base de datos
  * @param{String} usuario
  * @return {Promise<[]>}
  */
