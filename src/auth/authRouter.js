@@ -26,7 +26,7 @@ module.exports = [
   },
   {
     method: 'get',
-    url: '/tiposIdentificacion/:id?',
+    url: '/tipos-identificacion/:id?',
     handler: authService.getIposIdentificacion,
     middelwares: [],
   },

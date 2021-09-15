@@ -1,0 +1,86 @@
+### Iniciar sessión
+
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "kg3",
+  "clave": "1234"
+}
+
+### Registrar un captador
+
+POST http://localhost:3000/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "27056027",
+    "primerNombre": "klissman",
+    "segundoNombre": "",
+    "primerApellido": "granados",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "1"
+  },
+  "usuario": {
+    "usuario": "kg3",
+    "clave": "1234",
+    "rolesId": "2"
+  },
+  "empresa": {
+    "rif": "1231",
+    "razonSocial": "POLAR"
+  },
+  "correo": {
+    "direccion": "kg3@gmail.com"
+  }
+}
+
+### Registrar un captado
+ 
+POST http://localhost:3000/api/v1/auth/registrar
+Content-Type: application/json
+
+{
+  "persona": {
+    "identificacion": "27056027",
+    "primerNombre": "klissman",
+    "segundoNombre": "",
+    "primerApellido": "granados",
+    "segundoApellido": "",
+    "idTipoIdentificacion": "1"
+  },
+  "usuario": {
+    "usuario": "kg3",
+    "clave": "1234",
+    "rolesId": "1"
+  },
+  "correo": {
+    "direccion": "kg3@gmail.com"
+  }
+}
+
+### Mostrar las rutas 
+
+GET http://localhost:3000/api/v1/public/listar-rutas
+Accept: application/json
+
+### Listar roles 
+
+GET http://localhost:3000/api/v1/auth/roles/
+Accept: application/json
+
+### Seleccionar un rol
+
+GET http://localhost:3000/api/v1/auth/roles/1
+Accept: application/json
+
+### Listar los tipos de identificacion
+
+GET http://localhost:3000/api/v1/auth/tipos-identificacion/
+Accept: application/json
+
+### Seleccionar un tipo de identificacion
+
+GET http://localhost:3000/api/v1/auth/tipos-identificacion/2
+Accept: application/json

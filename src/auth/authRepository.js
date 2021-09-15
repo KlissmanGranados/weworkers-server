@@ -32,8 +32,7 @@ exports.getRolesById = async (id = null)=>{
 
     return rows;
   }
-
-  const rows = await db.execute( async (conn) => {
+  return db.execute( async (conn) => {
     const sqlRoles = {
       text: `SELECT 
                id, nombre 
@@ -44,7 +43,6 @@ exports.getRolesById = async (id = null)=>{
     return rows.rows[0];
   });
 
-  return rows;
 };
 
 /**
@@ -55,16 +53,15 @@ exports.getRolesById = async (id = null)=>{
  */
 exports.getTipoIdentificacion = async (id = null) =>{
   if (!id) {
-    const rows = await db.execute(async (conn) =>{
+    return db.execute(async (conn) =>{
       const rows = await conn.query(
           `SELECT id, tipo FROM tipos_identificacion`,
       );
       return rows.rows;
     });
-    return rows;
   }
 
-  const rows = await db.execute(async (conn) => {
+  return db.execute(async (conn) => {
     const sqlTipoIdentificacion = {
       text: `SELECT id, tipo FROM tipos_identificacion WHERE id=$1`,
       values: [id],
@@ -72,8 +69,6 @@ exports.getTipoIdentificacion = async (id = null) =>{
     const rows = await conn.query(sqlTipoIdentificacion);
     return rows.rows;
   });
-
-  return rows;
 };
 
 /**
