@@ -44,7 +44,7 @@ class Persona extends Dto {
   }
 
   set primerNombre(value) {
-    this._primerNombre = value.toLowerCase();
+    this._primerNombre = value?value.toLowerCase():value;
   }
 
   get primerApellido() {
@@ -52,7 +52,7 @@ class Persona extends Dto {
   }
 
   set primerApellido(value) {
-    this._primerApellido = value.toLowerCase();
+    this._primerApellido = value?value.toLowerCase():value;
   }
 
   get segundoNombre() {
@@ -60,7 +60,7 @@ class Persona extends Dto {
   }
 
   set segundoNombre(value) {
-    this._segundoNombre = value.toLowerCase();
+    this._segundoNombre = value?value.toLowerCase():value;
   }
 
   get segundoApellido() {
@@ -68,7 +68,7 @@ class Persona extends Dto {
   }
 
   set segundoApellido(value) {
-    this._segundoApellido = value.toLowerCase();
+    this._segundoApellido = value?value.toLowerCase():value;
   }
 }
 module.exports = Persona;
