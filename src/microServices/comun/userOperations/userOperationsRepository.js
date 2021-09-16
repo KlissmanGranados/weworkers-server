@@ -102,7 +102,7 @@ exports.identificacionIsRepeated = async (tipo, identificacion,id) =>{
       AND identificacion=$2 AND id!=$3`, [tipo, identificacion, id]);
     return row.rowCount;
   });
-  console.log(check)
+  
   return check !== 0;
 };
 
