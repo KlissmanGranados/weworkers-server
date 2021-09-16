@@ -1,4 +1,5 @@
 const {Persona} = require('../../../dto');
+const {Usuario} = require('../../../dto');
 const response = require('../../../response');
 const utils = require('../../../utils');
 
@@ -36,10 +37,9 @@ exports.requiredFieldsReactivate = async (req, res, next) =>{
   const body = req.body;
 
   const requireInputs = [
-    'id',
     'usuario',
     'clave',
-    'id_tipo_identificacion',
+    'idTipoIdentificacion',
     'identificacion',
     'direccion'];
 

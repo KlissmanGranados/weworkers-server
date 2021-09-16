@@ -19,12 +19,13 @@ exports.readUser = async (req, res) => {
  */
 exports.updatePerson = async (req, res) => {
   const persona = req.body;
+
   // verificar si la identificación está en uso por un usuario distinto
   const identificationInUse = await userOperationsRepository
   .identificacionIsRepeated(
       persona.idTipoIdentificacion,
       persona.identificacion,
-      req.params.id
+      req.user.idusuario
   );
   if (identificationInUse) {
     response.warning_identification_not_available(res,persona.identificacion);
@@ -32,11 +33,11 @@ exports.updatePerson = async (req, res) => {
   }
 
   const data = persona.toArray();
-  data.unshift(req.params.id);
+  data.unshift(req.user.idusuario);
   const update = await userOperationsRepository.updatePersonTable(data);
 
   if (update) {
-    response.success(res,req.params.id);
+    response.success(res,req.user.idusuario);
     return;
   }
   response.error(res);
@@ -51,7 +52,15 @@ exports.updateUser = async (req, res) => {};
  * @return {Promise<void>}
  */
 exports.deactivateUser = async (req, res) => {
-  const {id} = req.params;
+  const id = req.user.idusuario;
+
+  const checkState = await userOperationsRepository.stateIsTrue(id);
+
+  if(!checkState){
+    response.error(res);
+    return;
+  }
+
   const deactivate = await userOperationsRepository.deactivateUser(id);
 
   if (deactivate) {
@@ -70,7 +79,25 @@ exports.deactivateUser = async (req, res) => {
 exports.reactivateUser = async (req, res) => {
   const params = req.body;
 
-  const reactivate = await userOperationsRepository.reactivateUser(params);
+
+  const check = await userOperationsRepository.selectUser(req.user.idusuario);
+
+  const conditions = [
+    check.estado,
+    check.usuario != params.usuario,
+    check.clave != params.clave,
+    check.id_tipo_identificacion != params.idTipoIdentificacion,
+    check.identificacion != params.identificacion,
+    check.direccion != params.direccion,
+  ];
+
+  if (!conditions.every((item) => item === false)) {
+    response.error(res);
+    return;
+  }
+
+  const reactivate = await userOperationsRepository
+  .reactivateUser(req.user.idusuario);
 
   if (reactivate) {
     response.success(res);

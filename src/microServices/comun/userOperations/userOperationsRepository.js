@@ -1,5 +1,4 @@
 const {db} = require('../../../../index');
-const User = require('../DTO/User');
 const {getUsuario} = require('../../../auth/../auth/authRepository');
 /**
  * @description Consulta los datos de un perfil
@@ -69,8 +68,6 @@ exports.updateUserTable = async (params, password) => {
    * TODO los dtos se tratan desde el middleware
    */
 
-  const user = new User(params.id, params.usuario, password);
-
   /** 
    * TODO esto es LOGICA DE NEGOCIO, exportando funcion como modulo
    * 
@@ -97,9 +94,10 @@ exports.updateUserTable = async (params, password) => {
 
 exports.identificacionIsRepeated = async (tipo, identificacion,id) =>{
   const check = await db.execute(async (conn) =>{
-    const row = await conn.query(`SELECT id FROM personas 
+    const row = await conn.query(`SELECT personas.id FROM personas 
+      INNER JOIN usuarios ON (usuarios.persona_id=personas.id)
       WHERE id_tipo_identificacion=$1 
-      AND identificacion=$2 AND id!=$3`, [tipo, identificacion, id]);
+      AND identificacion=$2 AND usuarios.id!=$3`, [tipo, identificacion, id]);
     return row.rowCount;
   });
   
@@ -117,7 +115,8 @@ exports.updatePersonTable = async (params) => {
         primer_apellido=$5, 
         segundo_nombre=$6, 
         segundo_apellido=$7
-        WHERE id=$1`,
+        FROM usuarios 
+        WHERE usuarios.id=$1 AND usuarios.persona_id = personas.id;`,
       values: params,
     };
     const row = await conn.query(updatePersonSql);
@@ -126,22 +125,10 @@ exports.updatePersonTable = async (params) => {
 };
 
 exports.deactivateUser = async (id) => {
-  
-  /** 
-    TODO esto es LOGICA DE NEGOCIO 
-
-  const check = db.execute(async (conn) =>{
-    const rows = await conn.query(`SELECT estado 
-      FROM usuarios WHERE id=$1`, [id]);
-    return rows.rows[0];
-  });
-  if (!check.estado) return false;
-  
-  */
  return  db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
       SET estado=$1
-      WHERE id=$2`, [!check.estado, id]);
+      WHERE id=$2`, [false, id]);
 
     return rows.rowCount > 0;
   });
@@ -151,41 +138,35 @@ exports.deactivateUser = async (id) => {
  * @param {Object} params 
  * @returns 
  */
-exports.reactivateUser = async (params) => {
+exports.reactivateUser = async (id) => {
 
-  /** 
-    TODO esto es logica de negocio 
+  return db.execute(async (conn) =>{
+    const rows = await conn.query(`UPDATE usuarios
+      SET estado=$1
+      WHERE id=$2`, [true, id]);
+    return rows.rowCount > 0;
+  });
+};
 
-  const check = await db.execute(async (conn) =>{
+exports.selectUser = async (id) =>{
+
+  return db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT usuarios.usuario ,
      usuarios.clave , usuarios.estado ,
     personas.id_tipo_identificacion , personas.identificacion ,
     correos.direccion FROM usuarios
      INNER JOIN personas ON (usuarios.persona_id = personas.id)
     INNER JOIN correos on (correos.usuarios_id = usuarios.id)
-     WHERE usuarios.id =$1;`, [params.id]);
+     WHERE usuarios.id =$1;`, [id]);
 
     return rows.rows[0];
   });
+};
 
-  const conditions = [
-    check.estado,
-    check.usuario != params.usuario,
-    check.clave != params.clave,
-    check.id_tipo_identificacion != params.id_tipo_identificacion,
-    check.identificacion != params.identificacion,
-    check.direccion != params.direccion,
-  ];
-
-  if (!conditions.every((item) => item === false)) {
-    return false;
-  }
-  */
-
+exports.stateIsTrue = async (id) =>{
   return db.execute(async (conn) =>{
-    const rows = await conn.query(`UPDATE usuarios
-      SET estado=$1
-      WHERE id=$2`, [!check.estado, params.id]);
-    return rows.rowCount > 0;
+    const rows = await conn.query(`SELECT estado 
+      FROM usuarios WHERE id=$1`, [id]);
+    return rows.rows[0].estado;
   });
 };

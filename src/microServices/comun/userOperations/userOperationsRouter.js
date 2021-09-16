@@ -4,17 +4,11 @@ const userOperationsService = require('./userOperationsService');
 module.exports = [
   {
     method: 'put',
-    url: '/persona/:id',
+    url: '/persona',
     handler: userOperationsService.updatePerson,
     middelwares: [
       userOperationsMiddleware.requiredFieldsPerson,
       userOperationsMiddleware.updatePerson],
-  },
-  {
-    method: 'get',
-    url: '/usuario/:id',
-    handler: userOperationsService.readUser,
-    middelwares: [],
   },
   {
     method: 'put',
@@ -24,7 +18,7 @@ module.exports = [
   },
   {
     method: 'get',
-    url: '/desactivar-usuario/:id',
+    url: '/desactivar-usuario',
     handler: userOperationsService.deactivateUser,
     middelwares: [],
   },
