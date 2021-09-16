@@ -96,14 +96,16 @@ exports.updateUserTable = async (params, password) => {
 };
 
 exports.identificacionIsRepeated = async (tipo, identificacion,id) =>{
-  const check = db.execute(async (conn) =>{
+  const check = await db.execute(async (conn) =>{
     const row = await conn.query(`SELECT id FROM personas 
       WHERE id_tipo_identificacion=$1 
       AND identificacion=$2 AND id!=$3`, [tipo, identificacion, id]);
     return row.rowCount;
   });
+  console.log(check)
   return check !== 0;
 };
+
 
 exports.updatePersonTable = async (params) => {
   return db.execute(async (conn) =>{

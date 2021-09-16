@@ -35,6 +35,8 @@ exports.updatePerson = async (req, res) => {
   data.unshift(req.params.id);
   const update = await userOperationsRepository.updatePersonTable(data);
 
+  console.log(update);
+
   if (update) {
     response.success(res,req.params.id);
     return;
