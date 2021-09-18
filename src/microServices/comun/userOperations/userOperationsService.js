@@ -43,7 +43,36 @@ exports.updatePerson = async (req, res) => {
   response.error(res);
 };
 
-exports.updateUser = async (req, res) => {};
+exports.updateUser = async (req, res) => {
+
+  const user = req.body;
+
+  const checkUsername = await userOperationsRepository.usernameExists(req.user.idusuario, user.usuario);
+
+  if (checkUsername) {
+    response.error(res);
+    return;
+  }
+
+  const checkPassword = await userOperationsRepository.checkPassword(req.user.idusuario, user.claveVieja);
+
+  if(!checkPassword){
+    response.error(res);
+    return;
+  }
+
+  const update = await userOperationsRepository.updateUserTable({
+    id:req.user.idusuario,
+    usuario: user.usuario,
+    clave: user.claveNueva});
+
+  if(update){
+    response.success(res);
+    return;
+  }
+
+  response.error(res);
+};
 
 /**
  * @description desactiva un usuario

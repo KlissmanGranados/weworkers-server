@@ -31,6 +31,21 @@ exports.updatePerson = (req, res, next) =>{
 
 exports.requiredFieldsUser = async (req, res, next) =>{
   const body = req.body;
+
+  const requireInputs = [
+    'usuario',
+    'claveVieja',
+    'claveNueva',
+  ];
+
+  const fill = utils.requiredFields({requireInputs, body});
+
+  if(fill.length > 0) {
+    response.warning_required_fields(res, fill);
+    return;
+  }
+
+  next();
 };
 
 exports.requiredFieldsReactivate = async (req, res, next) =>{

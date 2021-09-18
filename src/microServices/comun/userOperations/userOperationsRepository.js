@@ -46,44 +46,54 @@ exports.readProfile = async (id) => {
   });
 };
 
-exports.readUserTable = async (id) => {
-  return db.execute(async (conn) =>{
-    const rows = await conn.query(`SELECT id, usuario, roles_id, estado
-    FROM usuarios WHERE id=$1`, [id]);
-    return rows.rows[0];
-  });
-};
 /**
  * @description Verifica si un usario está disponible
  * @param {String} username 
  * @returns 
  */
+
+/*
+Esta función sirve para buscar si el usuario existe, pero 
+como puede pasar que se envía el mismo usuario sin modificar puede
+retornar true y no pasar la prueba, así que dejaré una versión que lo
+toma en cuenta.
+
 exports.usernameExists = async (username) =>{
   return (await getUsuario(username)).length !== 0;
 };
+*/
 
-exports.updateUserTable = async (params, password) => {
+exports.usernameExists = async (id, username) =>{
+  return db.execute(async (conn) =>{
+    const sql = {
+      text: `SELECT id FROM usuarios
+      WHERE id!=$1 AND usuario=$2`,
+      values: [id, username],
+    }
+    const row = await conn.query(sql);
+    return row.rowCount > 0;
+  });
+};
 
-  /**
-   * TODO los dtos se tratan desde el middleware
-   */
+exports.checkPassword = async (id, password) =>{
+  return db.execute(async (conn) =>{
+    const sql = {
+      text: `SELECT clave FROM usuarios
+      WHERE id=$1`,
+      values:[id],
+    }
+    const row = await conn.query(sql);
+    return row.rows[0].clave == password;
+  });
+};
 
-  /** 
-   * TODO esto es LOGICA DE NEGOCIO, exportando funcion como modulo
-   * 
-  const checkUsername = await usernameExists(user.usuario);
-
-  if (checkUsername) {
-    return false;
-  }
-
-  */
+exports.updateUserTable = async (params) => {
 
   return db.execute(async (conn) =>{
     const sql = {
       text: `UPDATE usuarios
       SET usuario=$2, clave=$3 WHERE id=$1`,
-      values: Object.values(user),
+      values: Object.values(params),
     };
 
     const row = await conn.query(sql);
