@@ -1,8 +1,8 @@
 /**
- * @class Dto
- * @description Defines las operaciones en comun para todos los Dto
+ * @class Entity
+ * @description Defines las operaciones en comun para todos los Entity
  */
-class Dto {
+class Entity {
   /**
    *
    * @param {Object} body
@@ -100,6 +100,6 @@ class Dto {
   }
 }
 
-module.exports = Dto;
+module.exports = Entity;
 
 

@@ -1,6 +1,6 @@
 const utils = require('../utils');
 const response = require('../response');
-const Auth = require('./authDTO/Auth');
+const Auth = require('./authEntities/Auth');
 
 exports.validityLogin = (req, res, next)=>{
   const requireInputs = ['usuario', 'clave'];

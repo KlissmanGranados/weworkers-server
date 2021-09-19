@@ -1,6 +1,6 @@
-const Dto = require('./Dto');
+const Entity = require('./Entity');
 
-class Persona extends Dto {
+class Persona extends Entity {
   _id;
   _idTipoIdentificacion;
   _identificacion;
