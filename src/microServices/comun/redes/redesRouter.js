@@ -6,6 +6,6 @@ module.exports = [
     method: 'post',
     url: '/red',
     handler: redesService.AssociateNetwork,
-    middelwares: [],
+    middelwares: redesMiddleware.AssociateNetwork,
   },
 ];
