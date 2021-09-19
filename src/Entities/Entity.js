@@ -1,17 +1,11 @@
 /**
- * @class Dto
- * @description Defines las operaciones en comun para todos los Dto
+ * @class Entity
+ * @description Defines las operaciones en comun para todos los Entity
  */
-class Dto {
+class Entity {
   /**
-   * @description Carga la data proporcionada y la setea en el objeto,
-   * Nota: El objeto proporcionado debe de tener el formato: {
-   *   clave:valor,
-   *   clave:valor,
-   *   clave:valor, ...
-   *  }
+   *
    * @param {Object} body
-   * @return void
    */
   loadData(body) {
     if (!body) {
@@ -41,8 +35,7 @@ class Dto {
 
   /**
    * @description verifica los campos obligatorios
-   * @type {Array}
-   * @param inputs
+   * @param {Array} inputs
    * @return { Array } Lista de los campos vacios
    */
   checkRequired(inputs) {
@@ -107,6 +100,6 @@ class Dto {
   }
 }
 
-module.exports = Dto;
+module.exports = Entity;
 
 

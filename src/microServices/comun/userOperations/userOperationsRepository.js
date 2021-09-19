@@ -1,12 +1,11 @@
 const {db} = require('../../../../index');
-const {getUsuario} = require('../../../auth/../auth/authRepository');
 /**
  * @description Consulta los datos de un perfil
- * @param {BigInt} id 
- * @returns 
+ * @param {BigInteger} id
+ * @return {Object}
  */
 exports.readProfile = async (id) => {
- return db.execute(async (conn) => {
+  return db.execute(async (conn) => {
     const rowsProfile = await conn.query(`SELECT 
       usuarios.id, 
       usuarios.usuario, 
@@ -24,12 +23,12 @@ exports.readProfile = async (id) => {
       INNER JOIN personas ON (usuarios.persona_id=personas.id)
       INNER JOIN correos ON (correos.usuarios_id=usuarios.id)
       WHERE usuarios.id=$1`, [id]);
-    
+
     const profile = rowsProfile.rows[0];
 
     // si el perfil es de un capatado
-    if(profile.roles_id === 1){
-      return{profile};
+    if (profile.roles_id === 1) {
+      return {perfil};
     }
     // si el perfil es de un captador
     const rowsBusiness = await conn.query(`SELECT
@@ -37,71 +36,65 @@ exports.readProfile = async (id) => {
     empresas.razon_social FROM reclutadores
     INNER JOIN empresas ON (empresas.id = reclutadores.empresas_id)
     WHERE reclutadores.usuarios_id=$1`, [profile.id]);
-    
-    return{
-      profile,
-      business:rowsBusiness.rows[0]
-    }
 
+    return {
+      perfil,
+      empresa: rowsBusiness.rows[0],
+    };
   });
 };
 
-exports.readUserTable = async (id) => {
-  return db.execute(async (conn) =>{
-    const rows = await conn.query(`SELECT id, usuario, roles_id, estado
-    FROM usuarios WHERE id=$1`, [id]);
-    return rows.rows[0];
-  });
-};
 /**
  * @description Verifica si un usario está disponible
- * @param {String} username 
- * @returns 
+ * @param {String} username
+ * @returns
  */
-exports.usernameExists = async (username) =>{
-  return (await getUsuario(username)).length !== 0;
+
+exports.usernameExists = async (id, username) =>{
+  return db.execute(async (conn) =>{
+    const sql = {
+      text: `SELECT id FROM usuarios
+      WHERE id!=$1 AND usuario=$2`,
+      values: [id, username],
+    };
+    const row = await conn.query(sql);
+    return row.rowCount > 0;
+  });
 };
 
-exports.updateUserTable = async (params, password) => {
+exports.checkPassword = async (id, password) =>{
+  return db.execute(async (conn) =>{
+    const sql = {
+      text: `SELECT clave FROM usuarios
+      WHERE id=$1`,
+      values: [id],
+    };
+    const row = await conn.query(sql);
+    return row.rows[0].clave == password;
+  });
+};
 
-  /**
-   * TODO los dtos se tratan desde el middleware
-   */
-
-  /** 
-   * TODO esto es LOGICA DE NEGOCIO, exportando funcion como modulo
-   * 
-  const checkUsername = await usernameExists(user.usuario);
-
-  if (checkUsername) {
-    return false;
-  }
-
-  */
-
+exports.updateUserTable = async (params) => {
   return db.execute(async (conn) =>{
     const sql = {
       text: `UPDATE usuarios
       SET usuario=$2, clave=$3 WHERE id=$1`,
-      values: Object.values(user),
+      values: Object.values(params),
     };
 
     const row = await conn.query(sql);
     return row.rowCount > 0;
   });
-
 };
 
-exports.identificacionIsRepeated = async (tipo, identificacion,id) =>{
-  const check = await db.execute(async (conn) =>{
+exports.identificacionIsRepeated = async (tipo, identificacion, id) =>{
+  return (db.execute(async (conn) =>{
     const row = await conn.query(`SELECT personas.id FROM personas 
       INNER JOIN usuarios ON (usuarios.persona_id=personas.id)
       WHERE id_tipo_identificacion=$1 
       AND identificacion=$2 AND usuarios.id!=$3`, [tipo, identificacion, id]);
     return row.rowCount;
-  });
-  
-  return check !== 0;
+  })) !== 0;
 };
 
 
@@ -125,7 +118,7 @@ exports.updatePersonTable = async (params) => {
 };
 
 exports.deactivateUser = async (id) => {
- return  db.execute(async (conn) =>{
+  return db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
       SET estado=$1
       WHERE id=$2`, [false, id]);
@@ -135,11 +128,10 @@ exports.deactivateUser = async (id) => {
 };
 /**
  * @description reactiva un usuario
- * @param {Object} params 
- * @returns 
+ * @param {BigInteger} id
+ * @return {Promise}
  */
 exports.reactivateUser = async (id) => {
-
   return db.execute(async (conn) =>{
     const rows = await conn.query(`UPDATE usuarios
       SET estado=$1
@@ -149,7 +141,6 @@ exports.reactivateUser = async (id) => {
 };
 
 exports.selectUser = async (id) =>{
-
   return db.execute(async (conn) =>{
     const rows = await conn.query(`SELECT usuarios.usuario ,
      usuarios.clave , usuarios.estado ,

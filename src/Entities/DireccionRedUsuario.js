@@ -1,6 +1,6 @@
-const Dto = require('./Dto');
+const Entity = require('./Entity');
 
-class DireccionRedUsuario extends Dto{
+class DireccionRedUsuario extends Entity{
 
   _id;
   _redesDireccionesId;

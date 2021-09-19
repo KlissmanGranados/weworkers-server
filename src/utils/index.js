@@ -36,7 +36,7 @@ exports.checkIntegers = (value) => {
 };
 /**
  * @description Convierte un string snake case a camelCase
- * @param str
+ * @param {String} str
  * @return {string}
  */
 const snakeToCamel = (str) =>
@@ -49,7 +49,8 @@ const snakeToCamel = (str) =>
 
 /**
  * @description Recibe un objeto y cambia sus keys a camelCase
- * @param{Object} object
+ * @param {Object} object
+ * @return {Object}
  */
 const snakeToCamelObject = (object) => {
   if (!object || typeof object != 'object') {

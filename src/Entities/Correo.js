@@ -1,7 +1,7 @@
-const Dto = require('./Dto');
+const Entity = require('./Entity');
 const {checkEmail} = require('../utils/index');
 
-class Correo extends Dto {
+class Correo extends Entity {
   _id
   _direccion;
   _usuariosId;

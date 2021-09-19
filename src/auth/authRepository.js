@@ -2,7 +2,7 @@ const {db} = require('../../index');
 
 /**
  *
- * @param paramns
+ * @param {Object} paramns
  * @return {Promise<Boolean>}
  */
 exports.login = async (paramns) => {
@@ -27,18 +27,17 @@ exports.login = async (paramns) => {
  */
 exports.getRolesById = async (id = null)=>{
   return db.execute(async (conn) => {
-    if(!id){
+    if (!id) {
       return (await conn.query(
-        `SELECT id, nombre FROM roles `
+          `SELECT id, nombre FROM roles `,
       )).rows;
     }
     return (await conn.query(
-      `SELECT 
+        `SELECT 
              id, nombre 
-             FROM roles WHERE id=$1`,[id]
-     )).rows[0];
+             FROM roles WHERE id=$1`, [id],
+    )).rows[0];
   });
-
 };
 
 /**
@@ -48,17 +47,17 @@ exports.getRolesById = async (id = null)=>{
  *
  */
 exports.getTipoIdentificacion = async (id = null) =>{
-    return db.execute(async (conn) =>{
-      if(!id){
-        return (await conn.query(
-          `SELECT id, tipo FROM tipos_identificacion`,
-        )).rows;
-      }
+  return db.execute(async (conn) =>{
+    if (!id) {
       return (await conn.query(
+          `SELECT id, tipo FROM tipos_identificacion`,
+      )).rows;
+    }
+    return (await conn.query(
         `SELECT id, tipo FROM tipos_identificacion WHERE id=$1`,
-        [id]
-      )).rows[0];
-    });
+        [id],
+    )).rows[0];
+  });
 };
 
 /**
@@ -83,8 +82,8 @@ exports.checkIdentificacion = async (idTipo,
 exports.getEmail = async (email) => {
   return db.execute(async (conn) =>{
     return (await conn.query(
-      `SELECT id FROM correos WHERE direccion = $1`,
-      [email],
+        `SELECT id FROM correos WHERE direccion = $1`,
+        [email],
     )).rows;
   });
 };
@@ -95,14 +94,14 @@ exports.getEmail = async (email) => {
  */
 exports.getUsuario = async (usuario) => {
   return db.execute(async (conn) => {
-   return(await conn.query(
-        `SELECT * FROM usuarios where usuario = $1`, 
+    return (await conn.query(
+        `SELECT * FROM usuarios where usuario = $1`,
         [usuario])).rows;
   });
 };
 /**
  *
- * @param data
+ * @param {Auth} data
  * @return {Promise<Boolean>}
  */
 exports.insertUsuario = async (data) =>{

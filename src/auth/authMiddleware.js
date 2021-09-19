@@ -1,15 +1,8 @@
 const utils = require('../utils');
 const response = require('../response');
-const Auth = require('./authDTO/Auth');
+const Auth = require('./authEntities/Auth');
 
-/**
- * Verifica los campos para autenticarse en el sistema
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
- * @return {Promise<void>}
- */
-exports.validityLogin = async (req, res, next)=>{
+exports.validityLogin = (req, res, next)=>{
   const requireInputs = ['usuario', 'clave'];
   const body = req.body;
   const fill = utils.requiredFields({requireInputs, body});
@@ -20,14 +13,7 @@ exports.validityLogin = async (req, res, next)=>{
   next();
 };
 
-/**
- * Verifica los datos proporciados para el registro
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
- * @return {Promise<void>}
- */
-exports.validityRegedit = async (req, res, next)=>{
+exports.validityRegedit = (req, res, next)=>{
   const {persona, usuario, correo, empresa} = req.body;
   const auth = new Auth();
   let checkRequiredInputs = [];
@@ -39,7 +25,10 @@ exports.validityRegedit = async (req, res, next)=>{
   // Verificar campos vacios
   checkRequiredInputs = checkRequiredInputs.concat(
       auth.persona.checkRequired([
-        'idTipoIdentificacion', 'identificacion', 'primerNombre', 'primerApellido',
+        'idTipoIdentificacion',
+        'identificacion',
+        'primerNombre',
+        'primerApellido',
       ]),
   );
   checkRequiredInputs = checkRequiredInputs.concat(
