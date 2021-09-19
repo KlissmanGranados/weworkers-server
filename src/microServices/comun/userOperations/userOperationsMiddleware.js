@@ -30,7 +30,6 @@ exports.updatePerson = (req, res, next) =>{
 
 exports.requiredFieldsUser = async (req, res, next) =>{
   const body = req.body;
-
   const requireInputs = [
     'usuario',
     'claveVieja',

@@ -1,5 +1,5 @@
 const Entity = require('./Entity');
-class RedDireccion extends Entity{
+class RedDireccion extends Entity {
   _id;
   _direccion;
 
@@ -11,7 +11,7 @@ class RedDireccion extends Entity{
   }
 
   /**
-   * @param{BigInteger} value
+   * @param{BigInteger} id
    */
   set id(id) {
     this._id = id;

@@ -1,7 +1,6 @@
 const Entity = require('./Entity');
 
-class DireccionRedUsuario extends Entity{
-
+class DireccionRedUsuario extends Entity {
   _id;
   _redesDireccionesId;
   _redesId;
