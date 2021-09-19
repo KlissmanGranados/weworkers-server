@@ -1,5 +1,4 @@
 const {Persona} = require('../../../dto');
-const {Usuario} = require('../../../dto');
 const response = require('../../../response');
 const utils = require('../../../utils');
 
@@ -40,7 +39,7 @@ exports.requiredFieldsUser = async (req, res, next) =>{
 
   const fill = utils.requiredFields({requireInputs, body});
 
-  if(fill.length > 0) {
+  if (fill.length > 0) {
     response.warning_required_fields(res, fill);
     return;
   }

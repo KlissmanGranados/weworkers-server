@@ -4,7 +4,6 @@ const userOperationsRepository = require('./userOperationsRepository');
  * @description Selecciona un usuario
  * @param{Request} req
  * @param{Response} res
- * @return {Promise<void>}
  */
 exports.readUser = async (req, res) => {
   const {id} = req.params;
@@ -15,20 +14,19 @@ exports.readUser = async (req, res) => {
  * @description Actualiza una persona
  * @param{Request} req
  * @param{Response} res
- * @return {Promise<void>}
  */
 exports.updatePerson = async (req, res) => {
   const persona = req.body;
 
   // verificar si la identificación está en uso por un usuario distinto
   const identificationInUse = await userOperationsRepository
-  .identificacionIsRepeated(
-      persona.idTipoIdentificacion,
-      persona.identificacion,
-      req.user.idusuario
-  );
+      .identificacionIsRepeated(
+          persona.idTipoIdentificacion,
+          persona.identificacion,
+          req.user.idusuario,
+      );
   if (identificationInUse) {
-    response.warning_identification_not_available(res,persona.identificacion);
+    response.warning_identification_not_available(res, persona.identificacion);
     return;
   }
 
@@ -37,36 +35,37 @@ exports.updatePerson = async (req, res) => {
   const update = await userOperationsRepository.updatePersonTable(data);
 
   if (update) {
-    response.success(res,req.user.idusuario);
+    response.success(res, req.user.idusuario);
     return;
   }
   response.error(res);
 };
 
 exports.updateUser = async (req, res) => {
-
   const user = req.body;
 
-  const checkUsername = await userOperationsRepository.usernameExists(req.user.idusuario, user.usuario);
+  const checkUsername = await userOperationsRepository
+      .usernameExists(req.user.idusuario, user.usuario);
 
   if (checkUsername) {
     response.error(res);
     return;
   }
 
-  const checkPassword = await userOperationsRepository.checkPassword(req.user.idusuario, user.claveVieja);
+  const checkPassword = await userOperationsRepository
+      .checkPassword(req.user.idusuario, user.claveVieja);
 
-  if(!checkPassword){
+  if (!checkPassword) {
     response.error(res);
     return;
   }
 
   const update = await userOperationsRepository.updateUserTable({
-    id:req.user.idusuario,
+    id: req.user.idusuario,
     usuario: user.usuario,
     clave: user.claveNueva});
 
-  if(update){
+  if (update) {
     response.success(res);
     return;
   }
@@ -78,14 +77,13 @@ exports.updateUser = async (req, res) => {
  * @description desactiva un usuario
  * @param{Request} req
  * @param{Response} res
- * @return {Promise<void>}
  */
 exports.deactivateUser = async (req, res) => {
   const id = req.user.idusuario;
 
   const checkState = await userOperationsRepository.stateIsTrue(id);
 
-  if(!checkState){
+  if (!checkState) {
     response.error(res);
     return;
   }
@@ -93,7 +91,7 @@ exports.deactivateUser = async (req, res) => {
   const deactivate = await userOperationsRepository.deactivateUser(id);
 
   if (deactivate) {
-    response.success(res,id);
+    response.success(res, id);
     return;
   }
 
@@ -103,12 +101,9 @@ exports.deactivateUser = async (req, res) => {
  * @description Reactiva un usuario
  * @param{Request} req
  * @param{Response} res
- * @return {Promise<void>}
  */
 exports.reactivateUser = async (req, res) => {
   const params = req.body;
-
-
   const check = await userOperationsRepository.selectUser(req.user.idusuario);
 
   const conditions = [
@@ -126,7 +121,7 @@ exports.reactivateUser = async (req, res) => {
   }
 
   const reactivate = await userOperationsRepository
-  .reactivateUser(req.user.idusuario);
+      .reactivateUser(req.user.idusuario);
 
   if (reactivate) {
     response.success(res);
@@ -137,9 +132,8 @@ exports.reactivateUser = async (req, res) => {
 };
 /**
  * @description consulta un perfil de usuario
- * @param req
- * @param res
- * @return {Promise<void>}
+ * @param {Request} req
+ * @param {Response} res
  */
 exports.userProfile = async (req, res) => {
   const {id} = req.params;

@@ -4,14 +4,8 @@
  */
 class Dto {
   /**
-   * @description Carga la data proporcionada y la setea en el objeto,
-   * Nota: El objeto proporcionado debe de tener el formato: {
-   *   clave:valor,
-   *   clave:valor,
-   *   clave:valor, ...
-   *  }
+   *
    * @param {Object} body
-   * @return void
    */
   loadData(body) {
     if (!body) {
@@ -41,8 +35,7 @@ class Dto {
 
   /**
    * @description verifica los campos obligatorios
-   * @type {Array}
-   * @param inputs
+   * @param {Array} inputs
    * @return { Array } Lista de los campos vacios
    */
   checkRequired(inputs) {

@@ -102,7 +102,7 @@ exports.regedit = async (req, res)=>{
     response.success(res, makeToken({
       idusuario: auth.usuario.id,
       rolesid: auth.usuario.rolesId,
-      estado: auth.usuario.estado
+      estado: auth.usuario.estado,
     }));
   } else {
     response.error(res);
