@@ -1,4 +1,4 @@
-const {Red,RedDireccion,DireccionRedUsuario} = require('../../../dto');
+const {Red,RedDireccion,DireccionRedUsuario} = require('../../../Entities');
 exports.AssociateNetwork = (req,res,next)=>{
   next();
 }

@@ -28,7 +28,7 @@ exports.readProfile = async (id) => {
 
     // si el perfil es de un capatado
     if (profile.roles_id === 1) {
-      return {perfil};
+      return {perfil:profile};
     }
     // si el perfil es de un captador
     const rowsBusiness = await conn.query(`SELECT
@@ -38,7 +38,7 @@ exports.readProfile = async (id) => {
     WHERE reclutadores.usuarios_id=$1`, [profile.id]);
 
     return {
-      perfil,
+      perfil: profile,
       empresa: rowsBusiness.rows[0],
     };
   });
