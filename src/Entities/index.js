@@ -7,3 +7,7 @@ exports.Usuario = require('./Usuario');
 exports.DireccionRedUsuario = require('./DireccionRedUsuario');
 exports.Red = require('./Red');
 exports.RedDireccion = require('./RedDireccion');
+exports.Proyecto = require('./Proyecto');
+exports.Tag = require('./Tag');
+exports.ProyectoTag = require('./ProyectoTag');
+
