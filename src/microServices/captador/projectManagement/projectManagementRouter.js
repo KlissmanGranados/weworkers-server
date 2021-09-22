@@ -13,4 +13,12 @@ module.exports = [
       projectManagementMiddleware.create
     ],
   },
+  {
+    method: 'put',
+    url: '/update-proyecto',
+    handler: projectManagementService.update,
+    middelwares: [
+      projectManagementMiddleware.update,
+    ]
+  }
 ];

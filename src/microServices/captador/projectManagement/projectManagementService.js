@@ -9,3 +9,7 @@ const projectManagementRepository = require('./projectManagementRepository');
 exports.create = (req,res)=>{
   
 };
+
+exports.update = (req, res)=>{
+
+};

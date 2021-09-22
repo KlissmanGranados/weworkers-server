@@ -10,3 +10,7 @@ const {Proyecto,Tag,ProyectoTag} = require('../../../Entities')
 exports.create = (req,res,next)=>{
   next();
 }
+
+exports.requiredFieldsUpdate = (req,res,next)=>{
+  next();
+};
