@@ -1,6 +1,6 @@
 const projectManagementMiddleware = require('./projectManagementMiddleware');
 const projectManagementService = require('./projectManagementService');
-  
+
 module.exports = [
   /*
     Formato de los objetos de las rutas
@@ -10,7 +10,15 @@ module.exports = [
     url: '/proyecto',
     handler: projectManagementService.create,
     middelwares: [
-      projectManagementMiddleware.create
+      projectManagementMiddleware.create,
+    ],
+  },
+  {
+    method: 'put',
+    url: '/update-proyecto',
+    handler: projectManagementService.update,
+    middelwares: [
+      projectManagementMiddleware.update,
     ],
   },
 ];
