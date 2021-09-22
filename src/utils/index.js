@@ -39,13 +39,15 @@ exports.checkIntegers = (value) => {
  * @param {String} str
  * @return {string}
  */
-const snakeToCamel = (str) =>
-  str.toLowerCase().replace(/([-_][a-z])/g, (group) =>
+ const snakeToCamel = (str) =>{
+  str = str.toLowerCase().replace(/([-_][a-z])/g, (group) =>
     group
         .toUpperCase()
         .replace('-', '')
         .replace('_', ''),
-  );
+  )
+  return str[0].toLowerCase() + str.slice(1);
+}
 
 /**
  * @description Recibe un objeto y cambia sus keys a camelCase
