@@ -2,6 +2,8 @@
  * @class Entity
  * @description Defines las operaciones en comun para todos los Entity
  */
+const {snakeToCamelObject} = require('./../utils');
+
 class Entity {
   /**
    *
@@ -71,6 +73,9 @@ class Entity {
     });
     return columns;
   }
+  snakeToCamel(){
+    return snakeToCamelObject(this);
+  }
 
   /**
    * @description Crea un Objeto con las columnas de la tablas del DTO
@@ -98,6 +103,8 @@ class Entity {
     _clone.__proto__ = this.__proto__;
     return _clone;
   }
+
+
 }
 
 module.exports = Entity;
