@@ -1,11 +1,19 @@
 const Entity = require('./Entity');
+const {checkMounts, isValidDate} = require('../utils'); 
 class Proyecto extends Entity{
   _id;
   _nombre;
   _descripcion;
-  _timestamp;
   _reclutadoresId;
   _estado;
+  _presupuesto;
+  _fechaCrea;
+  _fechaTermina;
+
+  constructor(){
+    super();
+    this._fechaCrea = new Date();
+  }
 
   get id() {
     return this._id;
@@ -31,12 +39,12 @@ class Proyecto extends Entity{
     this._descripcion = value;
   }
 
-  get timestamp() {
-    return this._timestamp;
+  get fechaCrea() {
+    return this._fechaCrea;
   }
 
-  set timestamp(value) {
-    this._timestamp = value;
+  set fechaCrea(value) {
+    this._fechaCrea = isValidDate(value);
   }
 
   get reclutadoresId() {
@@ -53,6 +61,19 @@ class Proyecto extends Entity{
 
   set estado(value) {
     this._estado = value;
+  }
+
+  set presupuesto(value){
+    this._presupuesto = checkMounts(value);
+  }
+  get presupuesto(){
+    return this._presupuesto;
+  }
+  get fechaTermina(){
+    return this._fechaTermina;
+  }
+  set fechaTermina(value){
+    this._fechaTermina = isValidDate(value);
   }
 }
 
