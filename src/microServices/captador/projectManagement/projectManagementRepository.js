@@ -95,3 +95,56 @@ exports.findReclutadorByUserId = (id)=>{
     return reclutador.rows[0].id;
   });
 };
+
+exports.findTagsByProjectId = (id) =>{
+  return db.execute(async (conn)=>{
+    const tags = await conn.query(
+        `SELECT tags.id FROM tags 
+      INNER JOIN proyectos_tags ON (proyectos_tags.tags_id=tags.id)
+      INNER JOIN proyectos ON (proyectos.id=proyectos_tags.proyectos_id)
+      WHERE proyectos.id=$1`, [id]);
+
+    return tags.rows;
+  });
+};
+
+exports.updateProject = (data) =>{
+  return db.execute(async (conn)=>{
+    const update = await conn.query(
+        `UPDATE weworkers.proyectos
+      SET nombre=$2, descripcion=$3
+      WHERE id=$1
+      `, data);
+
+    return update.rowCount > 0;
+  });
+};
+
+exports.insertProjectTags = (id, tags) =>{
+  return db.execute(async (conn)=>{
+    tags.forEach(async (tag) =>{
+      const insert = await conn.query(
+          `INSERT INTO weworkers.proyectos_tags
+        (proyectos_id, tags_id)
+        VALUES($1, $2);
+        `, [id, tag],
+      );
+    });
+
+    return true;
+  });
+};
+
+exports.deleteProjectTags = (id, tags) =>{
+  return db.execute(async (conn)=>{
+    tags.forEach(async (tag) =>{
+      const deleteTag = await conn.query(
+          `DELETE FROM weworkers.proyectos_tags
+        WHERE proyectos_id=$1 AND tags_id=$2;
+        `, [id, tag],
+      );
+    });
+
+    return true;
+  });
+};

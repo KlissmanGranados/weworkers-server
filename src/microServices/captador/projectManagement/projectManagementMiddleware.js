@@ -59,7 +59,16 @@ exports.create = (req, res, next)=>{
   next();
 };
 
-exports.requiredFieldsUpdate = (req, res, next)=>{
+exports.checkId = (req, res, next)=>{
+  const body = req.registro;
+
+  const requireFields = body.proyecto.checkRequired(['id']);
+
+  if (requireFields.length > 0) {
+    response.warning_required_fields(res, requireFields);
+    return;
+  }
+
   next();
 };
 
