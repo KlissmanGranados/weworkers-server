@@ -46,6 +46,16 @@ exports.create = async (req, res)=>{
 
 exports.update = async (req, res)=>{
   const registro = req.registro;
+  const reclutadorId = await projectManagementRepository
+      .findReclutadorByUserId(req.user.idusuario);
+
+  const verifyCreator = await projectManagementRepository
+      .isTheProjectCreator(registro.proyecto.id, reclutadorId);
+
+  if (!verifyCreator) {
+    response.error(res);
+    return;
+  }
   registro.tags = await projectManagementRepository
       .findTagByName(registro.tags);
 
