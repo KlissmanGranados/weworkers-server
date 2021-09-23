@@ -126,12 +126,13 @@ exports.checkMounts = (value)=>{
 }
 /**
  * @description verifica si una fecha es válida
- * @param {String} date 
+ * @param {Date} dateStart
+ * @param {Date} dateEnd
  * @returns {Date}
  */
-exports.isValidDate = (date)=>{
-  const currentDate = new Date();
-  const newDate = new Date(date);
+exports.isValidDate = (dateStart,dateEnd)=>{
+  const currentDate = dateStart || new Date();
+  const newDate = dateEnd;
   return currentDate.getTime() >= newDate.getTime()?false:newDate;
 }
 

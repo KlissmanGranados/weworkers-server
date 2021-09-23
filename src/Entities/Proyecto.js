@@ -44,7 +44,7 @@ class Proyecto extends Entity{
   }
 
   set fechaCrea(value) {
-    this._fechaCrea = isValidDate(value);
+    this._fechaCrea = isValidDate(this._fechaCrea,new Date(value));
   }
 
   get reclutadoresId() {
@@ -73,7 +73,7 @@ class Proyecto extends Entity{
     return this._fechaTermina;
   }
   set fechaTermina(value){
-    this._fechaTermina = isValidDate(value);
+    this._fechaTermina = isValidDate(this._fechaCrea,new Date(value));
   }
 }
 

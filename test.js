@@ -9,7 +9,7 @@ proyecto.loadData({
   reclutadoresId:1,
   estado:true,
   presupuesto:'100.000.000',
-  fechaTermina:'2021-09-23'
+  fechaTermina:'2021-09-24'
 });
 
 console.log(proyecto);
