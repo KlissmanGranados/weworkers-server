@@ -148,3 +148,14 @@ exports.deleteProjectTags = (id, tags) =>{
     return true;
   });
 };
+
+exports.isTheProjectCreator = (idProyecto, idReclutador) =>{
+  return db.execute(async (conn)=>{
+    const check = conn.query(`
+    SELECT nombre FROM proyectos
+    WHERE id=$1 AND reclutadores_id=$2
+    `, [idProyecto, idReclutador]);
+
+    return check.rowCount > 0;
+  });
+};
