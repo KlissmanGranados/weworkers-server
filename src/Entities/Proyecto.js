@@ -28,7 +28,9 @@ class Proyecto extends Entity{
   }
 
   set nombre(value) {
-    this._nombre = value?value.toLowerCase():value;
+    if(value && value.length <=45){
+      this._nombre = value.toLowerCase();
+    }
   }
 
   get descripcion() {
@@ -36,7 +38,10 @@ class Proyecto extends Entity{
   }
 
   set descripcion(value) {
-    this._descripcion = value;
+    if(value && value.length <= 1000){
+      this._descripcion = value;
+      value.toLowerCase();
+    }
   }
 
   get fechaCrea() {

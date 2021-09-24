@@ -29,7 +29,9 @@ class Red extends Entity {
    * @param {String}nombre
    */
   set nombre(nombre) {
-    this._nombre = nombre? nombre.toLowerCase():nombre;
+    if(nombre && nombre.length<=20){
+      this._nombre = nombre.toLowerCase();
+    }
   }
 }
 

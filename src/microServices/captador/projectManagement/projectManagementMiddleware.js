@@ -12,9 +12,15 @@ exports.create = (req, res, next)=>{
   let requireInputs = [];
 
   // verificar json del cliente
-  if (!proyecto || !tags) {
+  if (!proyecto) {
     response.warning_required_fields(
-        res, {proyecto: proyecto||null, tags: tags||null},
+        res, {proyecto: proyecto||null}
+    );
+    return;
+  }
+  if(!tags){
+    response.warning_required_fields(
+      res,{tags: tags||null}
     );
     return;
   }
@@ -41,9 +47,28 @@ exports.create = (req, res, next)=>{
     return;
   }
   _proyecto.loadData(proyecto);
+  
+  if(!_proyecto.presupuesto){
+    response.warning_data_not_valid(res,{proyecto:{presupuesto:null}})
+    return;
+  }
+  if(!_proyecto.fechaTermina){
+    response.warning_data_not_valid(res,{proyecto:{fechaTermina:null}});
+    return;
+  }
+  if(!_proyecto.fechaCrea){
+    response.warning_data_not_valid(res,{proyecto:{fechaCrea:null}});
+    return;
+  }
+
   // verificar si los datos del proyectos estan siendo enviados
   requireInputs = requireInputs.concat(
-      _proyecto.checkRequired(['nombre', 'descripcion']),
+      _proyecto.checkRequired([
+        'nombre', 
+        'descripcion',
+        'presupuesto',
+        'fechaTermina']
+      ),
   );
   if (requireInputs.length > 0) {
     response.warning_required_fields(res, {proyecto: requireInputs});

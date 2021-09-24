@@ -121,17 +121,14 @@ exports.insertUsuario = async (data) =>{
 async function crearUsuario(auth, conn) {
   const columnsPersona = auth.persona.getColumns();
   const insertPersona = {
-    text: `INSERT INTO personas 
-            (${ columnsPersona.columns }) 
-         VALUES(${ columnsPersona.columnsNumber }) RETURNING id`,
+    text: `INSERT INTO personas (${ columnsPersona.columns }) 
+        VALUES(${ columnsPersona.columnsNumber }) RETURNING id`,
     values: auth.persona.toArray(),
   };
-
   // se inserta la persona
   const idPersona = await conn.query(insertPersona);
   auth.persona.id = idPersona.rows[0].id;
   auth.usuario.personaId = idPersona.rows[0].id;
-
   const columnsUsuario = auth.usuario.getColumns();
   const insertUsuario = {
     text: `INSERT INTO usuarios 

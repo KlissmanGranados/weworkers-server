@@ -21,7 +21,9 @@ class Usuario extends Entity {
   }
 
   set usuario(value) {
-    this._usuario = value;
+    if(value && value.length <=15){
+      this._usuario = value;
+    }
   }
 
   get clave() {
@@ -29,7 +31,9 @@ class Usuario extends Entity {
   }
 
   set clave(value) {
-    this._clave = value;
+    if(value && value.length <=15){
+      this._clave = value;
+    }
   }
 
   get personaId() {

@@ -19,7 +19,9 @@ class Correo extends Entity {
   }
 
   set direccion(value) {
-    this._direccion = value.toLowerCase();
+    if(value && value.length <= 320){
+      this._direccion = value.toLowerCase();
+    }
   }
 
   get usuariosId() {
