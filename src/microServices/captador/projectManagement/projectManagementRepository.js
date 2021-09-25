@@ -123,7 +123,7 @@ exports.updateProject = (data) =>{
 exports.insertProjectTags = (id, tags) =>{
   return db.execute(async (conn)=>{
     tags.forEach(async (tag) =>{
-      const insert = await conn.query(
+      await conn.query(
           `INSERT INTO weworkers.proyectos_tags
         (proyectos_id, tags_id)
         VALUES($1, $2);
@@ -138,7 +138,7 @@ exports.insertProjectTags = (id, tags) =>{
 exports.deleteProjectTags = (id, tags) =>{
   return db.execute(async (conn)=>{
     tags.forEach(async (tag) =>{
-      const deleteTag = await conn.query(
+      await conn.query(
           `DELETE FROM weworkers.proyectos_tags
         WHERE proyectos_id=$1 AND tags_id=$2;
         `, [id, tag],

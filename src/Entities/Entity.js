@@ -73,7 +73,7 @@ class Entity {
     });
     return columns;
   }
-  snakeToCamel(){
+  snakeToCamel() {
     return snakeToCamelObject(this);
   }
 
@@ -103,8 +103,6 @@ class Entity {
     _clone.__proto__ = this.__proto__;
     return _clone;
   }
-
-
 }
 
 module.exports = Entity;

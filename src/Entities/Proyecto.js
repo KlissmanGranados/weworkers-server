@@ -1,6 +1,6 @@
 const Entity = require('./Entity');
-const {checkMounts, isValidDate} = require('../utils'); 
-class Proyecto extends Entity{
+const {checkMounts, isValidDate} = require('../utils');
+class Proyecto extends Entity {
   _id;
   _nombre;
   _descripcion;
@@ -9,10 +9,19 @@ class Proyecto extends Entity{
   _presupuesto;
   _fechaCrea;
   _fechaTermina;
+  _monedasId;
+  _tiposPagoId;
 
-  constructor(){
+  constructor() {
     super();
     this._fechaCrea = new Date();
+  }
+
+  get tiposPagoId() {
+    return this._tiposPagoId;
+  }
+  set tiposPagoId(value) {
+    this._tiposPagoId = value;
   }
 
   get id() {
@@ -28,7 +37,7 @@ class Proyecto extends Entity{
   }
 
   set nombre(value) {
-    if(value && value.length <=45){
+    if (value && value.length <=45) {
       this._nombre = value.toLowerCase();
     }
   }
@@ -38,7 +47,7 @@ class Proyecto extends Entity{
   }
 
   set descripcion(value) {
-    if(value && value.length <= 1000){
+    if (value && value.length <= 1000) {
       this._descripcion = value;
       value.toLowerCase();
     }
@@ -49,7 +58,7 @@ class Proyecto extends Entity{
   }
 
   set fechaCrea(value) {
-    this._fechaCrea = isValidDate(this._fechaCrea,new Date(value));
+    this._fechaCrea = isValidDate(this._fechaCrea, new Date(value));
   }
 
   get reclutadoresId() {
@@ -68,17 +77,23 @@ class Proyecto extends Entity{
     this._estado = value;
   }
 
-  set presupuesto(value){
+  set presupuesto(value) {
     this._presupuesto = checkMounts(value);
   }
-  get presupuesto(){
+  get presupuesto() {
     return this._presupuesto;
   }
-  get fechaTermina(){
+  get fechaTermina() {
     return this._fechaTermina;
   }
-  set fechaTermina(value){
-    this._fechaTermina = isValidDate(this._fechaCrea,new Date(value));
+  set fechaTermina(value) {
+    this._fechaTermina = isValidDate(this._fechaCrea, new Date(value));
+  }
+  set monedasId(value) {
+    this._monedasId = value;
+  }
+  get monedasId() {
+    return this._monedasId;
   }
 }
 

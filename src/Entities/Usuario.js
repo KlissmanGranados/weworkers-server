@@ -21,7 +21,7 @@ class Usuario extends Entity {
   }
 
   set usuario(value) {
-    if(value && value.length <=15){
+    if (value && value.length <=15) {
       this._usuario = value;
     }
   }
@@ -31,7 +31,7 @@ class Usuario extends Entity {
   }
 
   set clave(value) {
-    if(value && value.length <=15){
+    if (value && value.length <=15) {
       this._clave = value;
     }
   }

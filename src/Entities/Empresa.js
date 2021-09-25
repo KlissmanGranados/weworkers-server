@@ -18,7 +18,7 @@ class Empresa extends Entity {
   }
 
   set rif(value) {
-    if(value && value.length <=45){
+    if (value && value.length <=45) {
       this._rif = value;
     }
   }
@@ -28,7 +28,7 @@ class Empresa extends Entity {
   }
 
   set razonSocial(value) {
-    if(value && value.length <=45){
+    if (value && value.length <=45) {
       this._razonSocial = value.toLowerCase();
     }
   }

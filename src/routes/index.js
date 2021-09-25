@@ -76,5 +76,5 @@ routes.forEach((route) => {
 // Se inicia el servicio
 app.listen(serverPort, (err) => {
   if (err) throw err;
-  console.log(`server running on : ${serverHost}:${serverPort}${apiVersion}`);
+  console.log(`server running on : ${serverHost}:${serverPort}${apiVersion} 💪`);
 });

@@ -109,9 +109,9 @@ exports.warning_operation_not_available = (res, data = null)=>{
       makeResponse(WARNING_OPERATION_NOT_AVALIBLE, data),
   );
 };
-exports.warning_data_not_valid = (res,data = null) => {
+exports.warning_data_not_valid = (res, data = null) => {
   res.status(WARNING_CODE).json(
-    makeResponse(WARNING_DATA_NOT_VALID,data)
+      makeResponse(WARNING_DATA_NOT_VALID, data),
   );
 };
 

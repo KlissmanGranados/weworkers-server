@@ -1,5 +1,6 @@
 const response = require('../../../response');
 const {Proyecto, Tag, ProyectoTag} = require('../../../Entities');
+const {consts} = require('../../../../index');
 /**
  * @description verifica los datos del create
  * @param {Request} req
@@ -14,13 +15,13 @@ exports.create = (req, res, next)=>{
   // verificar json del cliente
   if (!proyecto) {
     response.warning_required_fields(
-        res, {proyecto: proyecto||null}
+        res, {proyecto: proyecto||null},
     );
     return;
   }
-  if(!tags){
+  if (!tags) {
     response.warning_required_fields(
-      res,{tags: tags||null}
+        res, {tags: tags||null},
     );
     return;
   }
@@ -47,33 +48,46 @@ exports.create = (req, res, next)=>{
     return;
   }
   _proyecto.loadData(proyecto);
-  
-  if(!_proyecto.presupuesto){
-    response.warning_data_not_valid(res,{proyecto:{presupuesto:null}})
+
+  if (!_proyecto.presupuesto) {
+    response.warning_data_not_valid(res, {proyecto: {presupuesto: null}});
     return;
   }
-  if(!_proyecto.fechaTermina){
-    response.warning_data_not_valid(res,{proyecto:{fechaTermina:null}});
+  if (!_proyecto.fechaTermina) {
+    response.warning_data_not_valid(res, {proyecto: {fechaTermina: null}});
     return;
   }
-  if(!_proyecto.fechaCrea){
-    response.warning_data_not_valid(res,{proyecto:{fechaCrea:null}});
+  if (!_proyecto.fechaCrea) {
+    response.warning_data_not_valid(res, {proyecto: {fechaCrea: null}});
     return;
   }
 
   // verificar si los datos del proyectos estan siendo enviados
   requireInputs = requireInputs.concat(
       _proyecto.checkRequired([
-        'nombre', 
+        'nombre',
         'descripcion',
         'presupuesto',
-        'fechaTermina']
+        'fechaTermina',
+        'monedasId',
+        'tiposPagoId',
+      ],
       ),
   );
   if (requireInputs.length > 0) {
     response.warning_required_fields(res, {proyecto: requireInputs});
     return;
   }
+
+  if (!consts().monedas.getById(_proyecto.monedasId)) {
+    response.warning_data_not_valid(res, {proyecto: {monedasId: null}});
+    return;
+  }
+  if (!consts().tiposPago.getById(_proyecto.tiposPagoId)) {
+    response.warning_data_not_valid(res, {proyecto: {tiposPagoId: null}});
+    return;
+  }
+
   // setear datos para manejarlos en el servicio
   req.registro = {
     proyecto: _proyecto,

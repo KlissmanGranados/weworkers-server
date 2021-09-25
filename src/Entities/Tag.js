@@ -1,5 +1,5 @@
 const Entity = require('./Entity');
-class Tag extends Entity{
+class Tag extends Entity {
   _id;
   _nombre;
 

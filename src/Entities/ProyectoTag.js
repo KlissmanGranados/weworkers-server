@@ -1,6 +1,6 @@
 const Entity = require('./Entity');
 
-class ProyectoTag extends Entity{
+class ProyectoTag extends Entity {
   _proyectosId;
   _tagsId;
 

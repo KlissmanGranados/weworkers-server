@@ -28,7 +28,7 @@ class RedDireccion extends Entity {
    * @param{String} direccion
    */
   set direccion(direccion) {
-    if(direccion && direccion.length <=320){
+    if (direccion && direccion.length <=320) {
       this._direccion = direccion?direccion.toLowerCase():direccion;
     }
   }

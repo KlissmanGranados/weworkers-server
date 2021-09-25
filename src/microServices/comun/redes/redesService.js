@@ -5,6 +5,6 @@ const response = require('../../../response');
  * @param{Request} req
  * @param{response} res
  */
-exports.AssociateNetwork = (req,res)=>{
+exports.AssociateNetwork = (req, res)=>{
 
-}
+};
