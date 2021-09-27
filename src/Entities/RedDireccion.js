@@ -1,35 +1,35 @@
 const Entity = require('./Entity');
+
 class RedDireccion extends Entity {
   _id;
+  _redesId;
   _direccion;
+  constructor() {
+    super('redes_direcciones');
+  }
 
-  /**
-   * @return {*}
-   */
   get id() {
     return this._id;
   }
 
-  /**
-   * @param{BigInteger} id
-   */
-  set id(id) {
-    this._id = id;
+  set id(value) {
+    this._id = value;
   }
 
-  /**
-   * @return {String}
-   */
+  get redesId() {
+    return this._redesId;
+  }
+
+  set redesId(value) {
+    this._redesId = value;
+  }
+
   get direccion() {
     return this._direccion;
   }
 
-  /**
-   * @param{String} direccion
-   */
-  set direccion(direccion) {
-    this._direccion = direccion?direccion.toLowerCase():direccion;
+  set direccion(value) {
+    this._direccion = value;
   }
 }
-
 module.exports = RedDireccion;

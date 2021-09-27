@@ -3,6 +3,17 @@
  * @description Defines las operaciones en comun para todos los Entity
  */
 class Entity {
+  #tableName;
+  #primaryKey;
+
+  /**
+   * @param {String} tableName nombre de la tabla
+   * @param {String} primaryKey clave primaria
+   */
+  constructor(tableName = null, primaryKey = 'id') {
+    this.#tableName = this.#getNameTable(tableName);
+    this.#primaryKey = primaryKey;
+  }
   /**
    *
    * @param {Object} body
@@ -97,6 +108,73 @@ class Entity {
     const _clone = {...this};
     _clone.__proto__ = this.__proto__;
     return _clone;
+  }
+  #getNameTable(tableName = false) {
+    if (tableName) {
+      return tableName;
+    }
+    tableName = this.constructor.name;
+    tableName = tableName.replace(/[A-Z]/g,
+        (letter) =>`_${letter.toLowerCase()}`).replace('_', '');
+    return tableName;
+  }
+  /**
+   * @return {{text:String,values:String[]}}
+   */
+  select() {
+    const columns = this.getAttributes().map(
+        (atr)=> atr.replace(
+            /[A-Z]/g, (letter) =>
+              `_${letter.toLowerCase()}`),
+    ).join(',');
+    return {
+      text: `SELECT ${columns} from ${this.#tableName} 
+                         where ${this.#primaryKey}=$1`,
+      values: [this[this.#primaryKey]],
+    };
+  }
+  /**
+   *
+   * @return {{text:String,values:String[]}}
+   */
+  save() {
+    const {columns, columnsNumber} = this.getColumns();
+    return {
+      text: `INSERT INTO ${this.#tableName}(${columns}) 
+                               values(${columnsNumber})
+                               RETURNING ${this.#primaryKey}`,
+      values: this.toArray(),
+    };
+  }
+
+  /**
+   * @return {{text:String,values:String[]}}
+   */
+  update() {
+    const columns = this.camelCaseToSnakeCase().
+        filter((col) => col != 'id').map((value, index) => {
+          return `${value}=$${index + 1}`;
+        });
+    const indexId = columns.length +1;
+    return {
+      text: `update ${this.#tableName} set ${columns.join(',')} 
+                          where ${this.#primaryKey}=$${indexId}
+                          RETURNING ${this.#primaryKey}`,
+      values: (
+        this.toArray().slice(1).concat(this[this.#primaryKey])
+      ),
+    };
+  }
+  /**
+   *@return {{text:String,values:String[]}}
+   */
+  delete() {
+    return {
+      text: `delete from ${this.#tableName} 
+                where ${this.#primaryKey}=$1
+                RETURNING ${this.#primaryKey}`,
+      values: [this[this.#primaryKey]],
+    };
   }
 }
 
