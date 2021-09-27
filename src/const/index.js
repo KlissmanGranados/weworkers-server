@@ -20,13 +20,15 @@ module.exports = (function() {
         monedas,
         tiposIdentificacion,
         tiposPago,
+        redes,
       ] = await Promise.all(
-          [
-            conn.query(`select id,nombre from roles`),
-            conn.query(`SELECT id, nombre_largo, nombre_corto FROM monedas`),
-            conn.query(`SELECT id, tipo FROM tipos_identificacion`),
-            conn.query(`SELECT id, nombre FROM tipos_pago`),
-          ],
+        [
+          conn.query(`select id,nombre from roles`),
+          conn.query(`SELECT id, nombre_largo, nombre_corto FROM monedas`),
+          conn.query(`SELECT id, tipo FROM tipos_identificacion`),
+          conn.query(`SELECT id, nombre FROM tipos_pago`),
+          conn.query(`SELECT id, nombre, "timestamp" FROM redes`),
+        ],
       );
 
       data = {
@@ -70,11 +72,25 @@ module.exports = (function() {
           rowCount: tiposPago.rowCount,
           getByType: (type) =>{
             return tiposPago.rows.filter(
-                (paymentType) => paymentType.nombre == type )[0];
+              (paymentType) => paymentType.nombre == type )[0];
           },
           getById: (id) =>{
             return tiposPago.rows.filter(
-                (paymentType) => paymentType.id == id,
+              (paymentType) => paymentType.id == id,
+            )[0];
+          },
+        },
+        redes: {
+          rows: redes.rows,
+          rowCount: redes.rowCount,
+          getByType: (_red) => {
+            return redes.rows.filter(
+              (red) => red.nombre == _red,
+            )[0];
+          },
+          getById: (id) =>{
+            return redes.rows.filter(
+              (red) => red.id == id,
             )[0];
           },
         },
