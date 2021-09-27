@@ -3,6 +3,9 @@ const db = require('./src/database/db');
 const express = require('express');
 const app = express();
 
+const consts = require('./src/const');
+consts();
+
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   // eslint-disable-next-line max-len
@@ -12,5 +15,6 @@ app.use(function(req, res, next) {
 });
 
 app.use(express.json());
-module.exports = ({app, db});
+module.exports = ({app, db, consts});
+
 

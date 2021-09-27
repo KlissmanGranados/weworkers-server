@@ -90,7 +90,7 @@ Content-Type: application/json
 
 {
   "persona": {
-    "identificacion": "27056027",
+    "identificacion": "2705602766",
     "primerNombre": "klissman",
     "segundoNombre": "",
     "primerApellido": "granados",
@@ -107,7 +107,7 @@ Content-Type: application/json
     "razonSocial": "POLAR"
   },
   "correo": {
-    "direccion": "kg3@gmail.com"
+    "direccion": "kg3@gxxmail.com"
   }
 }
 

@@ -44,7 +44,11 @@ class Persona extends Entity {
   }
 
   set primerNombre(value) {
-    this._primerNombre = value?value.toLowerCase():value;
+    if (value && value.length <=45) {
+      this._primerNombre = value.toLowerCase();
+    } else {
+      this._primerNombre = null;
+    }
   }
 
   get primerApellido() {
@@ -52,7 +56,11 @@ class Persona extends Entity {
   }
 
   set primerApellido(value) {
-    this._primerApellido = value?value.toLowerCase():value;
+    if (value && value.length<=45) {
+      this._primerApellido = value.toLowerCase();
+    } else {
+      this._primerApellido = null;
+    }
   }
 
   get segundoNombre() {
@@ -60,7 +68,11 @@ class Persona extends Entity {
   }
 
   set segundoNombre(value) {
-    this._segundoNombre = value?value.toLowerCase():value;
+    if (value && value.length <=45) {
+      this._segundoNombre = value.toLowerCase();
+    } else {
+      this._segundoNombre = null;
+    }
   }
 
   get segundoApellido() {
@@ -68,7 +80,11 @@ class Persona extends Entity {
   }
 
   set segundoApellido(value) {
-    this._segundoApellido = value?value.toLowerCase():value;
+    if (value && value.length <=45) {
+      this._segundoApellido = value.toLowerCase();
+    } else {
+      this._segundoApellido = null;
+    }
   }
 }
 module.exports = Persona;

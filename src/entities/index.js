@@ -6,4 +6,7 @@ exports.Trabajador = require('./Trabajador');
 exports.Usuario = require('./Usuario');
 exports.Red = require('./Red');
 exports.RedDireccion = require('./RedDireccion');
+exports.Proyecto = require('./Proyecto');
+exports.Tag = require('./Tag');
+exports.ProyectoTag = require('./ProyectoTag');
 exports.RedUsuario = require('./RedUsuario');

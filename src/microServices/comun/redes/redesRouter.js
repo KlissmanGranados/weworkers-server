@@ -6,7 +6,7 @@ module.exports = [
     method: 'post',
     url: '/red',
     handler: redesService.associateNetwork,
-    middelwares: [
+    middlewares: [
       redesMiddleware.AssociateNetwork,
     ],
   },
@@ -14,7 +14,7 @@ module.exports = [
     method: 'put',
     url: '/actualizar-red/:id',
     handler: redesService.updateAssociateNetwork,
-    middelwares: [
+    middlewares: [
       redesMiddleware.AssociateNetwork,
       redesMiddleware.updateAssociateNetwork,
     ],
@@ -23,7 +23,7 @@ module.exports = [
     method: 'delete',
     url: '/eliminar-red/:id',
     handler: redesService.deleteAssociateNetwork,
-    middelwares: [
+    middlewares: [
       redesMiddleware.deleteAssociateNetwork,
     ],
   },

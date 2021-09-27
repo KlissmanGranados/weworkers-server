@@ -2,6 +2,8 @@
  * @class Entity
  * @description Defines las operaciones en comun para todos los Entity
  */
+const {snakeToCamelObject} = require('./../utils');
+
 class Entity {
   #tableName;
   #primaryKey;
@@ -81,6 +83,9 @@ class Entity {
       }
     });
     return columns;
+  }
+  snakeToCamel() {
+    return snakeToCamelObject(this);
   }
 
   /**

@@ -29,6 +29,7 @@ const WARNING_IDENTIFICATION_NOT_INTEGER = 'Debe de ingresar solo valores' +
   ' numéricos para registrar la identificacion y no puede enviar espacios en' +
   ' blanco';
 const WARNING_OPERATION_NOT_AVALIBLE = 'Operación no permitida';
+const WARNING_DATA_NOT_VALID = 'Los valores ingresados no son válidos';
 /**
  * MENSAJES PARA FORBIDDEN
  * **/
@@ -107,12 +108,17 @@ exports.warning_identification_not_available = (res, data =null) =>{
 
 exports.warning_exist_regedit = (res, data = null)=>{
   res.status(WARNING_CODE).json(
-      makeResponse(WARNING_EXIST_REGEDIT, data)
-  )
-}
+      makeResponse(WARNING_EXIST_REGEDIT, data),
+  );
+};
 exports.warning_operation_not_available = (res, data = null)=>{
   res.status(WARNING_CODE).json(
-      makeResponse(WARNING_OPERATION_NOT_AVALIBLE, data)
+      makeResponse(WARNING_OPERATION_NOT_AVALIBLE, data),
+  );
+};
+exports.warning_data_not_valid = (res, data = null) => {
+  res.status(WARNING_CODE).json(
+      makeResponse(WARNING_DATA_NOT_VALID, data),
   );
 };
 

@@ -1,5 +1,5 @@
 const response = require('../../../response');
-const {RedDireccion, RedUsuario} = require('../../../Entities');
+const {RedDireccion, RedUsuario} = require('../../../entities');
 const {consts} = require('../../../../index');
 
 /**
