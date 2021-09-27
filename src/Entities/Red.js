@@ -1,8 +1,12 @@
 const Entity = require('./Entity');
 
-class Red extends Entity{
+class Red extends Entity {
   _id;
   _nombre;
+
+  constructor() {
+    super('redes');
+  }
 
   /**
    * @return {BigInteger}

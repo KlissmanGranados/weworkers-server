@@ -1,11 +1,38 @@
+# Eliminar una red
+DELETE http://localhost:3000/api/v1/comun/eliminar-red/33
+Content-Type: application/json
+token:{{token}}}
+
+### Actualizar una red
+PUT http://localhost:3000/api/v1/comun/actualizar-red/33
+Content-Type: application/json
+token:{{token}}}
+
+{
+  "redId": 3,
+  "direccion": "PandulceConAzucarPorHoy"
+}
+
+### Crear una red
+
+POST http://localhost:3000/api/v1/comun/red
+Content-Type: application/json
+token: {{token}}
+
+{
+  "redId": 3,
+  "direccion": "PandulceConAzucar"
+}
+
+###
 ### Iniciar sessión
 
 POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "usuario": "kg3",
-  "clave": "1234"
+  "usuario": "kg",
+  "clave": "12345"
 }
 
 ### Registrar un captador

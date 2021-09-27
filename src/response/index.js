@@ -23,6 +23,7 @@ const WARNING_INVALID_MAIL = 'Correo inválido';
 const WARNING_ROL_NOT_FOUND = 'El rol proporcionado no existe';
 const WARNING_REQUEST_JSON = 'Asegurese de estar enviando la estructura de' +
   ' datos correcta en el json';
+const WARNING_EXIST_REGEDIT = 'El registro ya existe';
 const WARNING_IDENTIFICATION_NOT_FOUND = 'Tipo de identificación inválida';
 const WARNING_IDENTIFICATION_NOT_INTEGER = 'Debe de ingresar solo valores' +
   ' numéricos para registrar la identificacion y no puede enviar espacios en' +
@@ -100,6 +101,11 @@ exports.warning_identification_not_integer = (res, data = null) => {
 exports.warning_identification_not_available = (res, data =null) =>{
   res.status(WARNING_CODE).json(
       makeResponse(WARNING_IDENTIFICATION_NOT_AVAILABLE, data));
+};
+exports.warning_exist_regedit = (res, data = null)=>{
+  res.status(WARNING_CODE).json(
+      makeResponse(WARNING_EXIST_REGEDIT, data),
+  );
 };
 
 // NO AUTORIZADO
