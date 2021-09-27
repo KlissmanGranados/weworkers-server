@@ -42,7 +42,7 @@ const connect = async ()=>{
  * @return {Boolean}
  * @description Ejecuta las consultas a las bases de datos
  */
-exports.execute = async (updateRows) =>{
+const execute = async (updateRows) =>{
   return await (async () => {
     const client = await connect();
     try {
@@ -55,6 +55,7 @@ exports.execute = async (updateRows) =>{
     return false;
   });
 };
+exports.execute = execute;
 /**
  * @param {updateRowsCallback} updateRows
  * @return {Boolean}
@@ -77,6 +78,55 @@ exports.transaction = async (updateRows) =>{
   })(updateRows).catch((e) => {
     console.error(e.stack);
     return false;
+  });
+};
+
+/**
+ * @description Pagina una consulta, {limit} es opcional,
+ * tiene {offset:1,rowsLimit:20} por defecto
+ * @param { {
+ * limit:{offset:bigint,rowsLimit:bigint},
+ * uri:String,
+ * text:String,
+ * values:Array<String>,
+ * orderBy:String
+ * }} params
+ * @return {Promise}
+ */
+exports.repage = (params)=>{
+  let {offset, rowsLimit} = params.limit;
+
+  offset = offset || 1;
+  rowsLimit = rowsLimit || 20;
+
+  offset = (offset-1>=0)?offset-1:0;
+  offset = offset * rowsLimit;
+
+  rowsLimit *=1;
+  let {text, values} = params;
+
+  values = values || [];
+  values = values.concat([rowsLimit, offset]);
+  params.orderBy = params.orderBy ||'id';
+
+  const counterStatement = 'SELECT count(*) FROM ' + text.split('from')[1];
+  text = `${text} ORDER BY(${params.orderBy}) 
+          LIMIT $${values.length-1} OFFSET $${values.length}`;
+
+  return execute( async (conn)=>{
+    const [counter, records] = await Promise.all(
+        [
+          conn.query(counterStatement, values.slice(0, values.length-2)),
+          conn.query(text, values),
+        ],
+    );
+
+    return {
+      uri: params.uri,
+      totalCount: counter.rows[0].count*1,
+      pageCount: (records.rowCount)*1,
+      records: records.rows || null,
+    };
   });
 };
 

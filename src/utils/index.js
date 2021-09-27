@@ -66,8 +66,15 @@ const snakeToCamelObject = (object) => {
   return Object.fromEntries(
       entries.map((entrie)=>{
         let [key, value] = entrie;
-        if (typeof value === 'object') {
+        if (typeof value === 'object' && !/fecha/.test(key) ) {
           value = snakeToCamelObject(value);
+        }
+        if (/fecha/.test(key)) {
+          value = [
+            value.getFullYear(),
+            value.getMonth(),
+            value.getDay(),
+          ].join('-');
         }
         key = regex.test(key)? snakeToCamel(key):key;
         return [key, value];
