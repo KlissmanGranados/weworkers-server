@@ -1,12 +1,12 @@
 # Eliminar una red
-DELETE http://localhost:3000/api/v1/comun/eliminar-red/33
+DELETE http://localhost:3000/api/v1/comun/eliminar-red/{id}
 Content-Type: application/json
-token:{{token}}}
+token:{{token}}
 
 ### Actualizar una red
-PUT http://localhost:3000/api/v1/comun/actualizar-red/33
+PUT http://localhost:3000/api/v1/comun/actualizar-red/{{id}}
 Content-Type: application/json
-token:{{token}}}
+token: {{token}}
 
 {
   "redId": 3,
@@ -24,7 +24,55 @@ token: {{token}}
   "direccion": "PandulceConAzucar"
 }
 
+### Reactivar cuenta
+PUT http://localhost:3000/api/v1/comun/reactivar-usuario
+token:{{token}}
+Content-Type: application/json
+
+{
+    "usuario":"kg1",
+    "clave":"1234",
+    "idTipoIdentificacion":1,
+    "identificacion":270560279,
+    "direccion":"kg3@gmail.com"
+}
+
+### Desactivar cuenta
+PUT http://localhost:3000/api/v1/comun/desactivar-usuario
+token:{{token}}
+
+### Actualizar datos personales (Persona)
+PUT http://localhost:3000/api/v1/comun/persona
+token:{{token}}
+Content-Type: application/json
+
+{
+  "idTipoIdentificacion": "1",
+  "identificacion": "27056027",
+  "primerNombre": "klissman",
+  "segundoNombre": "andress",
+  "primerApellido": "granados",
+  "segundoApellido": "rodriguez"
+}
+
+### Actualizar usuario
+PUT http://localhost:3000/api/v1/comun/usuario
+Content-Type: application/json
+token:{{token}}
+
+{
+  "usuario":"kg1",
+  "claveVieja":9999,
+  "claveNueva":1234
+}
+
 ###
+# ver perfil
+
+GET http://localhost:3000/api/v1/comun/perfil/2
+Accept: application/json
+token:{{token}}
+
 ### Iniciar sessión
 
 POST http://localhost:3000/api/v1/auth/login
@@ -111,4 +159,3 @@ Accept: application/json
 
 GET http://localhost:3000/api/v1/auth/tipos-identificacion/2
 Accept: application/json
-

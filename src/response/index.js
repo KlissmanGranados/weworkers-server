@@ -11,10 +11,10 @@ const SUCCESS = 'operación realizada exitosamente';
 const SUCCESS_REGEDIT = 'Registro exitoso';
 const SUCCESS_FOUND = 'Datos encontrados';
 const SUCCESS_LOGIN = 'Bienvenido';
+const SUCCESS_NOT_DATA = 'Sin datos para mostrar';
 /**
  * MENSAJES PARA WARNING
  * */
-const WARNING_NOT_FOUND = 'Sin datos para mostrar';
 const WARNING_EMAIL_NOT_AVAILABLE = 'El correo no está disponible';
 const WARNING_USER_NOT_AVAILABLE = 'El usuario no está disponible';
 const WARNING_IDENTIFICATION_NOT_AVAILABLE = 'La identificación está en uso';
@@ -28,6 +28,7 @@ const WARNING_IDENTIFICATION_NOT_FOUND = 'Tipo de identificación inválida';
 const WARNING_IDENTIFICATION_NOT_INTEGER = 'Debe de ingresar solo valores' +
   ' numéricos para registrar la identificacion y no puede enviar espacios en' +
   ' blanco';
+const WARNING_OPERATION_NOT_AVALIBLE = 'Operación no permitida';
 /**
  * MENSAJES PARA FORBIDDEN
  * **/
@@ -67,10 +68,11 @@ exports.success_found = (res, data = null)=>{
 exports.success_login = (res, data=null)=>{
   res.status(SUCCESS_CODE).json(makeResponse(SUCCESS_LOGIN, data));
 };
-
-exports.warning_not_found = (res, data = null)=>{
-  res.status(WARNING_CODE).json(makeResponse(WARNING_NOT_FOUND, data));
+exports.success_no_data = (res, data = null)=>{
+  res.status(WARNING_CODE).json(makeResponse(SUCCESS_NOT_DATA, data));
 };
+
+
 exports.warning_email_not_available = (res, data = null)=>{
   res.status(WARNING_CODE)
       .json(makeResponse(WARNING_EMAIL_NOT_AVAILABLE, data));
@@ -102,9 +104,15 @@ exports.warning_identification_not_available = (res, data =null) =>{
   res.status(WARNING_CODE).json(
       makeResponse(WARNING_IDENTIFICATION_NOT_AVAILABLE, data));
 };
+
 exports.warning_exist_regedit = (res, data = null)=>{
   res.status(WARNING_CODE).json(
-      makeResponse(WARNING_EXIST_REGEDIT, data),
+      makeResponse(WARNING_EXIST_REGEDIT, data)
+  )
+}
+exports.warning_operation_not_available = (res, data = null)=>{
+  res.status(WARNING_CODE).json(
+      makeResponse(WARNING_OPERATION_NOT_AVALIBLE, data)
   );
 };
 

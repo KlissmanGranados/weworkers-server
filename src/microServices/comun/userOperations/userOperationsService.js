@@ -25,6 +25,7 @@ exports.updatePerson = async (req, res) => {
           persona.identificacion,
           req.user.idusuario,
       );
+
   if (identificationInUse) {
     response.warning_identification_not_available(res, persona.identificacion);
     return;
@@ -48,7 +49,7 @@ exports.updateUser = async (req, res) => {
       .usernameExists(req.user.idusuario, user.usuario);
 
   if (checkUsername) {
-    response.error(res);
+    response.warning_user_not_available(res, user.usuario);
     return;
   }
 
@@ -56,7 +57,7 @@ exports.updateUser = async (req, res) => {
       .checkPassword(req.user.idusuario, user.claveVieja);
 
   if (!checkPassword) {
-    response.error(res);
+    response.forbidden_invalid_login(res);
     return;
   }
 
@@ -84,7 +85,7 @@ exports.deactivateUser = async (req, res) => {
   const checkState = await userOperationsRepository.stateIsTrue(id);
 
   if (!checkState) {
-    response.error(res);
+    response.warning_operation_not_available(res);
     return;
   }
 
@@ -106,17 +107,21 @@ exports.reactivateUser = async (req, res) => {
   const params = req.body;
   const check = await userOperationsRepository.selectUser(req.user.idusuario);
 
+  if (check.estado) {
+    response.warning_operation_not_available(res);
+    return;
+  }
+
   const conditions = [
-    check.estado,
-    check.usuario != params.usuario,
-    check.clave != params.clave,
-    check.id_tipo_identificacion != params.idTipoIdentificacion,
-    check.identificacion != params.identificacion,
-    check.direccion != params.direccion,
+    check.usuario == params.usuario,
+    check.clave == params.clave,
+    check.id_tipo_identificacion == params.idTipoIdentificacion,
+    check.identificacion == params.identificacion,
+    check.direccion == params.direccion,
   ];
 
-  if (!conditions.every((item) => item === false)) {
-    response.error(res);
+  if (!conditions.every((condition) => condition )) {
+    response.forbidden_invalid_login(res);
     return;
   }
 
@@ -138,5 +143,9 @@ exports.reactivateUser = async (req, res) => {
 exports.userProfile = async (req, res) => {
   const {id} = req.params;
   const profile = await userOperationsRepository.readProfile(id);
+  if (!profile) {
+    response.forbidden(res);
+    return;
+  }
   response.success(res, profile);
 };

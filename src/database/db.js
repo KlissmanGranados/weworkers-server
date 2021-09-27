@@ -38,7 +38,7 @@ const connect = async ()=>{
   }
 };
 /**
- * @param {updateRowsCallback} updateRows
+ * @param {function(*): boolean} updateRows
  * @return {Boolean}
  * @description Ejecuta las consultas a las bases de datos
  */

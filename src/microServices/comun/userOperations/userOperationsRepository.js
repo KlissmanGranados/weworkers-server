@@ -28,7 +28,7 @@ exports.readProfile = async (id) => {
 
     // si el perfil es de un capatado
     if (profile.roles_id === 1) {
-      return {perfil:profile};
+      return {perfil: profile};
     }
     // si el perfil es de un captador
     const rowsBusiness = await conn.query(`SELECT
@@ -88,13 +88,13 @@ exports.updateUserTable = async (params) => {
 };
 
 exports.identificacionIsRepeated = async (tipo, identificacion, id) =>{
-  return (db.execute(async (conn) =>{
+  return db.execute(async (conn) =>{
     const row = await conn.query(`SELECT personas.id FROM personas 
       INNER JOIN usuarios ON (usuarios.persona_id=personas.id)
       WHERE id_tipo_identificacion=$1 
       AND identificacion=$2 AND usuarios.id!=$3`, [tipo, identificacion, id]);
-    return row.rowCount;
-  })) !== 0;
+    return row.rowCount !== 0;
+  });
 };
 
 
