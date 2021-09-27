@@ -1,5 +1,5 @@
 const response = require('../../../response');
-const {Proyecto, Tag, ProyectoTag} = require('../../../Entities');
+const {Proyecto, Tag, ProyectoTag} = require('../../../entities');
 const {consts} = require('../../../../index');
 /**
  * @description verifica los datos del create

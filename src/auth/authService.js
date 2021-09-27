@@ -5,21 +5,19 @@ const authRepository = require('./authRepository');
  * @description selecciona los roles
  * @param {Request}req
  * @param {Response} res
- * @return {Promise<void>}
  */
-exports.getRoles = async (req, res)=>{
+exports.getRoles = (req, res)=>{
   const {id} = req.params;
-  response.success(res, await authRepository.getRolesById(id));
+  response.success(res, authRepository.getRolesById(id));
 };
 /**
  * @description selecciona los tipos de identificacion
  * @param {Request} req
  * @param {Response} res
- * @return {Promise<void>}
  */
-exports.getIposIdentificacion = async (req, res)=>{
+exports.getIposIdentificacion = (req, res)=>{
   const {id} = req.params;
-  response.success(res, await authRepository.getTipoIdentificacion(id));
+  response.success(res, authRepository.getTipoIdentificacion(id));
 };
 /**
  * @description Crea un login
@@ -46,7 +44,7 @@ exports.regedit = async (req, res)=>{
   const auth = req.body;
 
   // verificar si el rol existe
-  const checkRol = await authRepository.getRolesById(
+  const checkRol = authRepository.getRolesById(
       auth.usuario.rolesId,
   );
   if (!checkRol) {
@@ -54,7 +52,7 @@ exports.regedit = async (req, res)=>{
     return;
   }
   // verificar si el tipo de identificacion existe
-  const chekIdentificationType = await authRepository.getTipoIdentificacion(
+  const chekIdentificationType = authRepository.getTipoIdentificacion(
       auth.persona.idTipoIdentificacion,
   );
   if (!chekIdentificationType) {

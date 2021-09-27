@@ -8,12 +8,12 @@ module.exports = [
     url: '/monedas/:query?',
     method: 'get',
     handler: staticService.moneys,
-    middelwares: [],
+    middlewares: [],
   },
   {
     url: 'tipos-pago/:query?',
     method: 'get',
     handler: staticService.paymentType,
-    middelwares: [],
+    middlewares: [],
   },
 ];

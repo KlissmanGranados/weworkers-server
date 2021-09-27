@@ -1,5 +1,5 @@
 const {db} = require('../../index');
-
+const {consts} = require('../../index');
 /**
  *
  * @param {Object} paramns
@@ -25,19 +25,11 @@ exports.login = async (paramns) => {
  * @param {BigInteger}id : Opcional
  * @return {Rol}
  */
-exports.getRolesById = async (id = null)=>{
-  return db.execute(async (conn) => {
-    if (!id) {
-      return (await conn.query(
-          `SELECT id, nombre FROM roles `,
-      )).rows;
-    }
-    return (await conn.query(
-        `SELECT 
-             id, nombre 
-             FROM roles WHERE id=$1`, [id],
-    )).rows[0];
-  });
+exports.getRolesById = (id = null)=>{
+  if (!id) {
+    return consts().roles.rows;
+  }
+  return consts().roles.getById(id);
 };
 
 /**
@@ -46,18 +38,11 @@ exports.getRolesById = async (id = null)=>{
  * @return {Array}
  *
  */
-exports.getTipoIdentificacion = async (id = null) =>{
-  return db.execute(async (conn) =>{
-    if (!id) {
-      return (await conn.query(
-          `SELECT id, tipo FROM tipos_identificacion`,
-      )).rows;
-    }
-    return (await conn.query(
-        `SELECT id, tipo FROM tipos_identificacion WHERE id=$1`,
-        [id],
-    )).rows[0];
-  });
+exports.getTipoIdentificacion = (id = null) =>{
+  if (id) {
+    return consts().tiposIdentificacion.getById(id);
+  }
+  return consts().tiposIdentificacion;
 };
 
 /**

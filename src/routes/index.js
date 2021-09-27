@@ -1,33 +1,6 @@
 /**
  * Archivo que agrega todas las rutas del servicio.
  */
-
-/**
- * @name{app}
- * @type{Express}
- * @description instancia principal del servicio
- *
- * @name{path}
- * @type {path}
- * @description maneja las rutas de lectura de los archivos
- *
- * @name{loader}
- * @param{multipleDirs}
- * @type {Array}
- * @description lista de rutas de los archivos contenedores de endpoints
- * @type{function}
- * @return {Array}
- * @description almacena todos los objetos que contienen las rutas de los
- * directorios proporcionados por { multipleDirs }.
- *
- * @name {guards}
- * @type {Array}
- * @description lista de guards ordenadas por atributo
- *
- * @name {auth}
- * @type {Array}
- * @description Protege las rutas que requieren autenticación
- */
 const {app} = require('../../index');
 const path = require('path');
 const loader = require('expressjs-routes-loader')({useNameFolder: true});
@@ -63,11 +36,11 @@ routes.forEach((route) => {
   const routePrefix = route.url.split('/')[3];
   // Se verifica sino necesitan protección
   if (routePrefix === 'auth' || routePrefix === 'public') {
-    app[route.method](route.url, route.middelwares, route.handler);
+    app[route.method](route.url, route.middlewares, route.handler);
   } else {
     app[route.method](
         route.url,
-        auth.concat(guards[routePrefix].concat(route.middelwares)),
+        auth.concat(guards[routePrefix].concat(route.middlewares)),
         route.handler,
     );
   }

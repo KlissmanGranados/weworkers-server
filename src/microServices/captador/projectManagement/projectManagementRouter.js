@@ -9,7 +9,7 @@ module.exports = [
     method: 'post',
     url: '/proyecto',
     handler: projectManagementService.create,
-    middelwares: [
+    middlewares: [
       projectManagementMiddleware.create,
     ],
   },
@@ -17,7 +17,7 @@ module.exports = [
     method: 'put',
     url: '/update-proyecto',
     handler: projectManagementService.update,
-    middelwares: [
+    middlewares: [
       projectManagementMiddleware.create,
       projectManagementMiddleware.checkId,
     ],
