@@ -119,7 +119,7 @@ module.exports = [
     method: '',
     url: '',
     handler: ${name}Service,
-    middelwares: [],
+    middlewares: [],
   },
 ];`;
 

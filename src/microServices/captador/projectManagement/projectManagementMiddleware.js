@@ -68,6 +68,7 @@ exports.create = (req, res, next)=>{
         'nombre',
         'descripcion',
         'presupuesto',
+        'fechaInicio',
         'fechaTermina',
         'monedasId',
         'tiposPagoId',
