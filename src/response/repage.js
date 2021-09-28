@@ -26,23 +26,29 @@ module.exports = (req, data)=>{
   const self = req.protocol + '://' + req.get('host') + req.originalUrl;
 
   let {perPage, page} = req.query;
-  perPage = perPage || 20;
-  page = page || 1;
+  perPage = Number(perPage) || 20;
+  page = Number(page) || 1;
 
   const apiVersion = process.env.VERSION;
   const serverHost = process.env.HOST || 'http://localhost';
   const serverPort = process.env.PORT || 3000;
 
   const fullUri = `${serverHost}:${serverPort}${apiVersion}`;
-  const totalPage = Math.round(totalCount/perPage);
-  const nexPage = (page*1)+1<= totalPage? (page*1)+1:totalPage;
-  const prevPage = (page*1)-1<=0?1:(page*1)-1;
+  const totalPage = Math.ceil(totalCount/perPage);
+
+  const nexPage =  (page+1)<= totalPage? (page+1):totalPage;
+  const prevPage = (page-1)<=0?1:(page-1);
 
   const template = self.split('?')[0] + `?perPage=${perPage}&`;
   const first = template + 'page=1';
-  const next = template + ('page=' + nexPage);
-  const previous = template + ('page=' + prevPage);
-  const last = template + ('page=' + totalPage);
+  let next = template + ('page=' + nexPage);
+
+  let previous = template + ('page=' + prevPage);
+  let last = template + ('page=' + totalPage );
+
+  next = self == next? null :next;
+  previous = self == first?null:previous;
+  last = self == last?null:last;
 
   return {
     metadata: {

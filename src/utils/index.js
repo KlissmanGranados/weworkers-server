@@ -59,14 +59,14 @@ const snakeToCamelObject = (object) => {
     return object;
   }
   if (object.length ) {
-    return object.map( (entrie) => snakeToCamelObject(entrie) );
+    return object.map( (entry) => snakeToCamelObject(entry) );
   }
   const entries = Object.entries(object);
   const regex = /_/;
   return Object.fromEntries(
-      entries.map((entrie)=>{
-        let [key, value] = entrie;
-        if (typeof value === 'object') {
+      entries.map((entry)=>{
+        let [key, value] = entry;
+        if (typeof value === 'object' && value !== null) {
           if (value.toLocaleDateString) {
             const options = {
               weekday: 'long',

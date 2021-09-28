@@ -89,6 +89,7 @@ exports.transaction = async (updateRows) =>{
  * uri:String,
  * text:String,
  * values:Array<String>,
+ * key:String,
  * groupBy:String,
  * orderBy:String,
  * counter:{text:String,values:Array<String>}
@@ -99,28 +100,51 @@ exports.repage = (params)=>{
   let {offset, rowsLimit} = params.limit;
 
   offset = offset || 1;
-  rowsLimit = rowsLimit || 20;
+  rowsLimit = Number(rowsLimit) || 20;
 
   offset = (offset-1>=0)?offset-1:0;
   offset = offset * rowsLimit;
 
-  rowsLimit *=1;
-  let {text, values} = params;
+  let {text, values,key} = params;
 
   values = values || [];
   values = values.concat([rowsLimit, offset]);
   params.orderBy = params.orderBy ||'id';
   params.groupBy = params.groupBy ||'id';
+  params.key = params.key || 'id';
 
   let counterStatement = params.counter;
-
+  /**
+   * @description en caso de que no se proporcione
+   * la consulta para el count, se trata de extraer
+   * el nombre de la tabla con los wheres en caso de
+   * que existan wheres en la consulta principal
+   */
   if (!counterStatement) {
-    counterStatement = {};
-    counterStatement.text = 'SELECT count(*) FROM ' + text.split('FROM')[1];
-    counterStatement.text = counterStatement.text
-        .replace(`GROUP BY(${params.groupBy})`, '')
-        .replace(`group by(${params.groupBy})`, '');
-    counterStatement.values = values.slice(0, values.length-2);
+
+    counterStatement = {
+      text,values
+    };
+    
+    counterStatement.text = counterStatement.text.toLowerCase();
+    /**
+     * @name sql
+     * @type {Array<String>}
+     */
+    const sql = counterStatement.text.split(' ');
+    
+    let tableName = sql;
+    tableName = tableName[ tableName.indexOf('from')+1 ];
+    
+    let wheres = sql.indexOf('where')!==-1? sql.slice(
+      sql.indexOf("where"),sql.indexOf('group')
+      ).join(' ').trim() : '';
+
+      counterStatement.text = `
+        SELECT count(*) FROM ${tableName} ${wheres}
+      `;
+      counterStatement.values = counterStatement
+        .values.slice(0,-2);  
   }
 
   text = `${text} ORDER BY(${params.orderBy}) 
@@ -139,6 +163,7 @@ exports.repage = (params)=>{
       totalCount: counter.rows[0].count*1,
       pageCount: (records.rowCount)*1,
       records: records.rows || null,
+      key:key
     };
   });
 };
