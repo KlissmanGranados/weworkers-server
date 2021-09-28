@@ -66,15 +66,23 @@ const snakeToCamelObject = (object) => {
   return Object.fromEntries(
       entries.map((entrie)=>{
         let [key, value] = entrie;
-        if (typeof value === 'object' && !/fecha/.test(key) ) {
-          value = snakeToCamelObject(value);
-        }
-        if (/fecha/.test(key)) {
-          value = [
-            value.getFullYear(),
-            value.getMonth(),
-            value.getDay(),
-          ].join('-');
+        if (typeof value === 'object') {
+          if (value.toLocaleDateString) {
+            const options = {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            };
+            const languaje = 'es-Es';
+            value = {
+              etiqueta: value.toLocaleDateString(languaje),
+              etiquetaSemantica: value.toLocaleDateString(languaje, options),
+              valor: value,
+            };
+          } else {
+            value = snakeToCamelObject(value);
+          }
         }
         key = regex.test(key)? snakeToCamel(key):key;
         return [key, value];
@@ -87,6 +95,7 @@ const snakeToCamelObject = (object) => {
  * @return {number}
  */
 exports.checkMounts = (value)=>{
+  value = (''+value);
   const _mount = value.split(',');
   /**
    * @type {String}

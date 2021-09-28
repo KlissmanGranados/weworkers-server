@@ -89,7 +89,9 @@ exports.transaction = async (updateRows) =>{
  * uri:String,
  * text:String,
  * values:Array<String>,
- * orderBy:String
+ * groupBy:String,
+ * orderBy:String,
+ * counter:{text:String,values:Array<String>}
  * }} params
  * @return {Promise}
  */
@@ -108,15 +110,26 @@ exports.repage = (params)=>{
   values = values || [];
   values = values.concat([rowsLimit, offset]);
   params.orderBy = params.orderBy ||'id';
+  params.groupBy = params.groupBy ||'id';
 
-  const counterStatement = 'SELECT count(*) FROM ' + text.split('from')[1];
+  let counterStatement = params.counter;
+
+  if (!counterStatement) {
+    counterStatement = {};
+    counterStatement.text = 'SELECT count(*) FROM ' + text.split('FROM')[1];
+    counterStatement.text = counterStatement.text
+        .replace(`GROUP BY(${params.groupBy})`, '')
+        .replace(`group by(${params.groupBy})`, '');
+    counterStatement.values = values.slice(0, values.length-2);
+  }
+
   text = `${text} ORDER BY(${params.orderBy}) 
           LIMIT $${values.length-1} OFFSET $${values.length}`;
 
   return execute( async (conn)=>{
     const [counter, records] = await Promise.all(
         [
-          conn.query(counterStatement, values.slice(0, values.length-2)),
+          conn.query(counterStatement),
           conn.query(text, values),
         ],
     );
