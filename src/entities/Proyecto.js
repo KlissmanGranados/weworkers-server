@@ -13,7 +13,7 @@ class Proyecto extends Entity {
   _tiposPagoId;
 
   constructor() {
-    super();
+    super('proyectos');
     this._fechaCrea = new Date();
   }
 

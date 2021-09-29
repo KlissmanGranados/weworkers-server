@@ -28,8 +28,10 @@ class Entity {
     const attributesClass = this.getAttributes();
 
     attributesBody.forEach((attribute) => {
-      const [key, value] = attribute;
-      if (attributesClass.indexOf(key) >= 0 && (value || value === null)) {
+      let [key, value] = attribute;
+      key = String(key);
+      value = String(value);
+      if (attributesClass.indexOf(key) >= 0 && (value)) {
         this[key] = value;
       }
     });

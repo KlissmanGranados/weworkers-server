@@ -88,7 +88,6 @@ exports.create = (req, res, next)=>{
     response.warning_data_not_valid(res, {proyecto: {tiposPagoId: null}});
     return;
   }
-
   // setear datos para manejarlos en el servicio
   req.registro = {
     proyecto: _proyecto,
@@ -101,7 +100,6 @@ exports.create = (req, res, next)=>{
 
 exports.checkId = (req, res, next)=>{
   const body = req.registro;
-
   const requireFields = body.proyecto.checkRequired(['id']);
 
   if (requireFields.length > 0) {

@@ -93,9 +93,8 @@ exports.update = async (req, res)=>{
 
   const allTags = [...new Set(currentTags.concat(newTags))];
 
-  const update = await projectManagementRepository.updateProject(
-      registro.proyecto.toArray(),
-  );
+  const update = await projectManagementRepository
+      .updateProject(registro.proyecto);
 
   const insertTags = await projectManagementRepository.insertProjectTags(
       registro.proyecto.id,
@@ -108,7 +107,7 @@ exports.update = async (req, res)=>{
   );
 
   if (update && insertTags && deleteTags) {
-    response.success(res);
+    response.success(res, registro.proyecto.id);
     return;
   }
 

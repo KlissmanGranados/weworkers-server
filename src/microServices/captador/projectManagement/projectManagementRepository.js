@@ -108,17 +108,9 @@ exports.findTagsByProjectId = (id) =>{
   });
 };
 
-exports.updateProject = (data) =>{
+exports.updateProject = (proyecto) =>{
   return db.execute(async (conn)=>{
-    const update = await conn.query(
-        `UPDATE weworkers.proyectos
-      SET nombre=$2, descripcion=$3,
-      presupuesto=$4, fecha_crea=$5,
-      fecha_termina=$6, monedas_id=$7, 
-      tipos_pago_id=$8
-      WHERE id=$1
-      `, data);
-
+    const update = await conn.query(proyecto.update());
     return update.rowCount > 0;
   });
 };

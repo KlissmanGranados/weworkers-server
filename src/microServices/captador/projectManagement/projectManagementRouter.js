@@ -15,7 +15,7 @@ module.exports = [
   },
   {
     method: 'put',
-    url: '/update-proyecto',
+    url: '/actualizar-proyecto',
     handler: projectManagementService.update,
     middlewares: [
       projectManagementMiddleware.create,
