@@ -9,7 +9,7 @@ const {
   Empresa,
   Reclutador,
   Trabajador,
-} = require('../../Entities');
+} = require('../../entities');
 
 class Auth {
   _persona;

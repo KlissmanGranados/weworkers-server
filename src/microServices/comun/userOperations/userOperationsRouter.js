@@ -6,7 +6,7 @@ module.exports = [
     method: 'put',
     url: '/persona',
     handler: userOperationsService.updatePerson,
-    middelwares: [
+    middlewares: [
       userOperationsMiddleware.requiredFieldsPerson,
       userOperationsMiddleware.updatePerson],
   },
@@ -14,24 +14,24 @@ module.exports = [
     method: 'put',
     url: '/usuario',
     handler: userOperationsService.updateUser,
-    middelwares: [userOperationsMiddleware.requiredFieldsUser],
+    middlewares: [userOperationsMiddleware.requiredFieldsUser],
   },
   {
     method: 'put',
     url: '/desactivar-usuario',
     handler: userOperationsService.deactivateUser,
-    middelwares: [],
+    middlewares: [],
   },
   {
     method: 'put',
     url: '/reactivar-usuario',
     handler: userOperationsService.reactivateUser,
-    middelwares: [userOperationsMiddleware.requiredFieldsReactivate],
+    middlewares: [userOperationsMiddleware.requiredFieldsReactivate],
   },
   {
     method: 'get',
     url: '/perfil/:id',
     handler: userOperationsService.userProfile,
-    middelwares: [],
+    middlewares: [],
   },
 ];

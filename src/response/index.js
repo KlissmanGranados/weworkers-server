@@ -3,6 +3,24 @@ const makeResponse = (message, data)=>{
   data = snakeToCamelObject(data);
   return ({message, data});
 };
+
+/**
+ * @description Medela paginación
+ * @param {Request} req
+ * @param {
+ * {
+ *  totalCount:bigint,
+ *  pageCount:bigint,
+ *  records:[],
+ *  uri:String,
+ *  key:String
+ * }
+* } data | {key} es opcional, selecciona el atributo que apunta a la clave,
+* por defecto es id.
+* @return {Object}
+*/
+exports.repage = require('./repage');
+
 /**
  *
  * MENSAJES PARA SUCCESS
@@ -23,11 +41,13 @@ const WARNING_INVALID_MAIL = 'Correo inválido';
 const WARNING_ROL_NOT_FOUND = 'El rol proporcionado no existe';
 const WARNING_REQUEST_JSON = 'Asegurese de estar enviando la estructura de' +
   ' datos correcta en el json';
+const WARNING_EXIST_REGEDIT = 'El registro ya existe';
 const WARNING_IDENTIFICATION_NOT_FOUND = 'Tipo de identificación inválida';
 const WARNING_IDENTIFICATION_NOT_INTEGER = 'Debe de ingresar solo valores' +
   ' numéricos para registrar la identificacion y no puede enviar espacios en' +
   ' blanco';
 const WARNING_OPERATION_NOT_AVALIBLE = 'Operación no permitida';
+const WARNING_DATA_NOT_VALID = 'Los valores ingresados no son válidos';
 /**
  * MENSAJES PARA FORBIDDEN
  * **/
@@ -103,9 +123,20 @@ exports.warning_identification_not_available = (res, data =null) =>{
   res.status(WARNING_CODE).json(
       makeResponse(WARNING_IDENTIFICATION_NOT_AVAILABLE, data));
 };
+
+exports.warning_exist_regedit = (res, data = null)=>{
+  res.status(WARNING_CODE).json(
+      makeResponse(WARNING_EXIST_REGEDIT, data),
+  );
+};
 exports.warning_operation_not_available = (res, data = null)=>{
   res.status(WARNING_CODE).json(
       makeResponse(WARNING_OPERATION_NOT_AVALIBLE, data),
+  );
+};
+exports.warning_data_not_valid = (res, data = null) => {
+  res.status(WARNING_CODE).json(
+      makeResponse(WARNING_DATA_NOT_VALID, data),
   );
 };
 
