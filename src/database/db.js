@@ -42,7 +42,7 @@ const connect = async ()=>{
  * @return {Boolean}
  * @description Ejecuta las consultas a las bases de datos
  */
-exports.execute = async (updateRows) =>{
+const execute = async (updateRows) =>{
   return await (async () => {
     const client = await connect();
     try {
@@ -55,6 +55,7 @@ exports.execute = async (updateRows) =>{
     return false;
   });
 };
+exports.execute = execute;
 /**
  * @param {updateRowsCallback} updateRows
  * @return {Boolean}
@@ -77,6 +78,93 @@ exports.transaction = async (updateRows) =>{
   })(updateRows).catch((e) => {
     console.error(e.stack);
     return false;
+  });
+};
+
+/**
+ * @description Pagina una consulta, {limit} es opcional,
+ * tiene {offset:1,rowsLimit:20} por defecto
+ * @param { {
+ * limit:{offset:bigint,rowsLimit:bigint},
+ * uri:String,
+ * text:String,
+ * values:Array<String>,
+ * key:String,
+ * groupBy:String,
+ * orderBy:String,
+ * counter:{text:String,values:Array<String>}
+ * }} params
+ * @return {Promise}
+ */
+exports.repage = (params)=>{
+  let {offset, rowsLimit} = params.limit;
+
+  offset = offset || 1;
+  rowsLimit = Number(rowsLimit) || 20;
+
+  offset = (offset-1>=0)?offset-1:0;
+  offset = offset * rowsLimit;
+
+  let {text, values,key} = params;
+
+  values = values || [];
+  values = values.concat([rowsLimit, offset]);
+  params.orderBy = params.orderBy ||'id';
+  params.groupBy = params.groupBy ||'id';
+  params.key = params.key || 'id';
+
+  let counterStatement = params.counter;
+  /**
+   * @description en caso de que no se proporcione
+   * la consulta para el count, se trata de extraer
+   * el nombre de la tabla con los wheres en caso de
+   * que existan wheres en la consulta principal
+   */
+  if (!counterStatement) {
+
+    counterStatement = {
+      text,values
+    };
+    
+    counterStatement.text = counterStatement.text.toLowerCase();
+    /**
+     * @name sql
+     * @type {Array<String>}
+     */
+    const sql = counterStatement.text.split(' ');
+    
+    let tableName = sql;
+    tableName = tableName[ tableName.indexOf('from')+1 ];
+    
+    let wheres = sql.indexOf('where')!==-1? sql.slice(
+      sql.indexOf("where"),sql.indexOf('group')
+      ).join(' ').trim() : '';
+
+      counterStatement.text = `
+        SELECT count(*) FROM ${tableName} ${wheres}
+      `;
+      counterStatement.values = counterStatement
+        .values.slice(0,-2);  
+  }
+
+  text = `${text} ORDER BY(${params.orderBy}) 
+          LIMIT $${values.length-1} OFFSET $${values.length}`;
+
+  return execute( async (conn)=>{
+    const [counter, records] = await Promise.all(
+        [
+          conn.query(counterStatement),
+          conn.query(text, values),
+        ],
+    );
+
+    return {
+      uri: params.uri,
+      totalCount: counter.rows[0].count*1,
+      pageCount: (records.rowCount)*1,
+      records: records.rows || null,
+      key:key
+    };
   });
 };
 

@@ -3,6 +3,24 @@ const makeResponse = (message, data)=>{
   data = snakeToCamelObject(data);
   return ({message, data});
 };
+
+/**
+ * @description Medela paginación
+ * @param {Request} req
+ * @param {
+ * {
+ *  totalCount:bigint,
+ *  pageCount:bigint,
+ *  records:[],
+ *  uri:String,
+ *  key:String
+ * }
+* } data | {key} es opcional, selecciona el atributo que apunta a la clave,
+* por defecto es id.
+* @return {Object}
+*/
+exports.repage = require('./repage');
+
 /**
  *
  * MENSAJES PARA SUCCESS

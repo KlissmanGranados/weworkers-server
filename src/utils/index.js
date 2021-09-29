@@ -59,15 +59,30 @@ const snakeToCamelObject = (object) => {
     return object;
   }
   if (object.length ) {
-    return object.map( (entrie) => snakeToCamelObject(entrie) );
+    return object.map( (entry) => snakeToCamelObject(entry) );
   }
   const entries = Object.entries(object);
   const regex = /_/;
   return Object.fromEntries(
-      entries.map((entrie)=>{
-        let [key, value] = entrie;
-        if (typeof value === 'object') {
-          value = snakeToCamelObject(value);
+      entries.map((entry)=>{
+        let [key, value] = entry;
+        if (typeof value === 'object' && value !== null) {
+          if (value.toLocaleDateString) {
+            const options = {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            };
+            const languaje = 'es-Es';
+            value = {
+              etiqueta: value.toLocaleDateString(languaje),
+              etiquetaSemantica: value.toLocaleDateString(languaje, options),
+              valor: value,
+            };
+          } else {
+            value = snakeToCamelObject(value);
+          }
         }
         key = regex.test(key)? snakeToCamel(key):key;
         return [key, value];
@@ -80,6 +95,7 @@ const snakeToCamelObject = (object) => {
  * @return {number}
  */
 exports.checkMounts = (value)=>{
+  value = (''+value);
   const _mount = value.split(',');
   /**
    * @type {String}
