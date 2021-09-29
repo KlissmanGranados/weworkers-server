@@ -1,12 +1,9 @@
 name: Deploy
 
 on:
-  pull_request:
-    branches:
-      - master
   push:
     branches:
-    - master
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
