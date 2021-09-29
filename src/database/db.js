@@ -105,7 +105,7 @@ exports.repage = (params)=>{
   offset = (offset-1>=0)?offset-1:0;
   offset = offset * rowsLimit;
 
-  let {text, values,key} = params;
+  let {text, values, key} = params;
 
   values = values || [];
   values = values.concat([rowsLimit, offset]);
@@ -115,36 +115,35 @@ exports.repage = (params)=>{
 
   let counterStatement = params.counter;
   /**
-   * @description en caso de que no se proporcione
+   * en caso de que no se proporcione
    * la consulta para el count, se trata de extraer
    * el nombre de la tabla con los wheres en caso de
    * que existan wheres en la consulta principal
    */
   if (!counterStatement) {
-
     counterStatement = {
-      text,values
+      text, values,
     };
-    
+
     counterStatement.text = counterStatement.text.toLowerCase();
     /**
      * @name sql
      * @type {Array<String>}
      */
     const sql = counterStatement.text.split(' ');
-    
-    let tableName = sql;
-    tableName = tableName[ tableName.indexOf('from')+1 ];
-    
-    let wheres = sql.indexOf('where')!==-1? sql.slice(
-      sql.indexOf("where"),sql.indexOf('group')
-      ).join(' ').trim() : '';
 
-      counterStatement.text = `
+    let tableName = sql;
+    tableName = tableName[tableName.indexOf('from')+1];
+
+    const wheres = sql.indexOf('where')!==-1? sql.slice(
+        sql.indexOf('where'), sql.indexOf('group'),
+    ).join(' ').trim() : '';
+
+    counterStatement.text = `
         SELECT count(*) FROM ${tableName} ${wheres}
       `;
-      counterStatement.values = counterStatement
-        .values.slice(0,-2);  
+    counterStatement.values = counterStatement
+        .values.slice(0, -2);
   }
 
   text = `${text} ORDER BY(${params.orderBy}) 
@@ -163,7 +162,7 @@ exports.repage = (params)=>{
       totalCount: counter.rows[0].count*1,
       pageCount: (records.rowCount)*1,
       records: records.rows || null,
-      key:key
+      key: key,
     };
   });
 };

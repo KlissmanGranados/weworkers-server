@@ -36,7 +36,7 @@ module.exports = (req, data)=>{
   const fullUri = `${serverHost}:${serverPort}${apiVersion}`;
   const totalPage = Math.ceil(totalCount/perPage);
 
-  const nexPage =  (page+1)<= totalPage? (page+1):totalPage;
+  const nexPage = (page+1)<= totalPage? (page+1):totalPage;
   const prevPage = (page-1)<=0?1:(page-1);
 
   const template = self.split('?')[0] + `?perPage=${perPage}&`;

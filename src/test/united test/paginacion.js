@@ -5,7 +5,7 @@ const db = require('../../database/db');
 
 paginacionRouter.get('/:query?', async (req, res)=>{
   const {perPage, page} = req.query;
-  
+
   const data = await db.repage({
     limit: {
       offset: page,
@@ -39,7 +39,7 @@ paginacionRouter.get('/:query?', async (req, res)=>{
     GROUP BY(proyectos.id,monedas.id,tipos_pago.id)`,
     groupBy: 'proyectos.id,monedas.id,tipos_pago.id',
     orderBy: 'proyectos.id',
-    uri: '/proyecto/'
+    uri: '/proyecto/',
   });
 
   response.success(res, response.repage(req, data));
