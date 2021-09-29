@@ -96,7 +96,7 @@ const snakeToCamelObject = (object) => {
  */
 exports.checkMounts = (value)=>{
   value = Number(value);
-  if(isNaN(value)){
+  if (isNaN(value)) {
     return false;
   }
   return value;
