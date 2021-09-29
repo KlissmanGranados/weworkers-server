@@ -95,49 +95,11 @@ const snakeToCamelObject = (object) => {
  * @return {number}
  */
 exports.checkMounts = (value)=>{
-  value = (''+value);
-  const _mount = value.split(',');
-  /**
-   * @type {String}
-   */
-  let [_integer, _decimal] = _mount;
-
-  if (value.indexOf(',') === -1) {
-    _integer = value;
-    _decimal = undefined;
-  }
-
-  if (!_integer) {
+  value = Number(value);
+  if(isNaN(value)){
     return false;
   }
-
-  if (_decimal) {
-    if (_mount.length !== 2) {
-      return false;
-    }
-    if (!checkIntegers(_decimal)) {
-      return false;
-    }
-  }
-
-  if (_integer.indexOf('.') !== -1) {
-    for (const _integers of _integer.split('.')) {
-      if (_integers.length != 3) {
-        return false;
-      }
-    }
-    _integer = _integer.replaceAll('.', '');
-  }
-
-  if (_integer <=0) {
-    return false;
-  }
-
-  if (!checkIntegers(_integer)) {
-    return false;
-  }
-
-  return _decimal? _integer.concat('.', _decimal): _integer;
+  return value;
 };
 /**
  * @description verifica si una fecha es válida
