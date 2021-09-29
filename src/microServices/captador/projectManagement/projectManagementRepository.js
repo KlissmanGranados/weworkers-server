@@ -34,7 +34,7 @@ exports.create = (registro)=>{
       await conn.query(insertProyectotags);
     }
 
-    return true;
+    return projectId;
   });
 };
 /**

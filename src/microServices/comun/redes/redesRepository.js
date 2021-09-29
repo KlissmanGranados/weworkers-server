@@ -16,7 +16,7 @@ exports.create = (registro)=>{
     redDireccion.id = (await conn.query(redDireccion.save())).rows[0].id;
     redUsuario.redesDireccionesId = redDireccion.id;
     redUsuario.id = (await conn.query(redUsuario.save())).rows[0].id;
-    return true;
+    return redUsuario.id;
   });
 };
 /**

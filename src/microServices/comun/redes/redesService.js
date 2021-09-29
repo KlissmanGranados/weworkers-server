@@ -22,11 +22,13 @@ exports.associateNetwork = async (req, res)=>{
     return;
   }
 
-  if (! await redesRepository.create(registro)) {
+  const id = await redesRepository.create(registro);
+
+  if (!id) {
     response.error(res);
     return;
   };
-  response.success(res);
+  response.success(res, id);
 };
 /**
  * @description actualiza la dirección de una red
@@ -52,7 +54,7 @@ exports.updateAssociateNetwork = async (req, res)=>{
     response.error(res);
     return;
   }
-  response.success(res);
+  response.success(res, registro.redDireccion.id);
 };
 /**
  * @description elimina la dirección de una red
