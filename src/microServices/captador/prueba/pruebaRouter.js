@@ -5,6 +5,6 @@ module.exports = [
     method: 'get',
     url: '/',
     handler: pruebaService.prueba,
-    middlewares: [],
+    middelwares: [],
   },
 ];

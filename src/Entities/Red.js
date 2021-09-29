@@ -4,10 +4,6 @@ class Red extends Entity {
   _id;
   _nombre;
 
-  constructor() {
-    super('redes');
-  }
-
   /**
    * @return {BigInteger}
    */
@@ -33,9 +29,7 @@ class Red extends Entity {
    * @param {String}nombre
    */
   set nombre(nombre) {
-    if (nombre && nombre.length<=20) {
-      this._nombre = nombre.toLowerCase();
-    }
+    this._nombre = nombre? nombre.toLowerCase():nombre;
   }
 }
 

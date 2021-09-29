@@ -1,4 +1,4 @@
-const {Persona} = require('../../../entities');
+const {Persona} = require('../../../Entities');
 const response = require('../../../response');
 const utils = require('../../../utils');
 

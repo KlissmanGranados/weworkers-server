@@ -75,12 +75,8 @@ function createFolder(route, name) {
  */
 function createFileMiddleware(route, name) {
   const fileName = name + 'Middleware.js';
-
-  const content = `const response = require('../../../response');
-const utils = require('../../../utils');`;
-
   fs.writeFile(
-      path.join(route, `./${fileName}`), content,
+      path.join(route, `./${fileName}`), '',
       (err) =>{
         if (err) throw err;
       });
@@ -93,10 +89,7 @@ const utils = require('../../../utils');`;
 function createFileRepository(route, name) {
   const fileName = name + 'Repository.js';
 
-  const content = `const {db} = require('../../../../index');
-  `;
-
-  fs.writeFile(path.join(route, `./${fileName}` ), content, (err) =>{
+  fs.writeFile(path.join(route, `./${fileName}` ), '', (err) =>{
     if (err) throw err;
   });
 }
@@ -111,17 +104,7 @@ function createFileRouter(route, name) {
   const content = `const ${name}Middleware = require('./${name}Middleware');
 const ${name}Service = require('./${name}Service');
   
-module.exports = [
-  /*
-    Formato de los objetos de las rutas
-  */
-  {
-    method: '',
-    url: '',
-    handler: ${name}Service,
-    middlewares: [],
-  },
-];`;
+module.exports = [];`;
 
   fs.writeFile(path.join(route, `./${fileName}`), content, (err) =>{
     if (err) throw err;
@@ -134,8 +117,7 @@ module.exports = [
  */
 function createFileService(route, name) {
   const fileName = name + 'Service.js';
-  const content = `const response = require('../../../response');
-const ${name}Repository = require('./${name}Repository');`;
+  const content = `const response = require('../../../response');`;
 
   fs.writeFile(path.join(route, `./${fileName}`), content, (err) =>{
     if (err) throw err;

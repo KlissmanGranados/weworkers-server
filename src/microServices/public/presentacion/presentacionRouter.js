@@ -6,7 +6,7 @@ module.exports = [
     method: 'get',
     url: '/listar-rutas',
     handler: presentacionService.main,
-    middlewares: [
+    middelwares: [
       presentacionMiddelware.validityMain,
     ],
   },
