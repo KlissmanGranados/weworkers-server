@@ -1,23 +1,38 @@
 const {db} = require('../../../../index');
 
 /**
- *
  * @description Lista todos los proyectos,
  * en función de los parametros proporcionados
  *
  * @param {{
- * etiqueta: Array<String>|String,
+ * etiqueta: Array<String>,
  * nombre: String,
- * fecha: Array<String>|String,
+ * fecha: Array<String>,
  * estado: Boolean,
- * presupuesto: Array<Number>|Number,
- * divisaId: Array<Number>|Number,
- * modalidadId: Array<Number>|Number}} paramns
+ * presupuesto: Array<Number>,
+ * divisaId: Array<Number>,
+ * modalidadId: Array<Number>}} paramns
  *
- * @return { Promise }
+ * @return {Promise}
  */
 exports.getProjects = (paramns)=>{
   const generalPreparedStatement = {
+    counter: {
+      text: `
+      SELECT
+      count(DISTINCT proyectos.id)
+      FROM proyectos
+      LEFT JOIN proyectos_tags 
+        ON proyectos_tags.proyectos_id = proyectos.id
+      LEFT JOIN tags
+        ON proyectos_tags.tags_id = tags.id 
+      inner JOIN tipos_pago
+        ON tipos_pago.id = proyectos.tipos_pago_id
+      inner JOIN monedas
+        ON monedas.id = proyectos.monedas_id
+      where {{wheres}}`,
+      values: [],
+    },
     text: `
     SELECT
     proyectos.id, 
@@ -43,7 +58,7 @@ exports.getProjects = (paramns)=>{
       ON tipos_pago.id = proyectos.tipos_pago_id
     inner JOIN monedas
       ON monedas.id = proyectos.monedas_id
-    {{wheres}}
+    where {{wheres}}
     GROUP BY(proyectos.id,monedas.id,tipos_pago.id)`,
     groupBy: 'proyectos.id,monedas.id,tipos_pago.id',
     orderBy: 'proyectos.id',
@@ -52,34 +67,47 @@ exports.getProjects = (paramns)=>{
   };
 
   if (Object.entries(paramns).length === 0) {
+    generalPreparedStatement.counter = undefined;
     generalPreparedStatement.text = generalPreparedStatement
         .text.replace('{{wheres}}', '');
     return db.repage(generalPreparedStatement);
   }
 
   let {text, values} = generalPreparedStatement;
-  let wheres;
-  // listar por etiqutas
+  let wheres = [];
+  // listar por etiquetas
   if (paramns.etiqueta && paramns.etiqueta !== null) {
     // varias etiquetas
+    values = values.concat(paramns.etiqueta);
     if (typeof paramns.etiqueta === 'object') {
-      values = paramns.etiqueta;
-      wheres = ' where ' + paramns.etiqueta.map(
-          (_etiqueta, index)=> {
-            const concat = (index>0 && index < paramns.etiqueta.length)?' and ':'';
-            return concat + ` tags.nombre=$${index+1} `;
-          },
-      ).join(' ');
-      text = text.replace('{{wheres}}', wheres);
-    } else {// solo una etiquetas
-
+      wheres.push(
+          ' ('+
+        paramns.etiqueta.map(
+            (_etiqueta, index)=> {
+              const or = (index>0 && index<paramns.etiqueta.length)?' or ' : '';
+              return ` ${or} tags.nombre=$${index+1} `;
+            },
+        ).join(' ') + ') ',
+      );
+    } else {// solo una etiqueta
+      wheres.push(`tags.nombre=$${wheres.length+1}`);
     }
   }
 
-  generalPreparedStatement.values = values;
-  generalPreparedStatement.text = text;
+  // agregar los filtros resultantes
+  wheres = (
+    wheres.map((value, index)=>{
+      const and = (index>0 && index<wheres.length)?' and ' : '';
+      return `${and}${value}`;
+    }).join(' ')
+  );
 
-  console.log(generalPreparedStatement);
+  generalPreparedStatement.counter.text = generalPreparedStatement
+      .counter.text.replace('{{wheres}}', wheres);
+  generalPreparedStatement.counter.values = values;
+
+  generalPreparedStatement.values = values;
+  generalPreparedStatement.text = text.replace('{{wheres}}', wheres);
 
   return db.repage(generalPreparedStatement);
 };
