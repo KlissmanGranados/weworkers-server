@@ -75,6 +75,10 @@ exports.getProjects = (paramns)=>{
 
   let {text, values} = generalPreparedStatement;
   let wheres = [];
+  let counterWhere = wheres.length;
+  const operators = (index, param, operator)=> {
+    return (index>0 && index<param.length)?` ${operator} ` : '';
+  };
   // listar por etiquetas
   if (paramns.etiqueta && paramns.etiqueta !== null) {
     // varias etiquetas
@@ -84,20 +88,43 @@ exports.getProjects = (paramns)=>{
           ' ('+
         paramns.etiqueta.map(
             (_etiqueta, index)=> {
-              const or = (index>0 && index<paramns.etiqueta.length)?' or ' : '';
-              return ` ${or} tags.nombre=$${index+1} `;
+              counterWhere++;
+              const or = operators(index, paramns.etiqueta, 'or');
+              return ` ${or} tags.nombre=$${(counterWhere)} `;
             },
         ).join(' ') + ') ',
       );
     } else {// solo una etiqueta
-      wheres.push(`tags.nombre=$${wheres.length+1}`);
+      counterWhere++;
+      wheres.push(`(tags.nombre=$${counterWhere})`);
+    }
+  }
+  // listar por fechas
+  if (paramns.fecha && paramns.fecha !== null) {
+    values = values.concat(paramns.fecha);
+    if (typeof paramns.fecha === 'object') { // intervalo de fechas
+      wheres.push(
+          '(' +
+        paramns.fecha.map(
+            (_fecha, index)=>{
+              const and = operators(index, paramns.fecha, 'and');
+              const interval = index === 0?'>=':'<=';
+              counterWhere++;
+              return (` ${and} 
+              proyectos.fecha_crea${interval}$${(counterWhere)}`);
+            },
+        ).join(' ') +')',
+      );
+    } else { // una fecha
+      counterWhere++;
+      wheres.push(`(proyectos.fecha_crea=$${counterWhere})`);
     }
   }
 
   // agregar los filtros resultantes
   wheres = (
     wheres.map((value, index)=>{
-      const and = (index>0 && index<wheres.length)?' and ' : '';
+      const and = operators(index, wheres, 'and');
       return `${and}${value}`;
     }).join(' ')
   );
@@ -108,6 +135,9 @@ exports.getProjects = (paramns)=>{
 
   generalPreparedStatement.values = values;
   generalPreparedStatement.text = text.replace('{{wheres}}', wheres);
+
+
+  console.log(generalPreparedStatement);
 
   return db.repage(generalPreparedStatement);
 };
