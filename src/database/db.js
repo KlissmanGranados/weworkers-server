@@ -97,10 +97,13 @@ exports.transaction = async (updateRows) =>{
  * @return {Promise}
  */
 exports.repage = (params)=>{
-  let {offset, rowsLimit} = params.limit;
+  let {offset, rowsLimit} = params.limit || {
+    offset: 1,
+    rowsLimit: 20,
+  };
 
-  offset = offset || 1;
-  rowsLimit = Number(rowsLimit) || 20;
+  offset = Number(offset);
+  rowsLimit = Number(rowsLimit);
 
   offset = (offset-1>=0)?offset-1:0;
   offset = offset * rowsLimit;
