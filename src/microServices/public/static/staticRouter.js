@@ -16,4 +16,10 @@ module.exports = [
     handler: staticService.paymentType,
     middlewares: [],
   },
+  {
+    url: 'modalidad/:query?',
+    method: 'get',
+    handler: staticService.modalidad,
+    middlewares: [],
+  },
 ];

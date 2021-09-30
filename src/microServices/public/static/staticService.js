@@ -42,3 +42,23 @@ exports.paymentType = (req, res)=>{
 
   response.success(res, list);
 };
+
+exports.modalidad = (req, res)=>{
+  const {id, nombre} = req.query;
+  let list;
+
+  if (id) {
+    list = consts().modalidades.getById(id);
+  } else if (nombre) {
+    list = consts().modalidades.getByType(nombre);
+  } else {
+    list = consts().modalidades;
+  }
+
+  if (!list) {
+    response.success_no_data(res);
+    return;
+  }
+
+  response.success(res, list);
+};

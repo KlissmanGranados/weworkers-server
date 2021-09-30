@@ -21,6 +21,7 @@ module.exports = (function() {
         tiposIdentificacion,
         tiposPago,
         redes,
+        modalidades,
       ] = await Promise.all(
           [
             conn.query(`select id,nombre from roles`),
@@ -28,6 +29,7 @@ module.exports = (function() {
             conn.query(`SELECT id, tipo FROM tipos_identificacion`),
             conn.query(`SELECT id, nombre FROM tipos_pago`),
             conn.query(`SELECT id, nombre, "timestamp" FROM redes`),
+            conn.query(`SELECT id, nombre FROM modalidades`),
           ],
       );
 
@@ -91,6 +93,20 @@ module.exports = (function() {
           getById: (id) =>{
             return redes.rows.filter(
                 (red) => red.id == id,
+            )[0];
+          },
+        },
+        modalidades: {
+          rows: modalidades.rows,
+          rowCount: modalidades.rowCount,
+          getByType: (_modalidad) =>{
+            return modalidades.rows.filter(
+                (modalidad) => modalidad.nombre == _modalidad,
+            )[0];
+          },
+          getById: (id) => {
+            return modalidades.rows.filter(
+                (modalidad) => modalidad.id == id,
             )[0];
           },
         },
