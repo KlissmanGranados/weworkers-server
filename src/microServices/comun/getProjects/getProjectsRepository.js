@@ -17,22 +17,6 @@ const {db} = require('../../../../index');
  */
 exports.getProjects = (paramns)=>{
   const generalPreparedStatement = {
-    counter: {
-      text: `
-      SELECT
-      count(DISTINCT proyectos.id)
-      FROM proyectos
-      LEFT JOIN proyectos_tags 
-        ON proyectos_tags.proyectos_id = proyectos.id
-      LEFT JOIN tags
-        ON proyectos_tags.tags_id = tags.id 
-      inner JOIN tipos_pago
-        ON tipos_pago.id = proyectos.tipos_pago_id
-      inner JOIN monedas
-        ON monedas.id = proyectos.monedas_id
-      where {{wheres}}`,
-      values: [],
-    },
     text: `
     SELECT
     proyectos.id, 
@@ -43,6 +27,8 @@ exports.getProjects = (paramns)=>{
     proyectos.presupuesto, 
     proyectos.fecha_crea, 
     proyectos.fecha_termina,
+    proyectos.presupuesto,
+    modalidades.nombre as modalidad_nombre,
     tipos_pago.id AS tipos_pago_id,
     tipos_pago.nombre AS tipos_pago_nombre,
     monedas.id AS moneda_id,
@@ -58,20 +44,40 @@ exports.getProjects = (paramns)=>{
       ON tipos_pago.id = proyectos.tipos_pago_id
     inner JOIN monedas
       ON monedas.id = proyectos.monedas_id
+    INNER JOIN modalidades
+    ON modalidades.id=proyectos.modalidades_id
     where {{wheres}}
-    GROUP BY(proyectos.id,monedas.id,tipos_pago.id)`,
-    groupBy: 'proyectos.id,monedas.id,tipos_pago.id',
+    GROUP BY(proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre)`,
+    groupBy: 'proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre',
     orderBy: 'proyectos.id',
     uri: '/proyecto/',
     values: [],
   };
 
   if (Object.entries(paramns).length === 0) {
-    generalPreparedStatement.counter = undefined;
     generalPreparedStatement.text = generalPreparedStatement
-        .text.replace('{{wheres}}', '');
+        .text.replace('{{wheres}}', '').replace('where', '');
     return db.repage(generalPreparedStatement);
   }
+
+  generalPreparedStatement.counter= {
+    text: `
+    SELECT
+    count(DISTINCT proyectos.id)
+    FROM proyectos
+    LEFT JOIN proyectos_tags 
+      ON proyectos_tags.proyectos_id = proyectos.id
+    LEFT JOIN tags
+      ON proyectos_tags.tags_id = tags.id 
+    inner JOIN tipos_pago
+      ON tipos_pago.id = proyectos.tipos_pago_id
+    inner JOIN monedas
+      ON monedas.id = proyectos.monedas_id
+    INNER JOIN modalidades
+      ON modalidades.id=proyectos.modalidades_id
+    where {{wheres}}`,
+    values: [],
+  };
 
   let {text, values} = generalPreparedStatement;
   let wheres = [];
@@ -80,7 +86,7 @@ exports.getProjects = (paramns)=>{
     return (index>0 && index<param.length)?` ${operator} ` : '';
   };
   // listar por etiquetas
-  if (paramns.etiqueta && paramns.etiqueta !== null) {
+  if (paramns.etiqueta) {
     // varias etiquetas
     values = values.concat(paramns.etiqueta);
     if (typeof paramns.etiqueta === 'object') {
@@ -100,7 +106,7 @@ exports.getProjects = (paramns)=>{
     }
   }
   // listar por fechas
-  if (paramns.fecha && paramns.fecha !== null) {
+  if (paramns.fecha) {
     values = values.concat(paramns.fecha);
     if (typeof paramns.fecha === 'object') { // intervalo de fechas
       wheres.push(
@@ -121,7 +127,7 @@ exports.getProjects = (paramns)=>{
     }
   }
   // buscar por nombres
-  if (paramns.nombre && paramns.nombre !== null) {
+  if (paramns.nombre) {
     if (typeof paramns.nombre === 'object') {// varios nombres
       values = values.concat(paramns.nombre.map((nombre)=>`%${nombre}%`));
       wheres.push('('+
@@ -139,6 +145,78 @@ exports.getProjects = (paramns)=>{
       wheres.push(`(proyectos.nombre like $${counterWhere}) `);
     }
   }
+  // filtrar por estado
+  if (paramns.estado) {
+    values = values.concat(paramns.estado);
+    counterWhere++;
+    wheres.push(`(proyectos.estado=$${counterWhere})`);
+  }
+  // filtrar por modalidad
+  if (paramns.modalidad) {
+    values = values.concat(paramns.modalidad);
+    counterWhere++;
+    if (Number(paramns.modalidad)) { // por id de modalidad
+      wheres.push(`(modalidades.id=$${counterWhere})`);
+    } else { // por nombre de la modalidad
+      wheres.push(`(modalidades.nombre=$${counterWhere})`);
+    }
+  }
+  // filtrar por presupuesto
+  if (paramns.presupuesto) {
+    values = values.concat(paramns.presupuesto);
+    if (typeof paramns.presupuesto === 'object') {
+      wheres.push('('+
+        paramns.presupuesto.map((_presupuesto, index)=>{
+          const and = operators(index, paramns.presupuesto, 'and');
+          const interval = index === 0?'>=':'<=';
+          counterWhere++;
+          return (` ${and} 
+          proyectos.presupuesto${interval}$${(counterWhere)}`);
+        }).join(' ')+
+      ')');
+    } else {
+      counterWhere++;
+      wheres.push(`proyectos.presupuesto=$${counterWhere}`);
+    }
+  }
+  // por moneda
+  if (paramns.moneda) {
+    values = values.concat(paramns.moneda);
+    if (typeof paramns.moneda === 'object') {
+      wheres.push('('+
+        paramns.moneda.map((_moneda, index)=>{
+          const and = operators(index, paramns.moneda, 'or');
+          counterWhere++;
+          return (` ${and} 
+          monedas.nombre_corto=$${(counterWhere)}`);
+        }).join(' ')+
+      ')');
+    } else if (Number(paramns.moneda)) {
+      counterWhere++;
+      wheres.push(` (monedas.id=$${counterWhere}) `);
+    } else {
+      counterWhere++;
+      wheres.push(` (monedas.nombre_corto=$${counterWhere}) `);
+    }
+  }
+  // formas de pago
+  if (paramns.tiposPago) {
+    values = values.concat(paramns.tiposPago);
+    if (typeof paramns.tiposPago === 'object') {
+      wheres.push('('+paramns.tiposPago.map((_tiposPagos, index)=>{
+        const and = operators(index, paramns.tiposPago, 'or');
+        counterWhere++;
+        return (` ${and} 
+        tipos_pago.nombre=$${(counterWhere)}`);
+      }).join(' ')+')');
+    } else if (Number(paramns.tiposPago)) {
+      counterWhere++;
+      wheres.push(` (tipos_pago.id=$${counterWhere}) `);
+    } else {
+      counterWhere++;
+      wheres.push(` (tipos_pago.nombre=$${counterWhere}) `);
+    }
+  }
 
   // agregar los filtros resultantes
   wheres = (
@@ -154,9 +232,6 @@ exports.getProjects = (paramns)=>{
 
   generalPreparedStatement.values = values;
   generalPreparedStatement.text = text.replace('{{wheres}}', wheres);
-
-
-  console.log(generalPreparedStatement);
 
   return db.repage(generalPreparedStatement);
 };
