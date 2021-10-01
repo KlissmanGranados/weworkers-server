@@ -40,7 +40,7 @@ module.exports = (req, data)=>{
   const prevPage = (page-1)<=0?1:(page-1);
 
   const template = self.replace(self.slice(self.indexOf('perPage')), '') +
-   `?perPage=${perPage}&`;
+   `perPage=${perPage}&`;
 
   const first = template + 'page=1';
   let next = template + ('page=' + nexPage);

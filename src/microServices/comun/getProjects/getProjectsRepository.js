@@ -60,7 +60,6 @@ exports.getProjects = (paramns)=>{
     },
     text: selectProjects.replace('{{other_colums}}', '')
         .replace('{{other_joins}}', ''),
-    groupBy: 'proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre',
     orderBy: 'proyectos.id',
     uri: '/comun/proyecto/',
     values: [],
