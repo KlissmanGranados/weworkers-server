@@ -72,6 +72,7 @@ exports.create = (req, res, next)=>{
         'fechaTermina',
         'monedasId',
         'tiposPagoId',
+        'modalidadesId',
       ],
       ),
   );
@@ -82,6 +83,10 @@ exports.create = (req, res, next)=>{
 
   if (!consts().monedas.getById(_proyecto.monedasId)) {
     response.warning_data_not_valid(res, {proyecto: {monedasId: null}});
+    return;
+  }
+  if (!consts().modalidades.getById(_proyecto.modalidadesId)) {
+    response.warning_data_not_valid(res, {proyectos: {modalidadesId: null}});
     return;
   }
   if (!consts().tiposPago.getById(_proyecto.tiposPagoId)) {

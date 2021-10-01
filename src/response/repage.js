@@ -39,7 +39,9 @@ module.exports = (req, data)=>{
   const nexPage = (page+1)<= totalPage? (page+1):totalPage;
   const prevPage = (page-1)<=0?1:(page-1);
 
-  const template = self.split('?')[0] + `?perPage=${perPage}&`;
+  const template = self.replace(self.slice(self.indexOf('perPage')), '') +
+   `?perPage=${perPage}&`;
+
   const first = template + 'page=1';
   let next = template + ('page=' + nexPage);
 

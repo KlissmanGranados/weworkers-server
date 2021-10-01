@@ -11,6 +11,7 @@ class Proyecto extends Entity {
   _fechaTermina;
   _monedasId;
   _tiposPagoId;
+  _modalidadesId;
 
   constructor() {
     super('proyectos');
@@ -94,6 +95,14 @@ class Proyecto extends Entity {
   }
   get monedasId() {
     return this._monedasId;
+  }
+
+  set modalidadesId(value) {
+    this._modalidadesId = value;
+  }
+
+  get modalidadesId() {
+    return this._modalidadesId;
   }
 }
 
