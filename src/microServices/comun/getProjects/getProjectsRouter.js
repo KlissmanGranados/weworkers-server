@@ -1,4 +1,4 @@
-// const getProjectsMiddleware = require('./getProjectsMiddleware');
+const getProjectsMiddleware = require('./getProjectsMiddleware');
 const getProjectsService = require('./getProjectsService');
 
 module.exports = [
@@ -9,6 +9,14 @@ module.exports = [
     method: 'get',
     url: 'listar-proyectos/:query?',
     handler: getProjectsService.getProjects,
+    middlewares: [
+      getProjectsMiddleware.getProjects,
+    ],
+  },
+  {
+    method: 'get',
+    url: 'proyecto/:id',
+    handler: getProjectsService.findBydId,
     middlewares: [],
   },
 ];

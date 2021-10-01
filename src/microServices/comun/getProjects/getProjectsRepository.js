@@ -1,5 +1,40 @@
 const {db} = require('../../../../index');
 
+const selectProjects = `
+  SELECT
+  proyectos.id, 
+  proyectos.nombre, 
+  proyectos.descripcion, 
+  proyectos.reclutadores_id, 
+  proyectos.estado, 
+  proyectos.presupuesto, 
+  proyectos.fecha_crea, 
+  proyectos.fecha_termina,
+  proyectos.presupuesto,
+  modalidades.nombre as modalidad_nombre,
+  tipos_pago.id AS tipos_pago_id,
+  tipos_pago.nombre AS tipos_pago_nombre,
+  monedas.id AS moneda_id,
+  monedas.nombre_largo AS moneda_nombre_largo,
+  monedas.nombre_corto AS moneda_nombre_corto,
+  json_agg(json_build_object('id',tags.id,'nombre', tags.nombre)) AS tags
+  {{other_colums}}
+  FROM proyectos
+  LEFT JOIN proyectos_tags 
+    ON proyectos_tags.proyectos_id = proyectos.id
+  LEFT JOIN tags
+    ON proyectos_tags.tags_id = tags.id 
+  inner JOIN tipos_pago
+    ON tipos_pago.id = proyectos.tipos_pago_id
+  inner JOIN monedas
+    ON monedas.id = proyectos.monedas_id
+  INNER JOIN modalidades
+  ON modalidades.id=proyectos.modalidades_id
+  {{other_joins}}
+  where {{wheres}}
+  GROUP BY(proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre)
+`;
+
 /**
  * @description Lista todos los proyectos,
  * en función de los parametros proporcionados
@@ -16,45 +51,27 @@ const {db} = require('../../../../index');
  * @return {Promise}
  */
 exports.getProjects = (paramns)=>{
+  const {page, perPage} = paramns;
+
   const generalPreparedStatement = {
-    text: `
-    SELECT
-    proyectos.id, 
-    proyectos.nombre, 
-    proyectos.descripcion, 
-    proyectos.reclutadores_id, 
-    proyectos.estado, 
-    proyectos.presupuesto, 
-    proyectos.fecha_crea, 
-    proyectos.fecha_termina,
-    proyectos.presupuesto,
-    modalidades.nombre as modalidad_nombre,
-    tipos_pago.id AS tipos_pago_id,
-    tipos_pago.nombre AS tipos_pago_nombre,
-    monedas.id AS moneda_id,
-    monedas.nombre_largo AS moneda_nombre_largo,
-    monedas.nombre_corto AS moneda_nombre_corto,
-    json_agg(json_build_object('id',tags.id,'nombre', tags.nombre)) AS tags
-    FROM proyectos
-    LEFT JOIN proyectos_tags 
-      ON proyectos_tags.proyectos_id = proyectos.id
-    LEFT JOIN tags
-      ON proyectos_tags.tags_id = tags.id 
-    inner JOIN tipos_pago
-      ON tipos_pago.id = proyectos.tipos_pago_id
-    inner JOIN monedas
-      ON monedas.id = proyectos.monedas_id
-    INNER JOIN modalidades
-    ON modalidades.id=proyectos.modalidades_id
-    where {{wheres}}
-    GROUP BY(proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre)`,
+    limit: {
+      offset: page || 0,
+      rowsLimit: perPage || 20,
+    },
+    text: selectProjects.replace('{{other_colums}}', '')
+        .replace('{{other_joins}}', ''),
     groupBy: 'proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre',
     orderBy: 'proyectos.id',
-    uri: '/proyecto/',
+    uri: '/comun/proyecto/',
     values: [],
   };
 
-  if (Object.entries(paramns).length === 0) {
+  if (
+    Object.entries(paramns).filter((value)=>{
+      const [_key] = value;
+      return _key !== 'page' && _key ==!'perPage';
+    }).length === 0
+  ) {
     generalPreparedStatement.text = generalPreparedStatement
         .text.replace('{{wheres}}', '').replace('where', '');
     return db.repage(generalPreparedStatement);
@@ -234,4 +251,20 @@ exports.getProjects = (paramns)=>{
   generalPreparedStatement.text = text.replace('{{wheres}}', wheres);
 
   return db.repage(generalPreparedStatement);
+};
+/**
+ * @description selecciona un proyecto
+ * @param {Number} id
+ * @return {Promise}
+ */
+exports.findBydId = (id)=>{
+  const sql = selectProjects.
+      replace('{{other_colums}}', '').replace('{{other_joins}}', '');
+  return db.execute(async (conn)=>{
+    return (await conn.query(
+        sql.replace(
+            '{{wheres}}',
+            'proyectos.id=$1',
+        ), [id])).rows[0];
+  });
 };
