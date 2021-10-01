@@ -120,6 +120,25 @@ exports.getProjects = (paramns)=>{
       wheres.push(`(proyectos.fecha_crea=$${counterWhere})`);
     }
   }
+  // buscar por nombres
+  if (paramns.nombre && paramns.nombre !== null) {
+    if (typeof paramns.nombre === 'object') {// varios nombres
+      values = values.concat(paramns.nombre.map((nombre)=>`%${nombre}%`));
+      wheres.push('('+
+        paramns.nombre.map((_nombre, index)=>{
+          const and = operators(index, paramns.nombre, 'or');
+          counterWhere++;
+          return (
+            ` ${and} proyectos.nombre like $${counterWhere} `
+          );
+        }).join(' ')+
+      ')');
+    } else { // un solo nombre
+      values = values.concat(`%${paramns.nombre}%`);
+      counterWhere++;
+      wheres.push(`(proyectos.nombre like $${counterWhere}) `);
+    }
+  }
 
   // agregar los filtros resultantes
   wheres = (
