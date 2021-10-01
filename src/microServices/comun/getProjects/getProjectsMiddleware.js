@@ -97,5 +97,6 @@ exports.getProjects = (req, res, next)=>{
       }
     }
   }
+  req.query = params;
   next();
 };

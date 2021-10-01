@@ -67,10 +67,16 @@ exports.getProjects = (paramns)=>{
   };
 
   if (
-    Object.entries(paramns).filter((value)=>{
-      const [_key] = value;
-      return _key !== 'page' && _key ==!'perPage';
-    }).length === 0
+    [
+      !paramns.etiqueta,
+      !paramns.nombre,
+      !paramns.fecha,
+      !paramns.presupuesto,
+      !paramns.estado,
+      !paramns.modalidad,
+      !paramns.moneda,
+      !paramns.tiposPago,
+    ].every((e)=>e)
   ) {
     generalPreparedStatement.text = generalPreparedStatement
         .text.replace('{{wheres}}', '').replace('where', '');
