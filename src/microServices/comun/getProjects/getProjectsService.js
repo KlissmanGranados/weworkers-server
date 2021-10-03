@@ -6,7 +6,10 @@ const getProjectsRepository = require('./getProjectsRepository');
  * @param {Response} res
  */
 exports.getProjects = async (req, res)=>{
-  const projectList = await getProjectsRepository.getProjects(req.query);
+  const projectList = await getProjectsRepository.getProjects({
+    paramns: req.query,
+    user: req.user,
+  });
   response.success(res, response.repage(req, projectList));
 };
 /**

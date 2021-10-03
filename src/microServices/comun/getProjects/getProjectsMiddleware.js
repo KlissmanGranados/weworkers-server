@@ -14,6 +14,7 @@ exports.getProjects = (req, res, next)=>{
     'estado',
     'perPage',
     'page',
+    'usuario',
   ];
 
   for (const entry of Object.entries(params)) {
@@ -31,7 +32,7 @@ exports.getProjects = (req, res, next)=>{
   if (params.fecha) {
     if (typeof params.fecha === 'object') {
       if (params.fecha.length !==2) {
-        response.warning_data_not_valid(res, params.fecha);
+        response.warning_data_not_valid(res, {fecha: params.fecha});
         return;
       }
 
@@ -40,18 +41,18 @@ exports.getProjects = (req, res, next)=>{
       dateEnd = new Date(dateEnd).getTime();
 
       if (!dateStart || !dateEnd) {
-        response.warning_data_not_valid(res, params.fecha);
+        response.warning_data_not_valid(res, {fecha: params.fecha});
         return;
       }
 
       if (dateEnd < dateStart) {
-        response.warning_data_not_valid(res, params.fecha);
+        response.warning_data_not_valid(res, {fecha: params.fecha});
         return;
       }
     } else {
       const dateStart = new Date(params.fecha).getTime();
       if (!dateStart) {
-        response.warning_data_not_valid(res, params.fecha);
+        response.warning_data_not_valid(res, {fecha: params.fecha});
         return;
       }
     }
@@ -60,7 +61,7 @@ exports.getProjects = (req, res, next)=>{
   if (params.presupuesto) {
     if (typeof params.presupuesto === 'object') {
       if (params.presupuesto.length !== 2) {
-        response.warning_data_not_valid(res, params.presupuesto);
+        response.warning_data_not_valid(res, {presupuesto: params.presupuesto});
         return;
       }
       let [presupuestoA, presupuestoB] = params.presupuesto;
@@ -68,33 +69,46 @@ exports.getProjects = (req, res, next)=>{
       presupuestoB = Number(presupuestoB);
 
       if (!presupuestoA || !presupuestoB) {
-        response.warning_data_not_valid(res, params.presupuesto);
+        response.warning_data_not_valid(res, {presupuesto: params.presupuesto});
         return;
       }
 
       if (presupuestoA<0) {
-        response.warning_data_not_valid(res, param.presupuesto);
+        response.warning_data_not_valid(res, {presupuesto: params.presupuesto});
         return;
       }
 
       if (presupuestoA > presupuestoB) {
-        response.warning_data_not_valid(res, params.presupuesto);
+        response.warning_data_not_valid(res, {presupuesto: params.presupuesto});
         return;
       }
 
       if (presupuestoB <=0) {
-        response.warning_data_not_valid(res, params.presupuesto);
+        response.warning_data_not_valid(res, {presupuesto: params.presupuesto});
         return;
       }
+
+      params.presupuesto = [presupuestoA, presupuestoB];
     } else {
       if (!Number(params.presupuesto)) {
-        response.warning_data_not_valid(res, params.presupuesto);
+        response.warning_data_not_valid(res, {presupuesto: params.presupuesto});
         return;
       }
       if (params.presupuesto<=0) {
-        response.warning_data_not_valid(res, params.presupuesto);
+        response.warning_data_not_valid(res, {presupuesto: params.presupuesto});
         return;
       }
+      params.presupuesto = Number(params.presupuesto);
+    }
+  }
+  if (params.usuario) {
+    if (params.usuario === null) {
+      response.warning_data_not_valid(res, {usuario: param.usuario});
+      return;
+    }
+    if (!Number(params.usuario) && String(params.usuario) !== 'true') {
+      response.warning_data_not_valid(res, {usuario: params.usuario});
+      return;
     }
   }
   req.query = params;

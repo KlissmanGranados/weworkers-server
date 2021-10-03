@@ -23,11 +23,21 @@ module.exports = (req, data)=>{
   totalCount = totalCount || 0;
   pageCount = pageCount || 0;
 
-  const self = req.protocol + '://' + req.get('host') + req.originalUrl;
+  let self = req.protocol + '://' + req.get('host') + req.originalUrl;
 
   let {perPage, page} = req.query;
   perPage = Number(perPage) || 20;
   page = Number(page) || 1;
+
+  if (self.indexOf('?') === -1) {
+    self += `?`;
+  }
+  if (!req.query.perPage) {
+    self += `&perPage=${perPage}`;
+  }
+  if (!req.query.page) {
+    self += `&page=${page}`;
+  }
 
   const apiVersion = process.env.VERSION;
   const serverHost = process.env.HOST || 'http://localhost';

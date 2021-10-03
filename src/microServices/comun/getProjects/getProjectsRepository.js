@@ -30,6 +30,8 @@ const selectProjects = `
     ON monedas.id = proyectos.monedas_id
   INNER JOIN modalidades
   ON modalidades.id=proyectos.modalidades_id
+  INNER JOIN reclutadores 
+  ON reclutadores.id=proyectos.reclutadores_id
   {{other_joins}}
   where {{wheres}}
   GROUP BY(proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre)
@@ -39,18 +41,12 @@ const selectProjects = `
  * @description Lista todos los proyectos,
  * en función de los parametros proporcionados
  *
- * @param {{
- * etiqueta: Array<String>,
- * nombre: String,
- * fecha: Array<String>,
- * estado: Boolean,
- * presupuesto: Array<Number>,
- * divisaId: Array<Number>,
- * modalidadId: Array<Number>}} paramns
+ * @param {*} data
  *
  * @return {Promise}
  */
-exports.getProjects = (paramns)=>{
+exports.getProjects = (data)=>{
+  const {paramns, user} = data;
   const {page, perPage} = paramns;
 
   const generalPreparedStatement = {
@@ -75,6 +71,7 @@ exports.getProjects = (paramns)=>{
       !paramns.modalidad,
       !paramns.moneda,
       !paramns.tiposPago,
+      !paramns.usuario,
     ].every((e)=>e)
   ) {
     generalPreparedStatement.text = generalPreparedStatement
@@ -97,6 +94,8 @@ exports.getProjects = (paramns)=>{
       ON monedas.id = proyectos.monedas_id
     INNER JOIN modalidades
       ON modalidades.id=proyectos.modalidades_id
+    INNER JOIN reclutadores 
+      ON reclutadores.id=proyectos.reclutadores_id
     where {{wheres}}`,
     values: [],
   };
@@ -239,6 +238,19 @@ exports.getProjects = (paramns)=>{
       wheres.push(` (tipos_pago.nombre=$${counterWhere}) `);
     }
   }
+  // busqueda por usuario
+  if (paramns.usuario) {
+    if (String(paramns.usuario) === 'true') { // seleccionar id por token
+      const {idusuario} = user;
+      counterWhere++;
+      values = values.concat(idusuario);
+      wheres.push(`(reclutadores.usuarios_id=$${counterWhere})`);
+    } else if (Number(paramns.usuario)) { // buscar por id de usuario
+      counterWhere++;
+      values = values.concat(Number(paramns.usuario));
+      wheres.push(`(reclutadores.usuarios_id=$${counterWhere})`);
+    }
+  }
 
   // agregar los filtros resultantes
   wheres = (
@@ -271,20 +283,5 @@ exports.findBydId = (id)=>{
             '{{wheres}}',
             'proyectos.id=$1',
         ), [id])).rows[0];
-  });
-};
-/**
- *
- * @param {Number} idUser identificador del usuario
- * @return {Promise} lista de proyectos por usuarios
- */
-exports.findByIdUser = (idUser)=>{
-  return db.execute(async (conn)=>{
-    const sql = selectProjects.replace('{{other_colums}}', '')
-        .replace('{{other_joins}}',
-            `INNER JOIN reclutadores 
-      ON reclutadores.id=proyectos.reclutadores_id`)
-        .replace('{{wheres}}', 'reclutadores.usuarios_id=$1');
-    return (await conn.query(sql, [idUser])).rows;
   });
 };
