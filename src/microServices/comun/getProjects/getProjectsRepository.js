@@ -273,3 +273,18 @@ exports.findBydId = (id)=>{
         ), [id])).rows[0];
   });
 };
+/**
+ *
+ * @param {Number} idUser identificador del usuario
+ * @return {Promise} lista de proyectos por usuarios
+ */
+exports.findByIdUser = (idUser)=>{
+  return db.execute(async (conn)=>{
+    const sql = selectProjects.replace('{{other_colums}}', '')
+        .replace('{{other_joins}}',
+            `INNER JOIN reclutadores 
+      ON reclutadores.id=proyectos.reclutadores_id`)
+        .replace('{{wheres}}', 'reclutadores.usuarios_id=$1');
+    return (await conn.query(sql, [idUser])).rows;
+  });
+};

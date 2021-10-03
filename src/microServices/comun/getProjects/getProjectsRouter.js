@@ -19,4 +19,10 @@ module.exports = [
     handler: getProjectsService.findBydId,
     middlewares: [],
   },
+  {
+    method: 'get',
+    url: 'proyecto-usuario/',
+    handler: getProjectsService.findBydUserId,
+    middlewares: [],
+  },
 ];
