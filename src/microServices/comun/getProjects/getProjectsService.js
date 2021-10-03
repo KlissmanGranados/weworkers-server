@@ -21,12 +21,3 @@ exports.findBydId = async (req, res)=>{
   const {id} = req.params;
   response.success(res, await getProjectsRepository.findBydId(id));
 };
-/**
- * @description lista los proyectos por usuario
- * @param {Request} req
- * @param {Response} res
- */
-exports.findBydUserId = async (req, res)=>{
-  const {idusuario} = req.user;
-  response.success(res, await getProjectsRepository.findByIdUser(idusuario));
-};
