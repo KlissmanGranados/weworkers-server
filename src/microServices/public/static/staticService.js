@@ -62,3 +62,46 @@ exports.modalidad = (req, res)=>{
 
   response.success(res, list);
 };
+
+exports.idioma = (req, res) => {
+  const {id, nombreCorto, nombreLargo} = req.query;
+
+  let list;
+
+  if (id) {
+    list = consts().idiomas.getById(id);
+  } else if (nombreCorto) {
+    list = consts().idiomas.getByShortName(nombreCorto);
+  } else if (nombreLargo) {
+    list = consts().idiomas.getByLongName(nombreLargo);
+  } else {
+    list = consts().idiomas;
+  }
+
+  if (!list) {
+    response.success_no_data(res);
+    return;
+  }
+
+  response.success(res, list);
+};
+
+exports.redes = (req, res)=>{
+  const {id, nombre} = req.query;
+  let list;
+
+  if (id) {
+    list = consts().redes.getById(id);
+  } else if (nombre) {
+    list = consts().redes.getByType(nombre);
+  } else {
+    list = consts().redes;
+  }
+
+  if (!list) {
+    response.success_no_data(res);
+    return;
+  }
+
+  response.success(res, list);
+};

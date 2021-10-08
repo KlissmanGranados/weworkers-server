@@ -22,4 +22,16 @@ module.exports = [
     handler: staticService.modalidad,
     middlewares: [],
   },
+  {
+    url: 'idiomas/:query?',
+    method: 'get',
+    handler: staticService.idioma,
+    middlewares: [],
+  },
+  {
+    url: 'redes/:query?',
+    method: 'get',
+    handler: staticService.redes,
+    middlewares: [],
+  },
 ];

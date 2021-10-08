@@ -10,3 +10,6 @@ exports.Proyecto = require('./Proyecto');
 exports.Tag = require('./Tag');
 exports.ProyectoTag = require('./ProyectoTag');
 exports.RedUsuario = require('./RedUsuario');
+exports.Idioma = require('./Idioma');
+exports.UsuarioTag = require('./UsuarioTag');
+exports.UsuarioIdioma = require('./UsuarioIdioma');
