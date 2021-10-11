@@ -161,3 +161,64 @@ exports.stateIsTrue = async (id) =>{
     return rows.rows[0].estado;
   });
 };
+
+/**
+ * @param {*} params
+ * @return {Promise<*>} lista de usuarios
+ */
+exports.getUsers = (params)=>{
+  const {page, perPage} = params;
+
+  const getUsersQuery = {
+    limit: {
+      offset: page || 1,
+      rowsLimit: perPage || 20,
+    },
+    text: `SELECT 
+    usuarios.id,
+    usuarios.usuario,
+    personas.primer_nombre,
+    personas.primer_apellido,
+    personas.segundo_nombre,
+    personas.segundo_apellido,
+    initcap(personas.primer_nombre) ||' '|| 
+    initcap(personas.primer_apellido) AS nombre_completo,
+    array_to_json(array_agg(DISTINCT idiomas)) AS idiomas,
+    array_to_json(array_agg(DISTINCT tags)) AS tags
+    FROM 
+    usuarios
+    LEFT JOIN personas ON 
+    usuarios.persona_id = personas.id
+    LEFT JOIN usuarios_idiomas ON
+    usuarios_idiomas.id_usuario = usuarios.id
+    LEFT JOIN idiomas ON 
+    idiomas.id = usuarios_idiomas.id_idioma 
+    LEFT JOIN usuarios_tags ON
+    usuarios_tags.id_usuario = usuarios.id
+    LEFT JOIN tags ON 
+    tags.id = usuarios_tags.id_tag
+    GROUP BY (
+      usuarios.id,
+      personas.id
+    )`,
+    uri: '/comun/proyecto/',
+    orderBy: 'usuarios.id,personas.id',
+    values: [],
+    counter: {
+      text: `SELECT count(DISTINCT usuarios.id) AS count  FROM 
+      usuarios
+      LEFT JOIN personas ON 
+      usuarios.persona_id = personas.id
+      LEFT JOIN usuarios_idiomas ON
+      usuarios_idiomas.id_usuario = usuarios.id
+      LEFT JOIN idiomas ON 
+      idiomas.id = usuarios_idiomas.id_idioma 
+      LEFT JOIN usuarios_tags ON
+      usuarios_tags.id_usuario = usuarios.id
+      LEFT JOIN tags ON 
+      tags.id = usuarios_tags.id_tag`,
+      values: [],
+    },
+  };
+  return db.repage(getUsersQuery);
+};

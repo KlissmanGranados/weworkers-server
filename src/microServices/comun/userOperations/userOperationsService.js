@@ -149,3 +149,15 @@ exports.userProfile = async (req, res) => {
   }
   response.success(res, profile);
 };
+/**
+ * @description Listar usuarios
+ * @param {Request} req
+ * @param {Response} res
+ */
+exports.getUsers = async (req, res)=>{
+  response.success(res,
+      response.repage(req,
+          await userOperationsRepository.getUsers(req.query),
+      ),
+  );
+};
