@@ -34,4 +34,10 @@ module.exports = [
     handler: userOperationsService.userProfile,
     middlewares: [],
   },
+  {
+    method: 'get',
+    url: '/usuario/:query?',
+    handler: userOperationsService.getUsers,
+    middlewares: [],
+  },
 ];
