@@ -163,13 +163,14 @@ exports.stateIsTrue = async (id) =>{
 };
 
 /**
+ * @description pagina una lista de usuarios en función de los parametros
  * @param {*} params
  * @return {Promise<*>} lista de usuarios
  */
 exports.getUsers = (params)=>{
   const {page, perPage} = params;
 
-  const getUsersQuery = {
+  const generalPreparedStatement = {
     limit: {
       offset: page || 1,
       rowsLimit: perPage || 20,
@@ -197,11 +198,12 @@ exports.getUsers = (params)=>{
     usuarios_tags.id_usuario = usuarios.id
     LEFT JOIN tags ON 
     tags.id = usuarios_tags.id_tag
+    {{wheres}}
     GROUP BY (
       usuarios.id,
       personas.id
     )`,
-    uri: '/comun/proyecto/',
+    uri: '/comun/perfil/',
     orderBy: 'usuarios.id,personas.id',
     values: [],
     counter: {
@@ -216,9 +218,84 @@ exports.getUsers = (params)=>{
       LEFT JOIN usuarios_tags ON
       usuarios_tags.id_usuario = usuarios.id
       LEFT JOIN tags ON 
-      tags.id = usuarios_tags.id_tag`,
+      tags.id = usuarios_tags.id_tag
+      {{wheres}}`,
       values: [],
     },
   };
-  return db.repage(getUsersQuery);
+
+  let {text, values} = generalPreparedStatement;
+  let wheres = [];
+  let counterWhere = wheres.length;
+
+  const operators = (index, param, operator)=> {
+    return (index>0 && index<param.length)?` ${operator} ` : '';
+  };
+
+  // listar por etiquetas
+  if (params.etiqueta) {
+    // varias etiquetas
+    values = values.concat(params.etiqueta);
+    if (typeof params.etiqueta === 'object') {
+      wheres.push(
+          ' ('+
+          params.etiqueta.map(
+              (_etiqueta, index)=> {
+                counterWhere++;
+                const or = operators(index, params.etiqueta, 'or');
+                return ` ${or} tags.nombre=$${(counterWhere)} `;
+              },
+          ).join(' ') + ') ',
+      );
+    } else {// solo una etiqueta
+      counterWhere++;
+      wheres.push(`(tags.nombre=$${counterWhere})`);
+    }
+  }
+  // listar por idiomas
+  if (params.idioma) {
+    values = values.concat(params.idioma);
+    if (typeof params.idioma === 'object') {
+      wheres.push(
+          '('+
+        params.idioma.map(
+            (_idioma, index)=>{
+              counterWhere++;
+              const or = operators(index, params.idioma, 'or');
+              return ` ${or} idiomas.nombre_largo=$${counterWhere} `;
+            },
+        ).join(' ')+
+        ')',
+      );
+    } else {
+      counterWhere++;
+      wheres.push(`(idiomas.nombre_largo=$${counterWhere})`);
+    }
+  }
+
+  // sino hay restricciones
+  if (counterWhere === 0) {
+    generalPreparedStatement.counter.text = generalPreparedStatement
+        .counter.text.replace('{{wheres}}', '');
+    generalPreparedStatement.text = text.replace('{{wheres}}', ' ');
+    return db.repage(generalPreparedStatement);
+  }
+
+  // agregar los filtros resultantes
+  wheres = (
+    ' WHERE ' +
+      wheres.map((value, index)=>{
+        const and = operators(index, wheres, 'and');
+        return `${and}${value}`;
+      }).join(' ')
+  );
+
+  generalPreparedStatement.counter.text = generalPreparedStatement
+      .counter.text.replace('{{wheres}}', wheres);
+  generalPreparedStatement.counter.values = values;
+
+  generalPreparedStatement.values = values;
+  generalPreparedStatement.text = text.replace('{{wheres}}', wheres);
+
+  return db.repage(generalPreparedStatement);
 };
