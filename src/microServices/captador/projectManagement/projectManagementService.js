@@ -53,7 +53,7 @@ exports.update = async (req, res)=>{
       .isTheProjectCreator(registro.proyecto.id, reclutadorId);
 
   if (!verifyCreator) {
-    response.error(res);
+    response.error(res); 
     return;
   }
   registro.tags = await projectManagementRepository

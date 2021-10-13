@@ -1,5 +1,9 @@
 const response = require('../../../response');
 const userOperationsRepository = require('./userOperationsRepository');
+const projectManagementRepository = require(
+    '../../captador/projectManagement/projectManagementRepository'
+);
+const UsuarioTag = require('../../../entities/UsuarioTag');
 /**
  * @description Selecciona un usuario
  * @param{Request} req
@@ -149,3 +153,87 @@ exports.userProfile = async (req, res) => {
   }
   response.success(res, profile);
 };
+
+exports.newTag = async (req, res) => {
+  
+  let usuariosTags = [];
+
+  /**
+   * buscando los ids de los tags
+   */
+
+  let tagsquery = await projectManagementRepository
+  .findTagByName(req.body);
+
+  /**
+   * setear los tags existentes
+   */
+
+  tagsquery.forEach((tag) =>{
+    if (tag.id) {
+      const usuarioTag = new UsuarioTag();
+      usuarioTag.loadData({
+        idTag: tag.id, 
+        id: undefined,
+        idUsuario: undefined});
+      usuariosTags.push(usuarioTag);
+    }
+  });
+
+  /**
+   * setear los tags no existentes
+   */
+
+  tagsquery = tagsquery.filter( (tag) => !tag.id);
+
+  /**
+   * crear tags no existentes
+   */
+
+  tagsquery = await projectManagementRepository.createTags(tagsquery);
+
+  /**
+   *  setear tags agregados
+   */
+  tagsquery.forEach((tag) =>{
+    const usuarioTag = new UsuarioTag();
+    usuarioTag.loadData({
+      idTag: tag.id, 
+      id: undefined,
+      idUsuario: undefined});
+    usuariosTags.push(usuarioTag); 
+  });
+
+  /**
+   * setear el id del usuario en los tags
+   */
+
+  usuariosTags.forEach((usuariosTag)=>{
+    usuariosTag.idUsuario = req.user.idusuario;
+  });
+
+  /**
+   *  revisar si los tags existen en usuarios tags
+   */
+
+  const repeatedUsuariosTags = await userOperationsRepository
+  .findUsuariosTagId(usuariosTags);
+
+  console.log(usuariosTags);
+  console.log(repeatedUsuariosTags);
+
+  const repeatedIds = repeatedUsuariosTags.map((el) => el._idTag);
+
+  usuariosTags = usuariosTags.filter( 
+    (usuarioTag)=>!repeatedIds.includes(usuarioTag._idTag));
+
+  console.log(usuariosTags);
+
+  response.success(res);
+};
+
+exports.deleteTag = async (req, res) => {};
+
+exports.newLanguage = async (req, res) => {};
+
+exports.deleteLanguage = async (req, res) => {};

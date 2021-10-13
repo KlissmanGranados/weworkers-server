@@ -34,4 +34,29 @@ module.exports = [
     handler: userOperationsService.userProfile,
     middlewares: [],
   },
+  {
+    method: 'post',
+    url: '/idioma-nuevo',
+    handler: userOperationsService.newLanguage,
+    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioIdiomas],
+  },
+  {
+    method: 'delete',
+    url: '/idioma-eliminar',
+    handler: userOperationsService.deleteLanguage,
+    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioIdiomas],
+  },
+  {
+    method: 'post',
+    url: '/tag-nuevo',
+    handler: userOperationsService.newTag,
+    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioTags,
+    userOperationsMiddleware.prepareUsuariosTags],
+  },
+  {
+    method: 'delete',
+    url: '/tag-eliminar',
+    handler: userOperationsService.deleteTag,
+    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioTags],
+  },
 ];
