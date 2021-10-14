@@ -26,5 +26,5 @@ Desarrollo de servicio rest para weworkers
 
 ### Documentación
 
-- [Detalle del uso de los endpoints](https://documenter.getpostman.com/view/12705560/UUy39SJu)
-- [Documentación del servicio](https://github.com/KlissmanGranados/WeWorkers-documentacion)
+- <a href="https://documenter.getpostman.com/view/12705560/UUy39SJu" target="_blank" >Detalle del uso de los endpoints</a>
+- <a href="https://github.com/KlissmanGranados/WeWorkers-documentacion" target="_blank">Documentación del servicio</a>
