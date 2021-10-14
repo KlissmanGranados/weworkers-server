@@ -253,7 +253,7 @@ exports.deleteTag = async (req, res) => {
     if (checkQuery) {
       const deleteQuery = await userOperationsRepository
           .deleteUsuariosTag(idUsuarioTag);
-    } 
+    }
   });
 
 
