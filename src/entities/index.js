@@ -13,3 +13,5 @@ exports.RedUsuario = require('./RedUsuario');
 exports.Idioma = require('./Idioma');
 exports.UsuarioTag = require('./UsuarioTag');
 exports.UsuarioIdioma = require('./UsuarioIdioma');
+exports.ProyectoPropuesta = require('./ProyectoPropuesta');
+exports.ProyectoTrabajador = require('./ProyectoTrabajador');
