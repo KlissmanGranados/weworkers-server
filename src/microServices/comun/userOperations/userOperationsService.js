@@ -222,10 +222,10 @@ exports.newTag = async (req, res) => {
    * filtrar los tags no repetidos para el insert
    */
 
-  const repeatedIds = repeatedUsuariosTags.map((el) => el._idTag);
+  const repeatedIds = repeatedUsuariosTags.map((el) => el.idTag);
 
   usuariosTags = usuariosTags.filter(
-      (usuarioTag)=>!repeatedIds.includes(usuarioTag._idTag));
+      (usuarioTag)=>!repeatedIds.includes(usuarioTag.idTag));
 
   /**
    * insert query
@@ -243,35 +243,21 @@ exports.newTag = async (req, res) => {
 };
 
 exports.deleteTag = async (req, res) => {
-  const usuariosTags = [];
+  let checkQuery;
+  const idUsuarioTags = req.body.idsUsuariosTags;
 
-  /**
-   * buscando los ids de los tags
-   */
+  idUsuarioTags.forEach( async (idUsuarioTag)=>{
+    checkQuery = await userOperationsRepository
+        .checkDelete(idUsuarioTag, req.user.idusuario);
 
-  let tagsquery = await projectManagementRepository
-      .findTagByName(req.body);
-
-  /**
-   * setear los tags existentes
-   */
-
-  tagsquery.forEach((tag) =>{
-    if (tag.id) {
-      const usuarioTag = new UsuarioTag();
-      usuarioTag.loadData({
-        idTag: tag.id,
-        id: undefined,
-        idUsuario: undefined});
-      usuariosTags.push(usuarioTag);
-    }
+    if (checkQuery) {
+      const deleteQuery = await userOperationsRepository
+          .deleteUsuariosTag(idUsuarioTag);
+    } 
   });
 
-  /**
-   * setear los tags no existentes
-   */
 
-  tagsquery = tagsquery.filter( (tag) => tag.id);
+  response.success(res);
 };
 
 exports.newLanguage = async (req, res) => {};

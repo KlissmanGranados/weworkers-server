@@ -57,7 +57,6 @@ module.exports = [
     method: 'delete',
     url: '/tag-eliminar',
     handler: userOperationsService.deleteTag,
-    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioTags,
-      userOperationsMiddleware.prepareUsuariosTags],
+    middlewares: [userOperationsMiddleware.requiredFieldsDeleteUsuarioTags],
   },
 ];

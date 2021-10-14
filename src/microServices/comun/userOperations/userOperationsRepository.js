@@ -171,7 +171,7 @@ exports.findUsuariosTagId = async (usuariosTags) =>{
       const usuariosTagQuery = await conn.query(
           `SELECT id, id_tag , id_usuario FROM usuarios_tags
          WHERE id_tag=$1 AND id_usuario=$2`,
-          [usuariosTag._idTag, usuariosTag._idUsuario],
+          [usuariosTag.idTag, usuariosTag.idUsuario],
       );
 
       if (usuariosTagQuery.rowCount > 0) {
@@ -196,10 +196,33 @@ exports.insertUsuariosTags = async (usuariosTags) =>{
           `INSERT INTO weworkers.usuarios_tags
         (id_tag, id_usuario)
         VALUES($1, $2);`,
-          [usuariosTag._idTag, usuariosTag._idUsuario],
+          [usuariosTag.idTag, usuariosTag.idUsuario],
       );
 
       return usuariosTagQuery;
     }
+  });
+};
+
+exports.checkDelete = async (idUsuariosTag, idUsuario) =>{
+  return db.execute(async (conn) =>{
+    const checkQuery = await conn.query(
+        `SELECT id FROM usuarios_tags WHERE
+      id=$1 AND id_usuario=$2`,
+        [idUsuariosTag, idUsuario],
+    );
+
+    return checkQuery.rowCount > 0;
+  });
+};
+
+exports.deleteUsuariosTag = async (idUsuariosTag) =>{
+  return db.execute(async (conn) =>{
+    const deleteQuery = await conn.query(`
+    DELETE FROM weworkers.usuarios_tags
+    WHERE id=$1
+    `, [idUsuariosTag]);
+
+    return true;
   });
 };
