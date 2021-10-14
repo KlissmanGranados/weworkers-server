@@ -1,5 +1,5 @@
 const {Persona} = require('../../../entities');
-const Tag = require('../../../entities/Tag');
+const {Tag} = require('../../../entities');
 const response = require('../../../response');
 const utils = require('../../../utils');
 
@@ -81,7 +81,7 @@ exports.requiredFieldsUsuarioTags = async (req, res, next) =>{
 
   const fill = utils.requiredFields({requireInputs, body});
 
-  if(fill.length > 0) {
+  if (fill.length > 0) {
     response.warning_required_fields(res, fill);
     return;
   }
@@ -92,7 +92,7 @@ exports.requiredFieldsUsuarioTags = async (req, res, next) =>{
 exports.prepareUsuariosTags = async (req, res, next) =>{
   let tags = req.body.tags;
 
-  tags = tags.map(e => {
+  tags = tags.map((e) => {
     const element = new Tag();
     element.loadData(e);
     return element;
@@ -101,7 +101,7 @@ exports.prepareUsuariosTags = async (req, res, next) =>{
   req.body = tags;
 
   next();
-}
+};
 
 exports.requiredFieldsUsuarioIdiomas = (req, res, next) =>{
   const body = req.body;
@@ -112,7 +112,7 @@ exports.requiredFieldsUsuarioIdiomas = (req, res, next) =>{
 
   const fill = utils.requiredFields({requireInputs, body});
 
-  if(fill.length > 0) {
+  if (fill.length > 0) {
     response.warning_required_fields(res, fill);
     return;
   }

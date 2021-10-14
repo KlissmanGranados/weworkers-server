@@ -167,24 +167,39 @@ exports.findUsuariosTagId = async (usuariosTags) =>{
   return db.execute(async (conn) =>{
     const _usuariosTags = [];
 
-   for (usuariosTag of usuariosTags) {
+    for (usuariosTag of usuariosTags) {
       const usuariosTagQuery = await conn.query(
-        `SELECT id, id_tag , id_usuario FROM usuarios_tags
+          `SELECT id, id_tag , id_usuario FROM usuarios_tags
          WHERE id_tag=$1 AND id_usuario=$2`,
-         [usuariosTag._idTag, usuariosTag._idUsuario]
+          [usuariosTag._idTag, usuariosTag._idUsuario],
       );
 
       if (usuariosTagQuery.rowCount > 0) {
         const usuariosTagEntity = new UsuarioTag();
         usuariosTagEntity.loadData({
-          id:usuariosTagQuery.rows[0].id,
-          idTag:usuariosTagQuery.rows[0].id_tag,
-          idUsuario:usuariosTagQuery.rows[0].id_usuario
+          id: usuariosTagQuery.rows[0].id,
+          idTag: usuariosTagQuery.rows[0].id_tag,
+          idUsuario: usuariosTagQuery.rows[0].id_usuario,
         });
         _usuariosTags.push(usuariosTagEntity);
-      } 
+      }
     }
 
     return _usuariosTags;
+  });
+};
+
+exports.insertUsuariosTags = async (usuariosTags) =>{
+  return db.execute(async (conn) =>{
+    for (usuariosTag of usuariosTags) {
+      const usuariosTagQuery = await conn.query(
+          `INSERT INTO weworkers.usuarios_tags
+        (id_tag, id_usuario)
+        VALUES($1, $2);`,
+          [usuariosTag._idTag, usuariosTag._idUsuario],
+      );
+
+      return usuariosTagQuery;
+    }
   });
 };
