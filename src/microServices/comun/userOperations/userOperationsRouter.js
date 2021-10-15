@@ -38,13 +38,15 @@ module.exports = [
     method: 'post',
     url: '/idioma-nuevo',
     handler: userOperationsService.newLanguage,
-    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioIdiomas],
+    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioIdiomas,
+      userOperationsMiddleware.prepareUsuarioIdiomas],
   },
   {
     method: 'delete',
     url: '/idioma-eliminar',
     handler: userOperationsService.deleteLanguage,
-    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioIdiomas],
+    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioIdiomas,
+      userOperationsMiddleware.prepareUsuarioIdiomas],
   },
   {
     method: 'post',

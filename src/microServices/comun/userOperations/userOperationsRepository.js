@@ -228,3 +228,41 @@ exports.deleteUsuariosTag = async (idUsuariosTag) =>{
     return true;
   });
 };
+
+exports.searchUsuariosIdiomas = async (idUsuario) =>{
+  return db.execute(async (conn) =>{
+    const usuariosIdiomasQuery = await conn.query(`
+    SELECT usuarios_idiomas.id, idiomas.nombre_largo
+    FROM usuarios_idiomas INNER JOIN
+    idiomas ON (idiomas.id=usuarios_idiomas.id_idioma) 
+    WHERE usuarios_idiomas.id_usuario=$1;
+    `, [idUsuario]);
+
+    return usuariosIdiomasQuery.rows;
+  });
+};
+
+exports.insertUsuariosIdiomas = async (idUsuario, idIdioma) =>{
+  return db.execute(async (conn) =>{
+    const usuariosIdiomaQuery = await conn.query(
+        `INSERT INTO usuarios_idiomas
+          (id_usuario, id_idioma)
+          VALUES($1, $2) RETURNING id;`,
+        [idUsuario, idIdioma],
+    );
+
+    return usuariosIdiomaQuery.rows[0];
+  });
+};
+
+exports.deleteUsuariosIdiomas = async (idUsuarioIdiomas) =>{
+  return db.execute(async (conn) =>{
+    const usuariosIdiomaQuery = await conn.query(
+        `DELETE FROM usuarios_idiomas
+      WHERE id=$1 RETURNING id`,
+        [idUsuarioIdiomas],
+    );
+
+    return usuariosIdiomaQuery.rows[0];
+  });
+};

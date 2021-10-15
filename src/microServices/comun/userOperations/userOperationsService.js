@@ -4,6 +4,7 @@ const projectManagementRepository = require(
     '../../captador/projectManagement/projectManagementRepository',
 );
 const {UsuarioTag} = require('../../../entities');
+const consts = require('../../../const');
 /**
  * @description Selecciona un usuario
  * @param{Request} req
@@ -248,22 +249,147 @@ exports.newTag = async (req, res) => {
 exports.deleteTag = async (req, res) => {
   let checkQuery;
   const idUsuarioTags = req.body.idsUsuariosTags;
+  const filteredTags = [];
 
   idUsuarioTags.forEach( async (idUsuarioTag)=>{
     checkQuery = await userOperationsRepository
         .checkDelete(idUsuarioTag, req.user.idusuario);
 
     if (checkQuery) {
+      filteredTags.push(idUsuarioTag);
       await userOperationsRepository
           .deleteUsuariosTag(idUsuarioTag);
     }
   });
 
 
-  response.success(res, idUsuarioTags);
+  response.success(res, filteredTags);
 };
 
 exports.newLanguage = async (req, res) => {
+  /**
+   * declarando las listas de idiomas constantes y las del usuario,
+   * junto con el idioma del request
+   */
+
+  const idiomas = consts().idiomas.rows;
+  const idioma = req.body.idioma;
+  const usuariosIdiomas = await userOperationsRepository
+      .searchUsuariosIdiomas(req.user.idusuario);
+
+
+  /**
+   * verificando si el idioma existe
+   */
+
+  let usuariosIdioma = false;
+
+  idiomas.forEach((el) =>{
+    if (el.nombreLargo === idioma.nombreLargo) {
+      usuariosIdioma = el;
+    }
+  });
+
+  if (!usuariosIdioma) {
+    response.error(res, 'no existe el idioma');
+    return;
+  }
+
+  /**
+   * verificando si el idioma a agregar no existe ya
+   * en el usuario
+   */
+
+  let checkUserIdiomas = true;
+
+  usuariosIdiomas.forEach((el) =>{
+    if (el.nombre_largo === usuariosIdioma.nombreLargo) {
+      checkUserIdiomas = false;
+    }
+  });
+
+  if (!checkUserIdiomas) {
+    response.error(res, 'ya existe dentro de la tabla');
+    return;
+  }
+
+  /**
+   * llamada del query para insertar el idioma en el
+   * usuario
+   */
+
+  const insertQuery = await userOperationsRepository
+      .insertUsuariosIdiomas(req.user.idusuario, usuariosIdioma.id);
+
+  if (!insertQuery) {
+    response.error(res, 'se hizo mal el request');
+    return;
+  }
+
+
+  response.success(res, insertQuery);
 };
 
-exports.deleteLanguage = async (req, res) => {};
+exports.deleteLanguage = async (req, res) => {
+  /**
+   * declarando las listas de idiomas constantes y las del usuario,
+   * junto con el idioma del request
+   */
+
+  const idiomas = consts().idiomas.rows;
+  const idioma = req.body.idioma;
+  const usuariosIdiomas = await userOperationsRepository
+      .searchUsuariosIdiomas(req.user.idusuario);
+
+  /**
+   * verificando si el idioma existe
+   */
+
+  let usuariosIdioma = false;
+
+  idiomas.forEach((el) =>{
+    if (el.nombreLargo === idioma.nombreLargo) {
+      usuariosIdioma = el;
+    }
+  });
+
+  if (!usuariosIdioma) {
+    response.error(res, 'no existe el idioma');
+    return;
+  }
+
+  /**
+   * verificando si el idioma a eliminar existe ya
+   * en el usuario
+   */
+
+  let checkUserIdiomas = false;
+
+  usuariosIdiomas.forEach((el) =>{
+    if (el.nombre_largo === usuariosIdioma.nombreLargo) {
+      checkUserIdiomas = true;
+      usuariosIdioma = el;
+    }
+  });
+
+  if (!checkUserIdiomas) {
+    response.error(res, 'no existe dentro de la tabla');
+    return;
+  }
+
+  /**
+   * llamada del query para eliminar el idioma
+   * del usuario
+   */
+
+  const deleteQuery = await userOperationsRepository
+      .deleteUsuariosIdiomas(usuariosIdioma.id);
+
+  if (!deleteQuery) {
+    response.error(res, 'no agarra el request');
+    return;
+  }
+
+
+  response.success(res, deleteQuery);
+};

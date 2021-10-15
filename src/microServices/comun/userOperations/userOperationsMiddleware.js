@@ -1,4 +1,4 @@
-const {Persona} = require('../../../entities');
+const {Persona, Idioma} = require('../../../entities');
 const {Tag} = require('../../../entities');
 const response = require('../../../response');
 const utils = require('../../../utils');
@@ -116,6 +116,16 @@ exports.requiredFieldsUsuarioIdiomas = (req, res, next) =>{
     response.warning_required_fields(res, fill);
     return;
   }
+
+  next();
+};
+
+exports.prepareUsuarioIdiomas = (req, res, next) =>{
+  const idioma = new Idioma();
+
+  idioma.nombreLargo = req.body.idioma;
+
+  req.body.idioma = idioma;
 
   next();
 };
