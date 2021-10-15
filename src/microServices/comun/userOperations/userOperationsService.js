@@ -4,7 +4,6 @@ const projectManagementRepository = require(
     '../../captador/projectManagement/projectManagementRepository',
 );
 const {UsuarioTag} = require('../../../entities');
-const consts = require('../../../const');
 /**
  * @description Selecciona un usuario
  * @param{Request} req
@@ -207,7 +206,7 @@ exports.newTag = async (req, res) => {
   response.success(res, insertQuery);
 };
 /**
- * @description elimina una lista de relaciones
+ * @description elimina la relación entre unas etiquetas y un usuario
  * @param {Request} req
  * @param {Response} res
  * @return {*}
@@ -236,21 +235,26 @@ exports.deleteTag = async (req, res) => {
   response.warning_data_not_valid(res);
 };
 
+/**
+ * @description inserta un nuevo idioma en el usuario
+ * @param {Request} req
+ * @param {Response} res
+ * @return {*}
+ */
+
 exports.newLanguage = async (req, res) => {
   /**
    * declarando las listas de idiomas constantes y las del usuario,
    * junto con el idioma del request
    */
 
-  const idiomas = consts().idiomas.rows;
+  const idiomas = req.consts;
   const idioma = req.body.idioma;
   const usuariosIdiomas = await userOperationsRepository
       .searchUsuariosIdiomas(req.user.idusuario);
 
 
-  /**
-   * verificando si el idioma existe
-   */
+  // verificando si el idioma existe
 
   let usuariosIdioma = false;
 
@@ -261,7 +265,7 @@ exports.newLanguage = async (req, res) => {
   });
 
   if (!usuariosIdioma) {
-    response.error(res, 'no existe el idioma');
+    response.success_no_data(res);
     return;
   }
 
@@ -279,7 +283,7 @@ exports.newLanguage = async (req, res) => {
   });
 
   if (!checkUserIdiomas) {
-    response.error(res, 'ya existe dentro de la tabla');
+    response.warning_exist_regedit(res);
     return;
   }
 
@@ -292,7 +296,7 @@ exports.newLanguage = async (req, res) => {
       .insertUsuariosIdiomas(req.user.idusuario, usuariosIdioma.id);
 
   if (!insertQuery) {
-    response.error(res, 'se hizo mal el request');
+    response.error(res);
     return;
   }
 
@@ -300,20 +304,25 @@ exports.newLanguage = async (req, res) => {
   response.success(res, insertQuery);
 };
 
+/**
+ * @description elimina la relación entre un idioma y un usuario
+ * @param {Request} req
+ * @param {Response} res
+ * @return {*}
+ */
+
 exports.deleteLanguage = async (req, res) => {
   /**
    * declarando las listas de idiomas constantes y las del usuario,
    * junto con el idioma del request
    */
 
-  const idiomas = consts().idiomas.rows;
+  const idiomas = req.consts;
   const idioma = req.body.idioma;
   const usuariosIdiomas = await userOperationsRepository
       .searchUsuariosIdiomas(req.user.idusuario);
 
-  /**
-   * verificando si el idioma existe
-   */
+  // verificando si el idioma existe
 
   let usuariosIdioma = false;
 
@@ -324,7 +333,7 @@ exports.deleteLanguage = async (req, res) => {
   });
 
   if (!usuariosIdioma) {
-    response.error(res, 'no existe el idioma');
+    response.success_no_data(res);
     return;
   }
 
@@ -343,7 +352,7 @@ exports.deleteLanguage = async (req, res) => {
   });
 
   if (!checkUserIdiomas) {
-    response.error(res, 'no existe dentro de la tabla');
+    response.warning_exist_regedit(res);
     return;
   }
 
@@ -356,7 +365,7 @@ exports.deleteLanguage = async (req, res) => {
       .deleteUsuariosIdiomas(usuariosIdioma.id);
 
   if (!deleteQuery) {
-    response.error(res, 'no agarra el request');
+    response.error(res);
     return;
   }
 

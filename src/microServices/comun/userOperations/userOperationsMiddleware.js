@@ -2,7 +2,7 @@ const {Persona, Idioma} = require('../../../entities');
 const {Tag} = require('../../../entities');
 const response = require('../../../response');
 const utils = require('../../../utils');
-
+const consts = require('../../../const');
 
 exports.requiredFieldsPerson = async (req, res, next) =>{
   const body = req.body;
@@ -126,6 +126,8 @@ exports.prepareUsuarioIdiomas = (req, res, next) =>{
   idioma.nombreLargo = req.body.idioma;
 
   req.body.idioma = idioma;
+
+  req.consts = consts().idiomas.rows;
 
   next();
 };
