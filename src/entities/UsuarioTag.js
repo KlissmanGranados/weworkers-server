@@ -17,7 +17,7 @@ class UsuarioTag extends Entity {
   /**
    * @return {Number} id del registro
    */
-   get id() {
+  get id() {
     return this._id;
   }
   /**
@@ -29,7 +29,7 @@ class UsuarioTag extends Entity {
   /**
    * @return {Number} id de la etiqueta
    */
-  get idTag() { 
+  get idTag() {
     return this._idTag;
   }
   /**
@@ -41,7 +41,7 @@ class UsuarioTag extends Entity {
   /**
    * @return {Number}
    */
-  get idUsuario(){
+  get idUsuario() {
     return this._idUsuario;
   }
 }
