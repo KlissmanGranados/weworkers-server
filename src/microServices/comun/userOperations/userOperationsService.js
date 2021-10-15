@@ -239,7 +239,7 @@ exports.newTag = async (req, res) => {
     return;
   }
 
-  response.success(res);
+  response.success(res, usuariosTags);
 };
 
 exports.deleteTag = async (req, res) => {
@@ -251,15 +251,16 @@ exports.deleteTag = async (req, res) => {
         .checkDelete(idUsuarioTag, req.user.idusuario);
 
     if (checkQuery) {
-      const deleteQuery = await userOperationsRepository
+      await userOperationsRepository
           .deleteUsuariosTag(idUsuarioTag);
     }
   });
 
 
-  response.success(res);
+  response.success(res, idUsuarioTags);
 };
 
-exports.newLanguage = async (req, res) => {};
+exports.newLanguage = async (req, res) => {
+};
 
 exports.deleteLanguage = async (req, res) => {};

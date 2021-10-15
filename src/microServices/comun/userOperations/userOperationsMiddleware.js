@@ -94,7 +94,7 @@ exports.prepareUsuariosTags = async (req, res, next) =>{
 
   tags = tags.map((e) => {
     const element = new Tag();
-    element.loadData(e);
+    element.nombre = e;
     return element;
   });
 

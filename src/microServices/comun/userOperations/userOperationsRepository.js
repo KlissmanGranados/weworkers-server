@@ -218,7 +218,7 @@ exports.checkDelete = async (idUsuariosTag, idUsuario) =>{
 
 exports.deleteUsuariosTag = async (idUsuariosTag) =>{
   return db.execute(async (conn) =>{
-    const deleteQuery = await conn.query(`
+    await conn.query(`
     DELETE FROM weworkers.usuarios_tags
     WHERE id=$1
     `, [idUsuariosTag]);
