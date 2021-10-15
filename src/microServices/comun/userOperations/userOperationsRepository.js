@@ -173,35 +173,35 @@ exports.findUsuariosTagId = async (usuariosTags) =>{
          WHERE id_tag=$1 AND id_usuario=$2`,
           [usuariosTag.idTag, usuariosTag.idUsuario],
       );
-
+      const usuariosTagEntity = new UsuarioTag();
       if (usuariosTagQuery.rowCount > 0) {
-        const usuariosTagEntity = new UsuarioTag();
         usuariosTagEntity.loadData({
           id: usuariosTagQuery.rows[0].id,
           idTag: usuariosTagQuery.rows[0].id_tag,
           idUsuario: usuariosTagQuery.rows[0].id_usuario,
         });
         _usuariosTags.push(usuariosTagEntity);
+      } else {
+        _usuariosTags.push(usuariosTag);
       }
     }
 
     return _usuariosTags;
   });
 };
-
+/**
+ * @description crea n asociaciones entre usuarios y etiquetas
+ * @param {UsuarioTag} usuariosTags
+ * @return {UsuarioTag} lista de de datos insertados
+ */
 exports.insertUsuariosTags = async (usuariosTags) =>{
   return db.execute(async (conn) =>{
     for (usuariosTag of usuariosTags) {
       const usuariosTagQuery = await conn.query(
-          `INSERT INTO usuarios_tags
-        (id_tag, id_usuario)
-        VALUES($1, $2) RETURNING id;`,
-          [usuariosTag.idTag, usuariosTag.idUsuario],
+          usuariosTag.save(),
       );
-
       usuariosTag.id = usuariosTagQuery.rows[0].id;
     }
-
     return usuariosTags;
   });
 };
@@ -213,7 +213,6 @@ exports.checkDelete = async (idUsuariosTag, idUsuario) =>{
       id=$1 AND id_usuario=$2`,
         [idUsuariosTag, idUsuario],
     );
-
     return checkQuery.rowCount > 0;
   });
 };

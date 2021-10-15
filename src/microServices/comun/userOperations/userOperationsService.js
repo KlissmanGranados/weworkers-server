@@ -158,112 +158,82 @@ exports.userProfile = async (req, res) => {
  * @description agrega etiquetas a un usuario
  * @param {Request} req
  * @param {Response} res
- * @return
+ * @return {*}
  */
 exports.newTag = async (req, res) => {
   let usuariosTags = [];
-
-  /**
-   * buscando los ids de los tags
-   */
-
+  // buscando los ids de los tags
   let tagsquery = await projectManagementRepository
       .findTagByName(req.body);
-
-  /**
-   * setear los tags existentes
-   */
-
+  // setear los tags existentes
   tagsquery.forEach((tag) =>{
     if (tag.id) {
       const usuarioTag = new UsuarioTag();
-      usuarioTag.loadData({
-        idTag: tag.id,
-        id: undefined,
-        idUsuario: undefined});
+      usuarioTag.idTag = tag.id;
       usuariosTags.push(usuarioTag);
     }
   });
-
-  /**
-   * setear los tags no existentes
-   */
-
+  // setear los tags no existentes
   tagsquery = tagsquery.filter( (tag) => !tag.id);
-
-  /**
-   * crear tags no existentes
-   */
-
+  // crear tags no existentes
   tagsquery = await projectManagementRepository.createTags(tagsquery);
-
-  /**
-   *  setear tags agregados
-   */
+  // setear tags agregados
   tagsquery.forEach((tag) =>{
     const usuarioTag = new UsuarioTag();
-    usuarioTag.loadData({
-      idTag: tag.id,
-      id: undefined,
-      idUsuario: undefined});
+    usuarioTag.idTag = tag.id;
     usuariosTags.push(usuarioTag);
   });
-
-  /**
-   * setear el id del usuario en los tags
-   */
-
+  // setear el id del usuario en los tags
   usuariosTags.forEach((usuariosTag)=>{
     usuariosTag.idUsuario = req.user.idusuario;
   });
-
-  /**
-   *  revisar si los tags existen en usuarios tags
-   */
-
+  // revisar y filtrar relaciones existentes
   const repeatedUsuariosTags = await userOperationsRepository
       .findUsuariosTagId(usuariosTags);
-
-  /**
-   * filtrar los tags no repetidos para el insert
-   */
-
-  const repeatedIds = repeatedUsuariosTags.map((el) => el.idTag);
-
-  usuariosTags = usuariosTags.filter(
-      (usuarioTag)=>!repeatedIds.includes(usuarioTag.idTag));
-
-  /**
-   * insert query
-   */
+  usuariosTags = repeatedUsuariosTags.filter((el) => !el.id);
+  // sino hay datos para insertar
+  if (usuariosTags.length === 0) {
+    response.success_no_data(res);
+    return;
+  }
+  // insertar tags nuevos
   const insertQuery = await userOperationsRepository
       .insertUsuariosTags(usuariosTags);
 
   if (!insertQuery) {
-    response.warning_exist_regedit(res);
+    response.error(res);
     return;
   }
   response.success(res, insertQuery);
 };
-
+/**
+ * @description elimina una lista de relaciones
+ * @param {Request} req
+ * @param {Response} res
+ * @return {*}
+ */
 exports.deleteTag = async (req, res) => {
   let checkQuery;
   const idUsuarioTags = req.body.idsUsuariosTags;
   const filteredTags = [];
 
-  idUsuarioTags.forEach( async (idUsuarioTag)=>{
+  for (const idUsuarioTag of idUsuarioTags) {
+    // verificar si la relación es válida para el usuario
     checkQuery = await userOperationsRepository
         .checkDelete(idUsuarioTag, req.user.idusuario);
 
     if (checkQuery) {
+      // Guardar ids válidos y ejecutar delete
       filteredTags.push(idUsuarioTag);
       await userOperationsRepository
           .deleteUsuariosTag(idUsuarioTag);
     }
-  });
-
-
-  response.success(res, filteredTags);
+  };
+  if (filteredTags.length > 0 ) {
+    response.success(res, filteredTags);
+    return;
+  }
+  response.warning_data_not_valid(res);
 };
 
 exports.newLanguage = async (req, res) => {
