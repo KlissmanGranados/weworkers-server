@@ -155,9 +155,9 @@ exports.userProfile = async (req, res) => {
 };
 /**
  * @description agrega etiquetas a un usuario
- * @param {Request} req 
- * @param {Response} res 
- * @return 
+ * @param {Request} req
+ * @param {Response} res
+ * @return
  */
 exports.newTag = async (req, res) => {
   let usuariosTags = [];
@@ -242,7 +242,7 @@ exports.newTag = async (req, res) => {
     response.warning_exist_regedit(res);
     return;
   }
-  response.success(res, usuariosTags);
+  response.success(res, insertQuery);
 };
 
 exports.deleteTag = async (req, res) => {

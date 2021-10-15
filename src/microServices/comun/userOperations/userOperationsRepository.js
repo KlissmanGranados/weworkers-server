@@ -193,14 +193,16 @@ exports.insertUsuariosTags = async (usuariosTags) =>{
   return db.execute(async (conn) =>{
     for (usuariosTag of usuariosTags) {
       const usuariosTagQuery = await conn.query(
-          `INSERT INTO weworkers.usuarios_tags
+          `INSERT INTO usuarios_tags
         (id_tag, id_usuario)
-        VALUES($1, $2);`,
+        VALUES($1, $2) RETURNING id;`,
           [usuariosTag.idTag, usuariosTag.idUsuario],
       );
 
-      return usuariosTagQuery;
+      usuariosTag.id = usuariosTagQuery.rows[0].id;
     }
+
+    return usuariosTags;
   });
 };
 
@@ -219,7 +221,7 @@ exports.checkDelete = async (idUsuariosTag, idUsuario) =>{
 exports.deleteUsuariosTag = async (idUsuariosTag) =>{
   return db.execute(async (conn) =>{
     await conn.query(`
-    DELETE FROM weworkers.usuarios_tags
+    DELETE FROM usuarios_tags
     WHERE id=$1
     `, [idUsuariosTag]);
 
