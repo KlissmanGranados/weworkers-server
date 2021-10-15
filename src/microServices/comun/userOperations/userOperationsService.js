@@ -153,7 +153,12 @@ exports.userProfile = async (req, res) => {
   }
   response.success(res, profile);
 };
-
+/**
+ * @description agrega etiquetas a un usuario
+ * @param {Request} req 
+ * @param {Response} res 
+ * @return 
+ */
 exports.newTag = async (req, res) => {
   let usuariosTags = [];
 
@@ -230,15 +235,13 @@ exports.newTag = async (req, res) => {
   /**
    * insert query
    */
-
   const insertQuery = await userOperationsRepository
       .insertUsuariosTags(usuariosTags);
 
   if (!insertQuery) {
-    response.error(res);
+    response.warning_exist_regedit(res);
     return;
   }
-
   response.success(res, usuariosTags);
 };
 
