@@ -244,30 +244,13 @@ exports.deleteTag = async (req, res) => {
 
 exports.newLanguage = async (req, res) => {
   /**
-   * declarando las listas de idiomas constantes y las del usuario,
+   * declarando las listas de idiomas del usuario,
    * junto con el idioma del request
    */
 
-  const idiomas = req.consts;
   const idioma = req.body.idioma;
   const usuariosIdiomas = await userOperationsRepository
       .searchUsuariosIdiomas(req.user.idusuario);
-
-
-  // verificando si el idioma existe
-
-  let usuariosIdioma = false;
-
-  idiomas.forEach((el) =>{
-    if (el.nombreLargo === idioma.nombreLargo) {
-      usuariosIdioma = el;
-    }
-  });
-
-  if (!usuariosIdioma) {
-    response.success_no_data(res);
-    return;
-  }
 
   /**
    * verificando si el idioma a agregar no existe ya
@@ -277,7 +260,7 @@ exports.newLanguage = async (req, res) => {
   let checkUserIdiomas = true;
 
   usuariosIdiomas.forEach((el) =>{
-    if (el.nombre_largo === usuariosIdioma.nombreLargo) {
+    if (el.nombre_largo === idioma.nombre_largo) {
       checkUserIdiomas = false;
     }
   });
@@ -293,7 +276,7 @@ exports.newLanguage = async (req, res) => {
    */
 
   const insertQuery = await userOperationsRepository
-      .insertUsuariosIdiomas(req.user.idusuario, usuariosIdioma.id);
+      .insertUsuariosIdiomas(req.user.idusuario, idioma.id);
 
   if (!insertQuery) {
     response.error(res);
@@ -313,29 +296,13 @@ exports.newLanguage = async (req, res) => {
 
 exports.deleteLanguage = async (req, res) => {
   /**
-   * declarando las listas de idiomas constantes y las del usuario,
+   * declarando las listas de idiomas del usuario,
    * junto con el idioma del request
    */
 
-  const idiomas = req.consts;
-  const idioma = req.body.idioma;
+  let idioma = req.body.idioma;
   const usuariosIdiomas = await userOperationsRepository
       .searchUsuariosIdiomas(req.user.idusuario);
-
-  // verificando si el idioma existe
-
-  let usuariosIdioma = false;
-
-  idiomas.forEach((el) =>{
-    if (el.nombreLargo === idioma.nombreLargo) {
-      usuariosIdioma = el;
-    }
-  });
-
-  if (!usuariosIdioma) {
-    response.success_no_data(res);
-    return;
-  }
 
   /**
    * verificando si el idioma a eliminar existe ya
@@ -345,14 +312,14 @@ exports.deleteLanguage = async (req, res) => {
   let checkUserIdiomas = false;
 
   usuariosIdiomas.forEach((el) =>{
-    if (el.nombre_largo === usuariosIdioma.nombreLargo) {
+    if (el.nombre_largo === idioma.nombre_largo) {
       checkUserIdiomas = true;
-      usuariosIdioma = el;
+      idioma = el;
     }
   });
 
   if (!checkUserIdiomas) {
-    response.warning_exist_regedit(res);
+    response.error(res);
     return;
   }
 
@@ -362,7 +329,7 @@ exports.deleteLanguage = async (req, res) => {
    */
 
   const deleteQuery = await userOperationsRepository
-      .deleteUsuariosIdiomas(usuariosIdioma.id);
+      .deleteUsuariosIdiomas(idioma.id);
 
   if (!deleteQuery) {
     response.error(res);

@@ -2,7 +2,7 @@ const {Persona, Idioma} = require('../../../entities');
 const {Tag} = require('../../../entities');
 const response = require('../../../response');
 const utils = require('../../../utils');
-const consts = require('../../../const');
+const {consts} = require('../../../../index');
 
 exports.requiredFieldsPerson = async (req, res, next) =>{
   const body = req.body;
@@ -127,7 +127,21 @@ exports.prepareUsuarioIdiomas = (req, res, next) =>{
 
   req.body.idioma = idioma;
 
-  req.consts = consts().idiomas.rows;
+  next();
+};
+
+exports.idiomaExists = (req, res, next) =>{
+// verificando si el idioma existe
+
+  const usuariosIdioma = consts()
+      .idiomas.getByLongName(req.body.idioma.nombreLargo);
+
+  if (!usuariosIdioma) {
+    response.warning_data_not_valid(res);
+    return;
+  }
+
+  req.body.idioma = usuariosIdioma;
 
   next();
 };
