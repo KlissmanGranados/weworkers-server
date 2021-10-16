@@ -190,7 +190,7 @@ exports.newTag = async (req, res) => {
   const repeatedUsuariosTags = await userOperationsRepository
       .findUsuariosTagId(usuariosTags);
   usuariosTags = repeatedUsuariosTags.filter((el) => !el.id);
-  // sino hay datos para insertar
+  // si no hay datos para insertar
   if (usuariosTags.length === 0) {
     response.success_no_data(res);
     return;
@@ -212,27 +212,39 @@ exports.newTag = async (req, res) => {
  * @return {*}
  */
 exports.deleteTag = async (req, res) => {
-  let checkQuery;
-  const idUsuarioTags = req.body.idsUsuariosTags;
-  const filteredTags = [];
-
-  for (const idUsuarioTag of idUsuarioTags) {
-    // verificar si la relación es válida para el usuario
-    checkQuery = await userOperationsRepository
-        .checkDelete(idUsuarioTag, req.user.idusuario);
-
-    if (checkQuery) {
-      // Guardar ids válidos y ejecutar delete
-      filteredTags.push(idUsuarioTag);
-      await userOperationsRepository
-          .deleteUsuariosTag(idUsuarioTag);
+  let usuariosTags = [];
+  // buscando los ids de los tags
+  const tagsquery = await projectManagementRepository
+      .findTagByName(req.body);
+  // setear los tags existentes
+  tagsquery.forEach((tag) =>{
+    if (tag.id) {
+      const usuarioTag = new UsuarioTag();
+      usuarioTag.idTag = tag.id;
+      usuarioTag.idUsuario = req.user.idusuario;
+      usuariosTags.push(usuarioTag);
     }
-  };
-  if (filteredTags.length > 0 ) {
-    response.success(res, filteredTags);
+  });
+
+  // revisar si los tags de la lista existen
+  const currentUsuariosTags = await userOperationsRepository
+      .findUsuariosTagId(usuariosTags);
+  usuariosTags = currentUsuariosTags.filter((el) => el.id);
+  // si no hay datos para borrar
+  if (usuariosTags.length === 0) {
+    response.error(res);
     return;
   }
-  response.warning_data_not_valid(res);
+
+  // borrar tags del usuario
+  const deleteQuery = await userOperationsRepository
+      .deleteUsuariosTag(usuariosTags);
+
+  if (!deleteQuery) {
+    response.error(res);
+    return;
+  }
+  response.success(res, deleteQuery);
 };
 
 /**

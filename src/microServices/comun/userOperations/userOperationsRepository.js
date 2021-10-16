@@ -206,25 +206,18 @@ exports.insertUsuariosTags = async (usuariosTags) =>{
   });
 };
 
-exports.checkDelete = async (idUsuariosTag, idUsuario) =>{
+exports.deleteUsuariosTag = async (usuariosTags) =>{
   return db.execute(async (conn) =>{
-    const checkQuery = await conn.query(
-        `SELECT id FROM usuarios_tags WHERE
-      id=$1 AND id_usuario=$2`,
-        [idUsuariosTag, idUsuario],
-    );
-    return checkQuery.rowCount > 0;
-  });
-};
-
-exports.deleteUsuariosTag = async (idUsuariosTag) =>{
-  return db.execute(async (conn) =>{
-    await conn.query(`
-    DELETE FROM usuarios_tags
-    WHERE id=$1
-    `, [idUsuariosTag]);
-
-    return true;
+    for (usuariosTag of usuariosTags) {
+      const usuariosTagQuery = await conn.query(
+          `DELETE FROM usuarios_tags
+          WHERE id_tag=$1 AND id_usuario=$2 RETURNING id;
+          `,
+          [usuariosTag.idTag, usuariosTag.idUsuario],
+      );
+      usuariosTag.id = usuariosTagQuery.rows[0].id;
+    }
+    return usuariosTags;
   });
 };
 

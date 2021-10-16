@@ -145,20 +145,3 @@ exports.idiomaExists = (req, res, next) =>{
 
   next();
 };
-
-exports.requiredFieldsDeleteUsuarioTags = async (req, res, next) =>{
-  const body = req.body;
-
-  const requireInputs = [
-    'idsUsuariosTags',
-  ];
-
-  const fill = utils.requiredFields({requireInputs, body});
-
-  if (fill.length > 0) {
-    response.warning_required_fields(res, fill);
-    return;
-  }
-
-  next();
-};

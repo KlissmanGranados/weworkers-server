@@ -55,13 +55,13 @@ module.exports = [
     url: '/tag-nuevo',
     handler: userOperationsService.newTag,
     middlewares: [userOperationsMiddleware.requiredFieldsUsuarioTags,
-      userOperationsMiddleware.prepareUsuariosTags,
-      userOperationsMiddleware.idiomaExists],
+      userOperationsMiddleware.prepareUsuariosTags],
   },
   {
     method: 'delete',
     url: '/tag-eliminar',
     handler: userOperationsService.deleteTag,
-    middlewares: [userOperationsMiddleware.requiredFieldsDeleteUsuarioTags],
+    middlewares: [userOperationsMiddleware.requiredFieldsUsuarioTags,
+      userOperationsMiddleware.prepareUsuariosTags],
   },
 ];
