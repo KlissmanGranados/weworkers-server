@@ -22,6 +22,7 @@ module.exports = (function() {
         tiposPago,
         redes,
         modalidades,
+        idiomas,
       ] = await Promise.all(
           [
             conn.query(`select id,nombre from roles`),
@@ -30,6 +31,7 @@ module.exports = (function() {
             conn.query(`SELECT id, nombre FROM tipos_pago`),
             conn.query(`SELECT id, nombre, "timestamp" FROM redes`),
             conn.query(`SELECT id, nombre FROM modalidades`),
+            conn.query(`SELECT id, nombre_largo, nombre_corto FROM idiomas`),
           ],
       );
 
@@ -108,6 +110,21 @@ module.exports = (function() {
             return modalidades.rows.filter(
                 (modalidad) => modalidad.id == id,
             )[0];
+          },
+        },
+        idiomas: {
+          rows: idiomas.rows,
+          rowCount: idiomas.rowCount,
+          getByShortName: (shortName) => {
+            return idiomas.rows.filter((shortNam) =>
+              shortNam.nombre_corto == shortName)[0];
+          },
+          getByLongName: (longName) => {
+            return idiomas.rows.filter((longNam) =>
+              longNam.nombre_largo == longName)[0];
+          },
+          getById: (id) => {
+            return idiomas.rows.filter( (lang) => lang.id == id )[0];
           },
         },
       };

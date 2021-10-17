@@ -103,14 +103,16 @@ exports.checkMounts = (value)=>{
 };
 /**
  * @description verifica si una fecha es válida
- * @param {Date} dateStart
- * @param {Date} dateEnd
+ * @param {Date} date
  * @return {Date}
  */
-exports.isValidDate = (dateStart, dateEnd)=>{
-  const currentDate = dateStart || new Date();
-  const newDate = dateEnd;
-  return currentDate.getTime() >= newDate.getTime()?false:newDate;
+exports.isValidDate = (date)=>{
+  /**
+   * TODO verificar condición
+   */
+  const currentDate = new Date();
+  const newDate = date;
+  return newDate.getTime()>=currentDate.getTime()?newDate:false;
 };
 
 exports.snakeToCamelObject = snakeToCamelObject;

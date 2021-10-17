@@ -59,7 +59,7 @@ class Proyecto extends Entity {
   }
 
   set fechaCrea(value) {
-    this._fechaCrea = isValidDate(this._fechaCrea, new Date(value));
+    this._fechaCrea = isValidDate(new Date(value));
   }
 
   get reclutadoresId() {
@@ -88,7 +88,14 @@ class Proyecto extends Entity {
     return this._fechaTermina;
   }
   set fechaTermina(value) {
-    this._fechaTermina = isValidDate(this._fechaCrea, new Date(value));
+    this._fechaTermina = isValidDate(new Date(value));
+    // validar si la fecha final es menor a la fecha de creación
+    if (
+      this._fechaTermina &&
+      this._fechaTermina.getTime()<this._fechaCrea.getTime()
+    ) {
+      this._fechaTermina = false;
+    }
   }
   set monedasId(value) {
     this._monedasId = value;
