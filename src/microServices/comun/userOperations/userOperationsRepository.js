@@ -192,7 +192,7 @@ exports.findUsuariosTagId = async (usuariosTags) =>{
 /**
  * @description crea n asociaciones entre usuarios y etiquetas
  * @param {UsuarioTag} usuariosTags
- * @return {UsuarioTag} lista de de datos insertados
+ * @return {Promise<UsuarioTag>} lista de de datos insertados
  */
 exports.insertUsuariosTags = async (usuariosTags) =>{
   return db.execute(async (conn) =>{

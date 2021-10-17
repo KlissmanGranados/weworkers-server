@@ -79,6 +79,22 @@ exports.requiredFieldsUsuarioTags = async (req, res, next) =>{
     'tags',
   ];
 
+  const {tags} = req.body;
+
+  if (!Array.isArray(tags)) {
+    response.warning_data_not_valid(res, tags);
+    return;
+  }
+  // filtrando tags con espacios en blanco y con Strings vacios
+  body.tags = tags
+      .map((tag) => tag.trim())
+      .filter((tag) => tag);
+
+  if (tags.length === 0) {
+    response.warning_data_not_valid(res, tags);
+    return;
+  }
+
   const fill = utils.requiredFields({requireInputs, body});
 
   if (fill.length > 0) {
