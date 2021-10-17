@@ -51,7 +51,7 @@ exports.getProjects = (data)=>{
 
   const generalPreparedStatement = {
     limit: {
-      offset: page || 0,
+      offset: page || 1,
       rowsLimit: perPage || 20,
     },
     text: selectProjects.replace('{{other_colums}}', '')

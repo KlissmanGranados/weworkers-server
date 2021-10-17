@@ -1,4 +1,5 @@
 const {db} = require('../../../../index');
+const UsuarioTag = require('../../../entities/UsuarioTag');
 /**
  * @description Consulta los datos de un perfil
  * @param {BigInteger} id
@@ -298,4 +299,100 @@ exports.getUsers = (params)=>{
   generalPreparedStatement.text = text.replace('{{wheres}}', wheres);
 
   return db.repage(generalPreparedStatement);
+};
+
+exports.findUsuariosTagId = async (usuariosTags) =>{
+  return db.execute(async (conn) =>{
+    const _usuariosTags = [];
+
+    for (usuariosTag of usuariosTags) {
+      const usuariosTagQuery = await conn.query(
+          `SELECT id, id_tag , id_usuario FROM usuarios_tags
+         WHERE id_tag=$1 AND id_usuario=$2`,
+          [usuariosTag.idTag, usuariosTag.idUsuario],
+      );
+      const usuariosTagEntity = new UsuarioTag();
+      if (usuariosTagQuery.rowCount > 0) {
+        usuariosTagEntity.loadData({
+          id: usuariosTagQuery.rows[0].id,
+          idTag: usuariosTagQuery.rows[0].id_tag,
+          idUsuario: usuariosTagQuery.rows[0].id_usuario,
+        });
+        _usuariosTags.push(usuariosTagEntity);
+      } else {
+        _usuariosTags.push(usuariosTag);
+      }
+    }
+
+    return _usuariosTags;
+  });
+};
+/**
+ * @description crea n asociaciones entre usuarios y etiquetas
+ * @param {UsuarioTag} usuariosTags
+ * @return {Promise<UsuarioTag>} lista de de datos insertados
+ */
+exports.insertUsuariosTags = async (usuariosTags) =>{
+  return db.execute(async (conn) =>{
+    for (usuariosTag of usuariosTags) {
+      const usuariosTagQuery = await conn.query(
+          usuariosTag.save(),
+      );
+      usuariosTag.id = usuariosTagQuery.rows[0].id;
+    }
+    return usuariosTags;
+  });
+};
+
+exports.deleteUsuariosTag = async (usuariosTags) =>{
+  return db.execute(async (conn) =>{
+    for (usuariosTag of usuariosTags) {
+      const usuariosTagQuery = await conn.query(
+          `DELETE FROM usuarios_tags
+          WHERE id_tag=$1 AND id_usuario=$2 RETURNING id;
+          `,
+          [usuariosTag.idTag, usuariosTag.idUsuario],
+      );
+      usuariosTag.id = usuariosTagQuery.rows[0].id;
+    }
+    return usuariosTags;
+  });
+};
+
+exports.searchUsuariosIdiomas = async (idUsuario) =>{
+  return db.execute(async (conn) =>{
+    const usuariosIdiomasQuery = await conn.query(`
+    SELECT usuarios_idiomas.id, idiomas.nombre_largo
+    FROM usuarios_idiomas INNER JOIN
+    idiomas ON (idiomas.id=usuarios_idiomas.id_idioma) 
+    WHERE usuarios_idiomas.id_usuario=$1;
+    `, [idUsuario]);
+
+    return usuariosIdiomasQuery.rows;
+  });
+};
+
+exports.insertUsuariosIdiomas = async (idUsuario, idIdioma) =>{
+  return db.execute(async (conn) =>{
+    const usuariosIdiomaQuery = await conn.query(
+        `INSERT INTO usuarios_idiomas
+          (id_usuario, id_idioma)
+          VALUES($1, $2) RETURNING id;`,
+        [idUsuario, idIdioma],
+    );
+
+    return usuariosIdiomaQuery.rows[0];
+  });
+};
+
+exports.deleteUsuariosIdiomas = async (idUsuarioIdiomas) =>{
+  return db.execute(async (conn) =>{
+    const usuariosIdiomaQuery = await conn.query(
+        `DELETE FROM usuarios_idiomas
+      WHERE id=$1 RETURNING id`,
+        [idUsuarioIdiomas],
+    );
+
+    return usuariosIdiomaQuery.rows[0];
+  });
 };

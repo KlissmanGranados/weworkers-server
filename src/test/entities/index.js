@@ -26,10 +26,10 @@ usuarioTag.loadData({
 
 mainStucture = [idioma, usuarioIdioma, usuarioTag];
 
+console.log(usuarioTag.idTag);
+
+/*
 mainStucture.forEach( (value) => {
   console.log(value);
-  console.log(value.select());
-  console.log(value.save());
-  console.log(value.update());
-  console.log(value.delete());
 });
+*/

@@ -15,10 +15,22 @@ class UsuarioTag extends Entity {
     this._id = id;
   }
   /**
+   * @return {Number} id del registro
+   */
+  get id() {
+    return this._id;
+  }
+  /**
    * @param {Number} idTag
    */
   set idTag(idTag) {
     this._idTag = idTag;
+  }
+  /**
+   * @return {Number} id de la etiqueta
+   */
+  get idTag() {
+    return this._idTag;
   }
   /**
    *  @param {Number} idUsuario
@@ -27,10 +39,10 @@ class UsuarioTag extends Entity {
     this._idUsuario = idUsuario;
   }
   /**
-   * @return {Number} id del registro
+   * @return {Number}
    */
-  get id() {
-    return this._id;
+  get idUsuario() {
+    return this._idUsuario;
   }
 }
 module.exports = UsuarioTag;
