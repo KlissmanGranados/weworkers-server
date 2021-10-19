@@ -155,6 +155,21 @@ exports.isTheProjectCreator = (idProyecto, idReclutador) =>{
   });
 };
 
+exports.searchPropuestas = async (proyectosId) =>{
+  return db.execute( async (conn) =>{
+    const propuestas = await conn.query(
+        `SELECT proyectos_propuestas.mensaje, usuarios.id, usuarios.usuario 
+      FROM proyectos_propuestas INNER JOIN trabajadores 
+      ON (proyectos_propuestas.trabajadores_id=trabajadores.id)
+      INNER JOIN usuarios ON (usuarios.id=trabajadores.usuarios_id)
+       WHERE proyectos_id=$1;`,
+        [proyectosId],
+    );
+
+    return propuestas.rows;
+  });
+};
+
 exports.tagPoints = (proyectosId, captadoId) =>{
   return db.execute(async (conn) =>{
     const points = await conn.query(
@@ -171,10 +186,10 @@ exports.tagPoints = (proyectosId, captadoId) =>{
 exports.languagePoints = (captadoId) =>{
   return db.execute(async (conn) =>{
     const points = await conn.query(
-        `SELECT count(id) FROM usuarios_idiomas WHERE id_usuario =$1;`,
+        `SELECT id FROM usuarios_idiomas WHERE id_usuario =$1;`,
         [captadoId],
     );
 
-    return points.rows[0].count >= 2? 100:0;
+    return points.rowCount >= 2? 100:0;
   });
 };

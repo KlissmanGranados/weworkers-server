@@ -115,25 +115,43 @@ exports.update = async (req, res)=>{
 };
 
 exports.evaluationProcess = async (req, res) =>{
-  const testCaptadoId = 39;
+  /**
+   * ids de prueba de captado: 39 de usuario y 20 trabajador
+   * (SergioD) con 2 tags congruentes con el proyecto y con 2 idiomas,
+   * 35 de usuario y 17 trabajador (adriarg) con ningún tag registrado y
+   * ningún idioma registrado
+   */
   const proyectoId = req.params.idProyecto;
 
-  // fase 1
-  const tagPoints = await phaseOne(proyectoId, testCaptadoId);
+  const totalPoints = async (proyectoId, captadoId) =>{
+    // fase 1
+    const tagPoints = await phaseOne(proyectoId, captadoId);
 
-  // fase 2
-  const surveyPoints = await phaseTwo();
+    // fase 2
+    const surveyPoints = await phaseTwo();
 
-  // fase 3
-  const languagePoints = await phaseThree(testCaptadoId);
+    // fase 3
+    const languagePoints = await phaseThree(captadoId);
 
-  console.log(tagPoints);
-  console.log(surveyPoints);
-  console.log(languagePoints);
+    return tagPoints + surveyPoints + languagePoints;
+  };
 
-  const totalPoints = tagPoints + surveyPoints + languagePoints;
+  // prueba de consulta de propuestas
 
-  response.success(res, totalPoints);
+  const propuestas = await projectManagementRepository
+      .searchPropuestas(proyectoId);
+
+  const propuestasOrdered = [];
+  let points = 0;
+
+  for (propuesta of propuestas) {
+    points = await totalPoints(proyectoId, propuesta.id);
+    propuestasOrdered.push({propuesta: propuesta, puntos: points});
+  }
+
+  propuestasOrdered.sort((pointsA, pointsB) => pointsB.puntos-pointsA.puntos);
+
+  response.success(res, propuestasOrdered);
 };
 
 const phaseOne = async (proyectoId, captadoId) =>{
