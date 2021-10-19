@@ -113,3 +113,41 @@ exports.update = async (req, res)=>{
 
   response.error(res);
 };
+
+exports.evaluationProcess = async (req, res) =>{
+
+  const testCaptadoId = 39;
+  const proyectoId = req.params.idProyecto;
+
+  // fase 1
+  const tagPoints = await phaseOne(proyectoId, testCaptadoId);
+
+  // fase 2 
+  const surveyPoints = await phaseTwo();
+
+  // fase 3
+  const languagePoints = await phaseThree(testCaptadoId);
+
+  console.log(tagPoints)
+  console.log(surveyPoints)
+  console.log(languagePoints)
+
+  const totalPoints = tagPoints + surveyPoints + languagePoints;
+
+  response.success(res, totalPoints);
+};
+
+const phaseOne = async (proyectoId, captadoId) =>{
+  const query = await projectManagementRepository
+      .tagPoints(proyectoId, captadoId)
+  return query;
+};
+
+const phaseTwo = async () =>{
+  return 0;
+};
+
+const phaseThree = async (captadoId) =>{
+  const query = await projectManagementRepository.languagePoints(captadoId);
+  return query;
+};
