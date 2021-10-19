@@ -115,22 +115,21 @@ exports.update = async (req, res)=>{
 };
 
 exports.evaluationProcess = async (req, res) =>{
-
   const testCaptadoId = 39;
   const proyectoId = req.params.idProyecto;
 
   // fase 1
   const tagPoints = await phaseOne(proyectoId, testCaptadoId);
 
-  // fase 2 
+  // fase 2
   const surveyPoints = await phaseTwo();
 
   // fase 3
   const languagePoints = await phaseThree(testCaptadoId);
 
-  console.log(tagPoints)
-  console.log(surveyPoints)
-  console.log(languagePoints)
+  console.log(tagPoints);
+  console.log(surveyPoints);
+  console.log(languagePoints);
 
   const totalPoints = tagPoints + surveyPoints + languagePoints;
 
@@ -139,7 +138,7 @@ exports.evaluationProcess = async (req, res) =>{
 
 const phaseOne = async (proyectoId, captadoId) =>{
   const query = await projectManagementRepository
-      .tagPoints(proyectoId, captadoId)
+      .tagPoints(proyectoId, captadoId);
   return query;
 };
 

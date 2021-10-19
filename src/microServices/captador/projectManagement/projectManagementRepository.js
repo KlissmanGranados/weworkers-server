@@ -161,20 +161,20 @@ exports.tagPoints = (proyectosId, captadoId) =>{
         `SELECT usuarios_tags.id FROM usuarios_tags 
       INNER JOIN proyectos_tags ON (proyectos_tags.tags_id=usuarios_tags.id_tag)
       WHERE proyectos_tags.proyectos_id=$1 AND usuarios_tags.id_usuario=$2;`,
-        [proyectosId, captadoId]
+        [proyectosId, captadoId],
     );
 
     return points.rowCount*10;
-  })
+  });
 };
 
 exports.languagePoints = (captadoId) =>{
   return db.execute(async (conn) =>{
     const points = await conn.query(
         `SELECT count(id) FROM usuarios_idiomas WHERE id_usuario =$1;`,
-        [captadoId]
+        [captadoId],
     );
 
     return points.rows[0].count >= 2? 100:0;
-  })
+  });
 };
