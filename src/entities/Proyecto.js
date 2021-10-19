@@ -39,7 +39,10 @@ class Proyecto extends Entity {
 
   set nombre(value) {
     if (value && value.length <=45) {
-      this._nombre = value.toLowerCase();
+      this._nombre = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
     }
   }
 
@@ -49,8 +52,10 @@ class Proyecto extends Entity {
 
   set descripcion(value) {
     if (value && value.length <= 1000) {
-      this._descripcion = value;
-      value.toLowerCase();
+      this._descripcion = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
     }
   }
 

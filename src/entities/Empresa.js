@@ -29,7 +29,10 @@ class Empresa extends Entity {
 
   set razonSocial(value) {
     if (value && value.length <=45) {
-      this._razonSocial = value.toLowerCase();
+      this._razonSocial = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
     }
   }
 }

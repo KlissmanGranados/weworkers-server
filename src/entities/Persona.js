@@ -45,7 +45,10 @@ class Persona extends Entity {
 
   set primerNombre(value) {
     if (value && value.length <=45) {
-      this._primerNombre = value.toLowerCase();
+      this._primerNombre = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
     } else {
       this._primerNombre = null;
     }
@@ -57,7 +60,10 @@ class Persona extends Entity {
 
   set primerApellido(value) {
     if (value && value.length<=45) {
-      this._primerApellido = value.toLowerCase();
+      this._primerApellido = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
     } else {
       this._primerApellido = null;
     }
@@ -69,7 +75,10 @@ class Persona extends Entity {
 
   set segundoNombre(value) {
     if (value && value.length <=45) {
-      this._segundoNombre = value.toLowerCase();
+      this._segundoNombre = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
     } else {
       this._segundoNombre = null;
     }
@@ -81,7 +90,10 @@ class Persona extends Entity {
 
   set segundoApellido(value) {
     if (value && value.length <=45) {
-      this._segundoApellido = value.toLowerCase();
+      this._segundoApellido = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
     } else {
       this._segundoApellido = null;
     }

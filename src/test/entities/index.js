@@ -1,35 +1,6 @@
-const {Idioma, UsuarioTag, UsuarioIdioma} = require('../../entities/index');
+const {Respuesta} = require('../../entities/');
 
-let mainStucture = [
-  new Idioma(),
-  new UsuarioIdioma(),
-  new UsuarioTag(),
-];
+const respuesta = new Respuesta();
+respuesta.respuesta = ' probando                    un                 dato';
 
-const [idioma, usuarioIdioma, usuarioTag] = mainStucture;
-
-idioma.loadData({
-  id: 1,
-  nombreLargo: 'español',
-  nombreCorto: 'es',
-});
-usuarioIdioma.loadData({
-  id: 1,
-  idUsuario: 33,
-  idIdioma: 2,
-});
-usuarioTag.loadData({
-  id: 1,
-  idTag: 2,
-  idUsuario: 33,
-});
-
-mainStucture = [idioma, usuarioIdioma, usuarioTag];
-
-console.log(usuarioTag.idTag);
-
-/*
-mainStucture.forEach( (value) => {
-  console.log(value);
-});
-*/
+console.log(respuesta);
