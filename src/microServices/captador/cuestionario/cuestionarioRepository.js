@@ -76,17 +76,21 @@ exports.create = (entities)=>{
           .filter((respuesta) => respuesta.id)[0];
       respuestaCorrectaId.id = undefined;
       respuestaCorrectaId.preguntasId = idPregunta;
+      respuestaCorrectaId.cuestionariosId = idCuestionario;
       respuestaCorrectaId.id = (
         await conn.query(respuestaCorrectaId.save())
       ).rows[0].id;
 
+      respuestaCorrecta.cuestionariosId = idCuestionario;
       respuestaCorrecta.respuestasId = respuestaCorrectaId.id;
+
       await conn.query(respuestaCorrecta.save());
       // insertando todas las respuestas faltantes
       respuestas = respuestas
           .filter((respuesta) => !respuesta.id)
           .map((respuesta) => {
             respuesta.preguntasId = idPregunta;
+            respuesta.cuestionariosId = idCuestionario;
             return conn.query(respuesta.save());
           });
       // ejecutar inserts faltantes en paralelo
@@ -94,5 +98,40 @@ exports.create = (entities)=>{
     }
 
     return true;
+  });
+};
+
+/**
+ * @param {BigInteger} idProyecto
+ * @return {Promise}
+ */
+exports.delete = (idProyecto) => {
+  return db.transaction(async (conn) => {
+    const idCuestionario = (await conn.query(`
+      SELECT id FROM cuestionarios 
+        WHERE cuestionarios.proyectos_id=$1
+      `, [idProyecto],
+    )).rows[0].id;
+    await conn.query(`
+      DELETE FROM cuestionarios_usuarios
+      WHERE cuestionarios_id=$1
+    `, [idCuestionario]);
+    await conn.query(`
+      DELETE FROM respuestas_correctas
+      WHERE cuestionarios_id=$1
+    `, [idCuestionario]);
+    await conn.query(`
+      DELETE FROM respuestas
+      WHERE cuestionarios_id=$1
+    `, [idCuestionario]);
+    await conn.query(`
+      DELETE FROM preguntas 
+        WHERE cuestionarios_id=$1
+    `, [idCuestionario]);
+    await conn.query(`
+      DELETE FROM cuestionarios 
+      WHERE id=$1
+    `, [idCuestionario]);
+    return idCuestionario;
   });
 };

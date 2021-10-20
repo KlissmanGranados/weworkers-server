@@ -15,7 +15,7 @@ module.exports = [
   },
   {
     method: 'delete',
-    url: '/cuestionario/eliminar',
+    url: '/cuestionario/eliminar/:idProyecto',
     handler: cuestionarioService.eliminarCuestionario,
     middlewares: [],
   },

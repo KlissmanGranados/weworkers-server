@@ -50,4 +50,37 @@ exports.crearCuestionario = async (req, res)=>{
  * @param {Response} res
  */
 exports.eliminarCuestionario = async (req, res) => {
+  const usuario = req.user;
+  const {idProyecto} = req.params;
+
+  const [
+    verifyProjectOwnershipResult,
+    checkProjectQuestionnairesResult,
+  ] = await Promise.all([
+    // verificar que el usuario sea propietario del proyecto
+    cuestionarioRepository
+        .verifyProjectOwnership(
+            usuario,
+            idProyecto),
+    // verificar si tiene cuestionarios
+    cuestionarioRepository
+        .checkProjectQuestionnaires(
+            idProyecto),
+  ]);
+  if (!checkProjectQuestionnairesResult ||
+     !verifyProjectOwnershipResult) {
+    response.warning_operation_not_available(res);
+    return;
+  }
+
+  const deleteResult = await cuestionarioRepository.delete(idProyecto);
+  if (!deleteResult) {
+    response.error(res);
+    return;
+  }
+
+  response.success(res,
+      {
+        cuestionarioId: deleteResult,
+      });
 };
