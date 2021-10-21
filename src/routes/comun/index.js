@@ -7,6 +7,7 @@ const MAIN = '../../microServices/comun';
 const userOperationsRouter = require(`${MAIN}/userOperations/userOperationsRouter`);
 const redesRouter = require(`${MAIN}/redes/redesRouter`);
 const getProjectsRouter = require(`${MAIN}/getProjects/getProjectsRouter`);
+const cuestionario = require(`${MAIN}/cuestionario/cuestionarioRouter`);
 
 /**
  * @description contiene las rutas concernientes al rol común
@@ -22,6 +23,7 @@ let routes = [];
 routes = routes.concat(userOperationsRouter);
 routes = routes.concat(redesRouter);
 routes = routes.concat(getProjectsRouter);
+routes = routes.concat(cuestionario);
 
 // Exportando rutas
 module.exports = routes;

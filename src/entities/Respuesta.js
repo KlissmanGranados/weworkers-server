@@ -3,8 +3,16 @@ class Respuesta extends Entity {
   _id;
   _respuesta;
   _preguntasId;
+  _cuestionariosId;
   constructor() {
     super('respuestas');
+  }
+
+  set cuestionariosId(value) {
+    this._cuestionariosId = value;
+  }
+  get cuestionariosId() {
+    return this._cuestionariosId;
   }
 
   get id() {
