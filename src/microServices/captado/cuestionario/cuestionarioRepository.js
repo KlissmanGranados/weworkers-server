@@ -40,6 +40,43 @@ exports.verifyParticipation = (idUsuario, idCuestionario)=>{
     return verifyParticipationResults !==0;
   });
 };
+/**
+ *
+ * @param {{
+ *  cuestionariosId:BigInteger,
+ *  respuestasId:Array<BigInteger>}} respuestas
+ * @return {Promise<Boolean>}
+ */
+exports.onlyOneAnswerByQuestion = (respuestas)=>{
+  return db.execute(async (conn) => {
+    const {cuestionariosId, respuestasId} = respuestas;
+    const respuestasResult = await Promise
+        .all(respuestasId.map( (respuestaId) => {
+          return conn.query(`
+          SELECT preguntas.id FROM preguntas
+          JOIN respuestas ON 
+          respuestas.preguntas_id = preguntas.id
+          WHERE respuestas.id=$1 AND preguntas.cuestionarios_id=$2
+        `, [respuestaId, cuestionariosId]);
+        }));
+
+    if (!respuestasResult.every( (respuesta) => respuesta.rowCount ==1 )) {
+      return false;
+    }
+
+    const preguntasId = respuestasResult.map( (respuesta) => {
+      return respuesta.rows[0].id;
+    });
+
+    const repPreguntas = (
+      [...new Set(preguntasId)].join('') !== preguntasId.join('')
+    );
+    if (repPreguntas) {
+      return false;
+    }
+    return true;
+  });
+};
 
 /**
  *
