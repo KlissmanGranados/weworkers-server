@@ -193,3 +193,23 @@ exports.languagePoints = (captadoId) =>{
     return points.rowCount >= 2? 100:0;
   });
 };
+
+exports.cuestionarioRespuestasCaptados = (proyectoId) =>{
+  return db.execute(async (conn) =>{
+    const respuestas = await conn.query(
+        `SELECT cuestionarios_usuarios.usuarios_id,
+      cuestionarios_usuarios.cuestionarios_id,
+      respuestas_correctas.respuestas_id
+      FROM cuestionarios_usuarios
+      LEFT JOIN respuestas_correctas ON 
+      (respuestas_correctas.respuestas_id =
+      cuestionarios_usuarios.respuestas_id) 
+      inner join cuestionarios on 
+      (cuestionarios_usuarios.cuestionarios_id=cuestionarios.id)
+      where cuestionarios.proyectos_id = $1;`,
+        [proyectoId],
+    );
+
+    return respuestas.rows;
+  });
+};

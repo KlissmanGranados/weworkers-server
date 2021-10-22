@@ -117,23 +117,26 @@ exports.update = async (req, res)=>{
 exports.evaluationProcess = async (req, res) =>{
   /**
    * ids de prueba de captado: 39 de usuario y 20 trabajador
-   * (SergioD) con 2 tags congruentes con el proyecto y con 2 idiomas,
+   * (SergioD) con 2 tags congruentes con el proyecto, con 2 idiomas y
+   * 2 preguntas incorrectas en el cuestionario, y tienes a
    * 35 de usuario y 17 trabajador (adriarg) con ningún tag registrado y
-   * ningún idioma registrado
+   * ningún idioma registrado y 2 preguntas correctas en el cuestionario
    */
   const proyectoId = req.params.idProyecto;
 
-  const totalPoints = async (proyectoId, captadoId) =>{
+  const totalPoints = async (proyectoId, captado, cuestionario) =>{
     // fase 1
-    const tagPoints = await phaseOne(proyectoId, captadoId);
+    const tagPoints = await phaseOne(proyectoId, captado.id);
 
     // fase 2
-    const surveyPoints = await phaseTwo();
+    const surveyPoints = await phaseTwo(captado.id, cuestionario);
 
     // fase 3
-    const languagePoints = await phaseThree(captadoId);
+    const languagePoints = await phaseThree(captado.id);
 
-    return tagPoints + surveyPoints + languagePoints;
+    const total = tagPoints + surveyPoints + languagePoints;
+
+    return total>=0? total:0;
   };
 
   // prueba de consulta de propuestas
@@ -141,11 +144,14 @@ exports.evaluationProcess = async (req, res) =>{
   const propuestas = await projectManagementRepository
       .searchPropuestas(proyectoId);
 
+  const cuestionario = await projectManagementRepository
+      .cuestionarioRespuestasCaptados(proyectoId);
+
   const propuestasOrdered = [];
   let points = 0;
 
   for (propuesta of propuestas) {
-    points = await totalPoints(proyectoId, propuesta.id);
+    points = await totalPoints(proyectoId, propuesta, cuestionario);
     propuestasOrdered.push({propuesta: propuesta, puntos: points});
   }
 
@@ -160,8 +166,24 @@ const phaseOne = async (proyectoId, captadoId) =>{
   return query;
 };
 
-const phaseTwo = async () =>{
-  return 0;
+const phaseTwo = async (captadoId, cuestionario) =>{
+  const respuestasCaptado = cuestionario
+      .filter((el) => el.usuarios_id==captadoId);
+
+  if (respuestasCaptado.length===0) {
+    return 0;
+  }
+
+  let counter = 0;
+
+  for (respuesta of respuestasCaptado) {
+    if (respuesta.respuestas_id) {
+      counter+=10;
+    } else {
+      counter-=10;
+    }
+  }
+  return counter;
 };
 
 const phaseThree = async (captadoId) =>{
