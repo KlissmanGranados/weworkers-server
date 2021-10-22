@@ -4,7 +4,7 @@ const cuestionarioRepository = require('./cuestionarioRepository');
 exports.answerQuestionnaire = async (req, res)=>{
   const respuestas = req.data;
   const idUsuario = req.user.idusuario;
-  const {cuestionariosId} = req.body;
+  const {cuestionariosId, respuestasId} = req.body;
 
   const verifyAnswersId = await cuestionarioRepository
       .verifyAnswersId(respuestas);
@@ -20,6 +20,15 @@ exports.answerQuestionnaire = async (req, res)=>{
     response.warning_operation_not_available(res);
     return;
   }
+
+  const onlyOneAnswerByQuestion = await cuestionarioRepository
+      .onlyOneAnswerByQuestion({cuestionariosId, respuestasId});
+  // si responde mas de una vez por pregunta
+  if (!onlyOneAnswerByQuestion) {
+    response.warning_data_not_valid(res, {respuestasId});
+    return;
+  }
+
   const respuestasResults = await cuestionarioRepository
       .answerQuestionnaire(respuestas);
   if (!respuestasResults) {
