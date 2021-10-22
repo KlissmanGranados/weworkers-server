@@ -1,7 +1,7 @@
 const response = require('../../../response');
 const projectManagementRepository = require('./projectManagementRepository');
 // eslint-disable-next-line max-len
-const cuestionarioRepository = require('../cuestionario/cuestionarioRepository');
+const {verifyProjectOwnership} = require('../cuestionario/cuestionarioRepository');
 
 /**
  * @description Crea un nuevo proyecto
@@ -116,19 +116,16 @@ exports.update = async (req, res)=>{
   response.error(res);
 };
 
+/**
+ * @description ejecuta las fases de valoración a las propuestas
+ * @param {Request} req
+ * @param {Response} res
+ */
 exports.evaluationProcess = async (req, res) =>{
-  /**
-   * ids de prueba de captado: 39 de usuario y 20 trabajador
-   * (SergioD) con 2 tags congruentes con el proyecto, con 2 idiomas y
-   * 2 preguntas incorrectas en el cuestionario, y tienes a
-   * 35 de usuario y 17 trabajador (adriarg) con ningún tag registrado y
-   * ningún idioma registrado y 2 preguntas correctas en el cuestionario
-   */
   const proyectoId = req.params.idProyecto;
   const captador = req.user;
 
-  const isOwner = await cuestionarioRepository
-      .verifyProjectOwnership(captador, proyectoId);
+  const isOwner = await verifyProjectOwnership(captador, proyectoId);
 
   if (!isOwner) {
     response.warning_operation_not_available(res);
@@ -136,15 +133,16 @@ exports.evaluationProcess = async (req, res) =>{
   }
 
   const totalPoints = async (proyectoId, captado, cuestionario) =>{
-    // fase 1
+    // fase 1: evaluar por tags
     const tagPoints = await phaseOne(proyectoId, captado.id);
 
-    // fase 2
-    const surveyPoints = await phaseTwo(captado.id, cuestionario);
+    // fase 2: evaluar respuestas del cuestionario
+    const surveyPoints = phaseTwo(captado.id, cuestionario);
 
-    // fase 3
+    // fase 3: evaluar si es biligüe
     const languagePoints = await phaseThree(captado.id);
 
+    // totalizar puntaje
     const total = tagPoints + surveyPoints + languagePoints;
 
     return total>=0? total:0;
@@ -170,18 +168,31 @@ exports.evaluationProcess = async (req, res) =>{
 
   response.success(res, propuestasOrdered);
 };
-
+/**
+ * @description puntaje por etiquetas en
+ * relación a las del usuario y las del proyecto
+ * @param {BigInteger} proyectoId
+ * @param {BigInteger} captadoId
+ * @return {Promise<BigInteger>}
+ */
 const phaseOne = async (proyectoId, captadoId) =>{
-  const query = await projectManagementRepository
-      .tagPoints(proyectoId, captadoId);
-  return query;
+  return (
+    await projectManagementRepository
+        .tagPoints(proyectoId, captadoId)
+  );
 };
-
-const phaseTwo = async (captadoId, cuestionario) =>{
+/**
+ * @description evaluar respuestas del captado
+ * en relación al cuestionario del proyecto
+ * @param {Bigint} captadoId
+ * @param {*} cuestionario
+ * @return {BigInteger} puntaje
+ */
+const phaseTwo = (captadoId, cuestionario) =>{
   const respuestasCaptado = cuestionario
       .filter((el) => el.usuarios_id==captadoId);
 
-  if (respuestasCaptado.length===0) {
+  if (respuestasCaptado.length === 0) {
     return 0;
   }
 
@@ -196,8 +207,13 @@ const phaseTwo = async (captadoId, cuestionario) =>{
   }
   return counter;
 };
-
+/**
+ * @description evaluar si sabe más de un idioma
+ * @param {BigInteger} captadoId
+ * @return {Promise<BigInteger>} puntaje
+ */
 const phaseThree = async (captadoId) =>{
-  const query = await projectManagementRepository.languagePoints(captadoId);
-  return query;
+  return (
+    await projectManagementRepository.languagePoints(captadoId)
+  );
 };

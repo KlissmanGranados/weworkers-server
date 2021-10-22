@@ -169,7 +169,14 @@ exports.searchPropuestas = async (proyectosId) =>{
     return propuestas.rows;
   });
 };
-
+/**
+ * @description relaciona los tags del proyecto
+ * con los tags del usuario y a base de ello,
+ * multiplica las coincidecias por 10
+ * @param {BigInt} proyectosId
+ * @param {BigInt} captadoId
+ * @return {Promise<BigInt>} puntaje
+ */
 exports.tagPoints = (proyectosId, captadoId) =>{
   return db.execute(async (conn) =>{
     const points = await conn.query(
@@ -183,6 +190,11 @@ exports.tagPoints = (proyectosId, captadoId) =>{
   });
 };
 
+/**
+ *
+ * @param {BigInteger} captadoId
+ * @return {Promise<BigInteger>} puntaje
+ */
 exports.languagePoints = (captadoId) =>{
   return db.execute(async (conn) =>{
     const points = await conn.query(
