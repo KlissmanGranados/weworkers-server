@@ -1,5 +1,7 @@
 const response = require('../../../response');
 const projectManagementRepository = require('./projectManagementRepository');
+// eslint-disable-next-line max-len
+const cuestionarioRepository = require('../cuestionario/cuestionarioRepository');
 
 /**
  * @description Crea un nuevo proyecto
@@ -123,6 +125,15 @@ exports.evaluationProcess = async (req, res) =>{
    * ningún idioma registrado y 2 preguntas correctas en el cuestionario
    */
   const proyectoId = req.params.idProyecto;
+  const captador = req.user;
+
+  const isOwner = await cuestionarioRepository
+      .verifyProjectOwnership(captador, proyectoId);
+
+  if (!isOwner) {
+    response.warning_operation_not_available(res);
+    return;
+  }
 
   const totalPoints = async (proyectoId, captado, cuestionario) =>{
     // fase 1
