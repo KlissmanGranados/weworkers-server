@@ -7,15 +7,6 @@ const loader = require('expressjs-routes-loader')({useNameFolder: true});
 const guards = require('../guards');
 const auth = require('../guards/authGuard');
 
-/**
- * @name{apiVersion}
- * @type{String}
- * @description versión del servicio
- *
- * @name{serverHost}
- * @type{String}
- * @description puerto en donde se ejecuta el servicio
- */
 const apiVersion = process.env.VERSION;
 const serverHost = process.env.HOST || 'http://localhost';
 const serverPort = process.env.PORT || 3000;
@@ -47,7 +38,9 @@ routes.forEach((route) => {
 });
 
 // Se inicia el servicio
-app.listen(serverPort, (err) => {
+const server = app.listen(serverPort, (err) => {
   if (err) throw err;
   console.log(`server running on : ${serverHost}:${serverPort}${apiVersion} 💪`);
 });
+// iniciar sockets
+require('../services/socket')(server);
