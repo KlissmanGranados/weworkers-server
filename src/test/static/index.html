@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:,">
+  <title>chat</title>
+</head>
+<body>
+  <script src="http://192.168.1.82:3000/socket.io/socket.io.js"></script>
+  <script> 
+
+  let token = 0;
+  let userId = 0;
+  let userName = "";
+  let roleId = 0;
+  const CAPTADO = 1;
+  const CAPTADOR = 2;
+
+  const SERGIO = 39;
+  const ADRIANA = 35;
+  const KG = 28;
+
+  (async ()=>{
+    
+    const option = await Number(prompt("numero"));
+
+    switch (option) {
+      case 1:
+        userId = 39;
+        roleId = CAPTADO;
+        userName = "sergio";
+        token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZHVzdWFyaW8iOjM5LCJyb2xlc2lkIjoxLCJlc3RhZG8iOnRydWUsImlhdCI6MTYzNTAzNjQ5MiwiZXhwIjoxNjM1NjQxMjkyfQ.NYOQgcC7ANG46JHna_dsmgVTTixUwd9RfwGDJiUH3c4';
+        break;
+      case 2:
+        userId = 35;
+        roleId = CAPTADO;
+        userName = "adriana"
+        token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZHVzdWFyaW8iOjM1LCJyb2xlc2lkIjoxLCJlc3RhZG8iOnRydWUsImlhdCI6MTYzNTA0NjU0MSwiZXhwIjoxNjM1NjUxMzQxfQ.rMAIinovdJZhNud4MxsqQXfTHtQMzUwgXU8KXCAyjNA';
+        break;
+      case 3: 
+        userId = 28;
+        roleId = CAPTADOR;
+        userName = "kliss";
+        token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZHVzdWFyaW8iOjI4LCJyb2xlc2lkIjoyLCJlc3RhZG8iOnRydWUsImlhdCI6MTYzNTA0NjczMywiZXhwIjoxNjM1NjUxNTMzfQ.XMYzGKly5o3w6aC6nzZidQZJIEXCTQywCXCU9TyHdYc";
+      default:
+        break;
+    }
+
+    resolve = await io('http://192.168.1.82:3000',{query:{token}});
+    resolve.on('chat:init',data => console.log(data));
+    resolve.on('chat:answer', data => console.log(data));
+  })();
+
+  const sendMessage = (OPTION) => {
+    switch (OPTION) {
+      case ADRIANA:
+        resolve.emit('chat:send',{to:ADRIANA,message:'HOLA ADRIANA'})
+        break;
+      case SERGIO:
+        resolve.emit('chat:send',{to:SERGIO,message:'HOLA SERGIO'})
+        break;
+      case KG:
+        resolve.emit('chat:send',{to:KG,message:'HOLA KLISSMAN'})
+        break;
+      default:
+        break;
+    }
+  }
+  </script>
+</body>
+</html>
