@@ -8,7 +8,7 @@
   <title>chat</title>
 </head>
 <body>
-  <script src="http://192.168.1.82:3000/socket.io/socket.io.js"></script>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <script> 
 
   let token = 0;
@@ -44,11 +44,12 @@
         roleId = CAPTADOR;
         userName = "kliss";
         token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZHVzdWFyaW8iOjI4LCJyb2xlc2lkIjoyLCJlc3RhZG8iOnRydWUsImlhdCI6MTYzNTA0NjczMywiZXhwIjoxNjM1NjUxNTMzfQ.XMYzGKly5o3w6aC6nzZidQZJIEXCTQywCXCU9TyHdYc";
+        break;
       default:
         break;
     }
 
-    resolve = await io('http://192.168.1.82:3000',{query:{token}});
+    resolve = await io('http://localhost:3000',{query:{token}});
     resolve.on('chat:init',data => console.log(data));
     resolve.on('chat:answer', data => console.log(data));
   })();

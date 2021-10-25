@@ -5,7 +5,7 @@ const {
 
 module.exports = async (io, socket, identify) => {
   const user = identify[socket.decoded.idusuario];
-  const listMessages = await readMessage();
+  const listMessages = await readMessage('');
 
   // abriendo chat
   socket.on('chat:init', () => {
@@ -13,7 +13,7 @@ module.exports = async (io, socket, identify) => {
     user.socketsIds.forEach((userId) => {
       io.to(userId).emit('chat:init', listMessages);
     });
-  });
+  }); 
 
   socket.on('chat:send', async (data) => {
     console.info(`${JSON.stringify(user)}, Ha enviado un mensaje`);
