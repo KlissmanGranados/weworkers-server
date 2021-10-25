@@ -3,25 +3,68 @@ const {db} = require('../../../../index');
 
 exports.insertMessage = async (data) => {
   return db.execute(async (conn) =>{
-    const prueba = 'query de prueba'
+    const prueba = 'query de prueba';
 
-    /*const query = conn.query(
+    /* const query = conn.query(
       ``,
       []
     ); */
 
     return prueba;
-  })
+  });
 };
-exports.readMessage = async (data) => {
-  return db.execute(async (conn) =>{
-    const prueba = 'leyendo mensajes';
+exports.readMessage = async (loggedUser, receivedUser, proyectoId) => {
+  return loggedUser !== receivedUser? db.transaction(async (conn) =>{
+    const usernames = await conn.query(
+        `SELECT usuarios.usuario FROM usuarios WHERE id=$1 OR id=$2;
+      `, [loggedUser, receivedUser],
+    );
 
-    /*const query = conn.query(
-      ``,
-      []
-    ); */
+    const firstSessionMessage = `primera sesión entre 
+    ${usernames.rows[0].usuario} y ${usernames.rows[1].usuario}`;
 
-    return prueba;
-  })
+    const query = await conn.query(
+        `SELECT chat_id FROM 
+      mensajes WHERE usuarios_id=$1;
+      `,
+        [receivedUser],
+    );
+
+    if (query.rowCount > 0) {
+      const loggedQuery = await conn.query(`select chat_id 
+      from mensajes where usuarios_id = $1;
+      `, [loggedUser]);
+
+      const receivedQuery = await conn.query(`select chat_id 
+      from mensajes where usuarios_id = $1;
+      `, [receivedUser]);
+
+      const loggedIds = loggedQuery.rows.map((el) => el.chat_id);
+
+      const receivedIds = receivedQuery.rows.map((el) => el.chat_id);
+
+      const chatId = loggedIds.filter((el) => receivedIds.includes(el));
+
+      const messages = await conn.query(`select * from mensajes 
+      where (usuarios_id=$1 and chat_id=$3) 
+      or (usuarios_id=$2 and chat_id=$3);`,
+      [loggedUser, receivedUser, chatId[0]]);
+
+      return messages.rows;
+    } else {
+      const chat = await conn.query(`INSERT INTO chat
+      (proyectos_id)
+      VALUES($1) RETURNING id;`, [proyectoId]);
+
+      await conn.query(`
+      INSERT INTO mensajes
+      (mensaje, chat_id, usuarios_id, "timestamp")
+      VALUES
+      ('Bienvenido/a al chat', $1, $2, CURRENT_TIMESTAMP),
+      ('Bienvenido/a al chat', $1, $3, CURRENT_TIMESTAMP);
+      `, [chat.rows[0].id, loggedUser, receivedUser]);
+
+      return firstSessionMessage;
+    }
+  }):'Error: ids repetidos';
 };
