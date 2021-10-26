@@ -1,11 +1,12 @@
 const {
   insertMessage,
-  readMessage,
+  contactList,
+  startChat,
 } = require('./queries');
 
 module.exports = async (io, socket, identify) => {
   const user = identify[socket.decoded.idusuario];
-  const listMessages = await readMessage(user.session.idusuario, 35, 2);
+  const listMessages = await contactList(user.session.idusuario);
 
   // abriendo chat
   console.info(`Abriendo chat para: [${JSON.stringify(user)}]`);
@@ -29,6 +30,17 @@ module.exports = async (io, socket, identify) => {
         await insertMessage(data);
         io.to(_to).emit('chat:answer', data);
       }
+    }
+  });
+
+  socket.on('chat:select', async (data) =>{
+    console.log('Seleccionando el chat de '+data.receivedUser);
+
+    const messages = await startChat(user.session.idusuario,
+        data.receivedUserId, 2);
+
+    for (const to of user.socketsIds) {
+      io.to(to).emit('chat:messages', messages);
     }
   });
 };

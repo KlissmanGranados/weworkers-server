@@ -52,6 +52,7 @@
     resolve = await io('http://localhost:3000',{query:{token}});
     resolve.on('chat:init',data => console.log(data));
     resolve.on('chat:answer', data => console.log(data));
+    resolve.on('chat:messages', data => console.log(data));
   })();
 
   const sendMessage = (OPTION) => {
@@ -69,7 +70,11 @@
         break;
     }
     console.log("mensaje enviado")
-  }
+  };
+
+  const selectChat = () => {
+    resolve.emit('chat:select', {receivedUser:'adriarg' , receivedUserId:35})
+  };
   </script>
 </body>
 </html>
