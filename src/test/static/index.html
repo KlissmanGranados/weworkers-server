@@ -55,16 +55,16 @@
     resolve.on('chat:messages', data => console.log(data));
   })();
 
-  const sendMessage = (OPTION) => {
+  const sendMessage = (OPTION, chatId) => {
     switch (OPTION) {
       case ADRIANA:
-        resolve.emit('chat:send',{to:ADRIANA,message:'HOLA ADRIANA'})
+        resolve.emit('chat:send',{to:ADRIANA,message:'HOLA ADRIANA', chatId: chatId})
         break;
       case SERGIO:
-        resolve.emit('chat:send',{to:SERGIO,message:'HOLA SERGIO'})
+        resolve.emit('chat:send',{to:SERGIO,message:'HOLA SERGIO', chatId: chatId})
         break;
       case KG:
-        resolve.emit('chat:send',{to:KG,message:'HOLA KLISSMAN'})
+        resolve.emit('chat:send',{to:KG,message:'HOLA KLISSMAN', chatId: chatId})
         break;
       default:
         break;
@@ -72,8 +72,8 @@
     console.log("mensaje enviado")
   };
 
-  const selectChat = () => {
-    resolve.emit('chat:select', {receivedUser:'adriarg' , receivedUserId:35})
+  const selectChat = (contact, contactId) => {
+    resolve.emit('chat:select', {receivedUser:contact , receivedUserId:contactId});
   };
   </script>
 </body>

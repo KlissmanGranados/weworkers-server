@@ -15,6 +15,16 @@ module.exports = async (io, socket, identify) => {
   });
 
   socket.on('chat:send', async (data) => {
+    const query = await insertMessage(data.message,
+        data.chatId, user.session.idusuario);
+
+    if (!query) {
+      user.socketsIds.forEach((userId) => {
+        io.to(userId).emit('chat:answer',
+            'Error: no se pudo enviar el mensaje');
+      });
+      return;
+    }
     console.info(`${JSON.stringify(user)}, Ha enviado un mensaje`);
     /**
      * @type {Array<BigInteger>} datos del destinatario
@@ -22,12 +32,10 @@ module.exports = async (io, socket, identify) => {
     const to = identify[data.to];
     if (to && data.to !== user.session.idusuario) { // si ambos estan conectados
       for (const _to of (to.socketsIds).concat(user.socketsIds)) {
-        await insertMessage(data);
         io.to(_to).emit('chat:answer', data);
       }
     } else { // si solo quien envia
       for (const _to of (user.socketsIds)) {
-        await insertMessage(data);
         io.to(_to).emit('chat:answer', data);
       }
     }

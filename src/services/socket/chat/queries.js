@@ -1,22 +1,22 @@
 const {db} = require('../../../../index');
 
 
-exports.insertMessage = async (data) => {
-  return db.execute(async (conn) =>{
-    const prueba = 'query de prueba';
-
-    /* const query = conn.query(
-      ``,
-      []
-    ); */
-
-    return prueba;
+exports.insertMessage = async (message, chatId, senderId) => {
+  return db.transaction(async (conn) =>{
+    await conn.query(
+        `INSERT INTO mensajes
+      (mensaje, chat_id, usuarios_id, "timestamp")
+      VALUES
+      ($1, $2, $3, CURRENT_TIMESTAMP);`,
+        [message, chatId, senderId],
+    );
+    return true;
   });
 };
 exports.contactList = async (loggedUser) => {
   return db.transaction(async (conn) =>{
     const chatrooms = await conn.query(`
-      SELECT chat_id FROM mensajes WHERE usuarios_id = $1;
+      SELECT chat_id FROM mensajes WHERE usuarios_id = $1 GROUP BY chat_id;
       `, [loggedUser]);
 
     const contacts = [];
@@ -24,7 +24,7 @@ exports.contactList = async (loggedUser) => {
 
     for (chat of chatrooms.rows) {
       contactQuery = await conn.query(`
-        SELECT usuarios.id, usuarios.usuario FROM mensajes 
+        SELECT usuarios.id, usuarios.usuario, mensajes.chat_id FROM mensajes 
         INNER JOIN usuarios ON (mensajes.usuarios_id=usuarios.id) 
         WHERE mensajes.chat_id = $1 AND mensajes.usuarios_id !=$2;
         `, [chat.chat_id, loggedUser]);
@@ -70,7 +70,7 @@ exports.startChat = async (loggedUser, receivedUser, proyectoId) => {
 
       const messages = await conn.query(`SELECT * FROM mensajes
       WHERE (usuarios_id=$1 and chat_id=$3)
-      OR (usuarios_id=$2 and chat_id=$3);`,
+      OR (usuarios_id=$2 and chat_id=$3) ORDER BY "timestamp";`,
       [loggedUser, receivedUser, chatId[0]]);
 
       return messages.rows;
