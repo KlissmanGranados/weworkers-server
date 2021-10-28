@@ -2,6 +2,7 @@ const {
   insertMessage,
   contactList,
   startChat,
+  createChatRoom,
 } = require('./queries');
 
 module.exports = async (io, socket, identify) => {
@@ -42,13 +43,19 @@ module.exports = async (io, socket, identify) => {
   });
 
   socket.on('chat:select', async (data) =>{
-    console.log('Seleccionando el chat de '+data.receivedUser);
-
-    const messages = await startChat(user.session.idusuario,
-        data.receivedUserId, 2);
+    const messages = await startChat(data);
 
     for (const to of user.socketsIds) {
       io.to(to).emit('chat:messages', messages);
+    }
+  });
+
+  socket.on('chat:create', async (data) =>{
+    const responseMessage = await createChatRoom(data.proyectoId,
+        data.loggedUser, data.receivedUser);
+
+    for (const to of user.socketsIds) {
+      io.to(to).emit('chat:created', responseMessage);
     }
   });
 };

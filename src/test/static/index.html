@@ -53,6 +53,7 @@
     resolve.on('chat:init',data => console.log(data));
     resolve.on('chat:answer', data => console.log(data));
     resolve.on('chat:messages', data => console.log(data));
+    resolve.on('chat:created', data => console.log(data));
   })();
 
   const sendMessage = (OPTION, chatId) => {
@@ -72,9 +73,13 @@
     console.log("mensaje enviado")
   };
 
-  const selectChat = (contact, contactId) => {
-    resolve.emit('chat:select', {receivedUser:contact , receivedUserId:contactId});
+  const selectChat = (chatId) => {
+    resolve.emit('chat:select', chatId);
   };
+
+  const createChat = (proyectoId, loggedUser, receivedUser) => {
+    resolve.emit('chat:create', {proyectoId:proyectoId, loggedUser:loggedUser, receivedUser:receivedUser});
+  }
   </script>
 </body>
 </html>
