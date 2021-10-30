@@ -154,3 +154,74 @@ exports.isTheProjectCreator = (idProyecto, idReclutador) =>{
     return check.rowCount > 0;
   });
 };
+
+exports.searchPropuestas = async (proyectosId) =>{
+  return db.execute( async (conn) =>{
+    const propuestas = await conn.query(
+        `SELECT proyectos_propuestas.mensaje, usuarios.id, usuarios.usuario 
+      FROM proyectos_propuestas INNER JOIN trabajadores 
+      ON (proyectos_propuestas.trabajadores_id=trabajadores.id)
+      INNER JOIN usuarios ON (usuarios.id=trabajadores.usuarios_id)
+       WHERE proyectos_id=$1;`,
+        [proyectosId],
+    );
+
+    return propuestas.rows;
+  });
+};
+/**
+ * @description relaciona los tags del proyecto
+ * con los tags del usuario y a base de ello,
+ * multiplica las coincidecias por 10
+ * @param {BigInt} proyectosId
+ * @param {BigInt} captadoId
+ * @return {Promise<BigInt>} puntaje
+ */
+exports.tagPoints = (proyectosId, captadoId) =>{
+  return db.execute(async (conn) =>{
+    const points = await conn.query(
+        `SELECT usuarios_tags.id FROM usuarios_tags 
+      INNER JOIN proyectos_tags ON (proyectos_tags.tags_id=usuarios_tags.id_tag)
+      WHERE proyectos_tags.proyectos_id=$1 AND usuarios_tags.id_usuario=$2;`,
+        [proyectosId, captadoId],
+    );
+
+    return points.rowCount*10;
+  });
+};
+
+/**
+ *
+ * @param {BigInteger} captadoId
+ * @return {Promise<BigInteger>} puntaje
+ */
+exports.languagePoints = (captadoId) =>{
+  return db.execute(async (conn) =>{
+    const points = await conn.query(
+        `SELECT id FROM usuarios_idiomas WHERE id_usuario =$1;`,
+        [captadoId],
+    );
+
+    return points.rowCount >= 2? 100:0;
+  });
+};
+
+exports.cuestionarioRespuestasCaptados = (proyectoId) =>{
+  return db.execute(async (conn) =>{
+    const respuestas = await conn.query(
+        `SELECT cuestionarios_usuarios.usuarios_id,
+      cuestionarios_usuarios.cuestionarios_id,
+      respuestas_correctas.respuestas_id
+      FROM cuestionarios_usuarios
+      LEFT JOIN respuestas_correctas ON 
+      (respuestas_correctas.respuestas_id =
+      cuestionarios_usuarios.respuestas_id) 
+      inner join cuestionarios on 
+      (cuestionarios_usuarios.cuestionarios_id=cuestionarios.id)
+      where cuestionarios.proyectos_id = $1;`,
+        [proyectoId],
+    );
+
+    return respuestas.rows;
+  });
+};

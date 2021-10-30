@@ -22,4 +22,11 @@ module.exports = [
       projectManagementMiddleware.checkId,
     ],
   },
+  {
+    method: 'get',
+    url: '/evaluar-captado/:idProyecto',
+    handler: projectManagementService.evaluationProcess,
+    middlewares: [],
+  },
+
 ];

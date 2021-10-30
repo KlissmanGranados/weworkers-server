@@ -23,7 +23,12 @@ class ProyectoPropuesta extends Entity {
   }
 
   set mensaje(value) {
-    this._mensaje = value;
+    if (value) {
+      this._mensaje = value
+          .toLowerCase()
+          .replaceAll(/\s+/g, ' ')
+          .trim();
+    }
   }
 
   get trabajadoresId() {

@@ -148,9 +148,19 @@ exports.userProfile = async (req, res) => {
   const {id} = req.params;
   const profile = await userOperationsRepository.readProfile(id);
   if (!profile) {
-    response.forbidden(res);
+    response.success_no_data(res);
     return;
   }
+  const codewarId = 3;
+  const [userCodewar] = profile.perfil
+      .redes.filter( (red) => red.id === codewarId );
+
+  if (userCodewar) { // si tiene codewars
+    const {codewars} = require('../../../services/');
+    const profileCodewars = await codewars.profile(userCodewar.direccion);
+    profile.codewars = profileCodewars;
+  }
+
   response.success(res, profile);
 };
 /**

@@ -1,5 +1,7 @@
 const response = require('../../../response');
 const projectManagementRepository = require('./projectManagementRepository');
+// eslint-disable-next-line max-len
+const {verifyProjectOwnership} = require('../cuestionario/cuestionarioRepository');
 
 /**
  * @description Crea un nuevo proyecto
@@ -112,4 +114,106 @@ exports.update = async (req, res)=>{
   }
 
   response.error(res);
+};
+
+/**
+ * @description ejecuta las fases de valoración a las propuestas
+ * @param {Request} req
+ * @param {Response} res
+ */
+exports.evaluationProcess = async (req, res) =>{
+  const proyectoId = req.params.idProyecto;
+  const captador = req.user;
+
+  const isOwner = await verifyProjectOwnership(captador, proyectoId);
+
+  if (!isOwner) {
+    response.warning_operation_not_available(res);
+    return;
+  }
+
+  const totalPoints = async (proyectoId, captado, cuestionario) =>{
+    // fase 1: evaluar por tags
+    const tagPoints = await phaseOne(proyectoId, captado.id);
+
+    // fase 2: evaluar respuestas del cuestionario
+    const surveyPoints = phaseTwo(captado.id, cuestionario);
+
+    // fase 3: evaluar si es biligüe
+    const languagePoints = await phaseThree(captado.id);
+
+    // totalizar puntaje
+    const total = tagPoints + surveyPoints + languagePoints;
+
+    return total>=0? total:0;
+  };
+
+  // prueba de consulta de propuestas
+
+  const propuestas = await projectManagementRepository
+      .searchPropuestas(proyectoId);
+
+  const cuestionario = await projectManagementRepository
+      .cuestionarioRespuestasCaptados(proyectoId);
+
+  const propuestasOrdered = [];
+  let points = 0;
+
+  for (propuesta of propuestas) {
+    points = await totalPoints(proyectoId, propuesta, cuestionario);
+    propuestasOrdered.push({propuesta: propuesta, puntos: points});
+  }
+
+  propuestasOrdered.sort((pointsA, pointsB) => pointsB.puntos-pointsA.puntos);
+
+  response.success(res, propuestasOrdered);
+};
+/**
+ * @description puntaje por etiquetas en
+ * relación a las del usuario y las del proyecto
+ * @param {BigInteger} proyectoId
+ * @param {BigInteger} captadoId
+ * @return {Promise<BigInteger>}
+ */
+const phaseOne = async (proyectoId, captadoId) =>{
+  return (
+    await projectManagementRepository
+        .tagPoints(proyectoId, captadoId)
+  );
+};
+/**
+ * @description evaluar respuestas del captado
+ * en relación al cuestionario del proyecto
+ * @param {Bigint} captadoId
+ * @param {*} cuestionario
+ * @return {BigInteger} puntaje
+ */
+const phaseTwo = (captadoId, cuestionario) =>{
+  const respuestasCaptado = cuestionario
+      .filter((el) => el.usuarios_id==captadoId);
+
+  if (respuestasCaptado.length === 0) {
+    return 0;
+  }
+
+  let counter = 0;
+
+  for (respuesta of respuestasCaptado) {
+    if (respuesta.respuestas_id) {
+      counter+=10;
+    } else {
+      counter-=10;
+    }
+  }
+  return counter;
+};
+/**
+ * @description evaluar si sabe más de un idioma
+ * @param {BigInteger} captadoId
+ * @return {Promise<BigInteger>} puntaje
+ */
+const phaseThree = async (captadoId) =>{
+  return (
+    await projectManagementRepository.languagePoints(captadoId)
+  );
 };

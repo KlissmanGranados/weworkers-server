@@ -1,5 +1,10 @@
 const response = require('../../../response');
 const redesRepository = require('./redesRepository');
+const {codewars} = require('../../../services/');
+const onlyOneNet = {
+  codewars: 3,
+};
+
 /**
  * @description vincular red con usuario
  * @param{Request} req
@@ -16,6 +21,24 @@ exports.associateNetwork = async (req, res)=>{
    *  }
    */
   const registro = req.registro;
+  /**
+   * En caso de que la cuenta corresponda con codewars,
+   * se verifica que ésta exista
+   */
+  if (registro.redDireccion.redesId == onlyOneNet.codewars) {
+    if (!await codewars.profile(
+        registro.redDireccion.direccion,
+    )) {
+      response.warning_data_not_valid(res);
+      return;
+    }
+  }
+
+  if (await redesRepository.checkOnlyOne(
+      onlyOneNet.codewars, registro.redUsuario.usuarioId)) {
+    response.warning_operation_not_available(res);
+    return;
+  }
 
   if (await redesRepository.redExist(registro.redDireccion)) {
     response.warning_exist_regedit(res);
