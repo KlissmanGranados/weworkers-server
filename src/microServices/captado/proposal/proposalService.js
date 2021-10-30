@@ -27,7 +27,7 @@ exports.createPropuesta = async (req, res) => {
     return;
   }
 
-  response.success(res, insert);
+  response.success(res, insert.rows[0]);
 };
 /**
  * @description se actualiza una propuesta tomando en cuenta
@@ -44,6 +44,7 @@ exports.updatePropuesta = async (req, res) => {
 
   const isCreator = await proposalRepository
       .isCreator(idTrabajador, idPropuesta);
+
   if (!isCreator) {
     response.error(res);
     return;
@@ -72,6 +73,8 @@ exports.deletePropuesta = async (req, res) => {
 
   const isCreator = await proposalRepository
       .isCreator(idTrabajador, idPropuesta);
+
+
   if (!isCreator) {
     response.error(res);
     return;
@@ -86,4 +89,26 @@ exports.deletePropuesta = async (req, res) => {
   }
 
   response.success(res, idPropuesta);
+};
+/**
+ * @description devuelve la propuesta que hizo el usuario a un proyecto
+ * @param {*} req
+ * @param {*} res
+ * @return {void}
+ */
+exports.searchPropuesta = async (req, res) =>{
+  const idProyecto = req.params.idProyecto;
+
+  const idTrabajador = await proposalRepository
+      .findTrabajadoresId(req.user.idusuario);
+
+  const search = await proposalRepository
+      .searchPropuesta(idTrabajador, idProyecto);
+
+  if (!search) {
+    response.error(res);
+    return;
+  }
+
+  response.success(res, search);
 };

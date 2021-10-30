@@ -7,20 +7,26 @@ module.exports = [
   */
   {
     method: 'post',
-    url: '/crear-propuesta',
+    url: 'crear-propuesta',
     handler: proposalService.createPropuesta,
     middlewares: [proposalMiddleware.requiredFieldsInsert],
   },
   {
     method: 'put',
-    url: '/actualizar-propuesta',
+    url: 'actualizar-propuesta',
     handler: proposalService.updatePropuesta,
     middlewares: [proposalMiddleware.requiredFieldsUpdate],
   },
   {
     method: 'delete',
-    url: '/borrar-propuesta',
+    url: 'eliminar-propuesta',
     handler: proposalService.deletePropuesta,
     middlewares: [proposalMiddleware.requiredFieldsDelete],
+  },
+  {
+    method: 'get',
+    url: 'propuesta/:idProyecto',
+    handler: proposalService.searchPropuesta,
+    middlewares: [],
   },
 ];

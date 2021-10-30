@@ -1,7 +1,7 @@
 const response = require('../../../response');
 const utils = require('../../../utils');
 
-exports.requiredFieldsInsert = async (req, res) =>{
+exports.requiredFieldsInsert = async (req, res, next) =>{
   const body = req.body;
 
   const requireInputs = [
@@ -19,7 +19,7 @@ exports.requiredFieldsInsert = async (req, res) =>{
   next();
 };
 
-exports.requiredFieldsUpdate = async (req, res) =>{
+exports.requiredFieldsUpdate = async (req, res, next) =>{
   const body = req.body;
 
   const requireInputs = [
@@ -37,7 +37,7 @@ exports.requiredFieldsUpdate = async (req, res) =>{
   next();
 };
 
-exports.requiredFieldsDelete = async (req, res) =>{
+exports.requiredFieldsDelete = async (req, res, next) =>{
   const body = req.body;
 
   const requireInputs = [

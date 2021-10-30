@@ -50,19 +50,6 @@ exports.deletePropuesta = async (idPropuesta) => {
   });
 };
 /**
- * @description determina si una propuesta existe (por id)
- * @param {Number} idPropuesta
- * @return {Promise<Boolean>}
- */
-exports.propuestaExists = async (idPropuesta) => {
-  return db.execute(async (conn) =>{
-    const check = await conn.query(`SELECT id 
-        FROM proyectos_propuestas WHERE id=$1`, [idPropuesta]);
-
-    return check.rowCount > 0;
-  });
-};
-/**
  * @description determina si una propuesta existe (por trabajador y proyecto)
  * @param {Number} idTrabajador
  * @param {Number} idProyecto
@@ -105,6 +92,22 @@ exports.findTrabajadoresId = async (idUsuario) => {
     SELECT id FROM trabajadores WHERE usuarios_id=$1;
     `, [idUsuario]);
 
-    return idTrabajador;
+    return idTrabajador.rows[0].id;
+  });
+};
+/**
+ * @description devuelve la propuesta de un trabajador en un proyecto
+ * @param {Number} idTrabajador
+ * @param {Number} idProyecto
+ * @return {Promise<Array>}
+ */
+exports.searchPropuesta = async (idTrabajador, idProyecto) =>{
+  return db.execute(async (conn) =>{
+    const search = await conn.query(`
+    SELECT id, mensaje FROM proyectos_propuestas
+    WHERE trabajadores_id=$1 AND proyectos_id=$2;
+    `, [idTrabajador, idProyecto]);
+
+    return search.rows;
   });
 };
