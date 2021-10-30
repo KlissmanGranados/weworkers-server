@@ -22,6 +22,7 @@ module.exports = (req, data)=>{
 
   totalCount = totalCount || 0;
   pageCount = pageCount || 0;
+  const totalPages = Math.ceil(totalCount/pageCount);
 
   let self = req.protocol + '://' + req.get('host') + req.originalUrl;
 
@@ -68,6 +69,7 @@ module.exports = (req, data)=>{
       perPage: perPage,
       pageCount: pageCount,
       totalCount: totalCount,
+      totalPages: totalPages,
       links: {
         self: self,
         first: first,

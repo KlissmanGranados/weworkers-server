@@ -29,6 +29,54 @@ exports.readProfile = async (id) => {
 
     // si el perfil es de un capatado
     if (profile.roles_id === 1) {
+      const [idiomas, tags, redes, proyectos] = await Promise.all([
+        conn.query(`
+          SELECT
+            idiomas.* AS idiomas
+          FROM usuarios_idiomas
+          INNER JOIN idiomas ON idiomas.id = usuarios_idiomas.id_idioma
+          WHERE usuarios_idiomas.id_usuario =$1`, [id]),
+        conn.query(`
+          SELECT tags.*
+            FROM usuarios_tags
+            INNER JOIN tags ON tags.id = usuarios_tags.id_tag 
+            WHERE usuarios_tags.id_usuario =$1`, [id]),
+        conn.query(`
+          SELECT 
+            redes.id,
+            redes.nombre,
+            redes_direcciones.direccion
+            FROM redes_usuarios
+            INNER JOIN redes_direcciones ON 
+            redes_direcciones.id = redes_usuarios.redes_direcciones_id
+            INNER JOIN redes ON redes.id = redes_direcciones.redes_id
+            WHERE redes_usuarios.usuario_id =$1`, [id]),
+        conn.query(`
+          SELECT
+            proyectos.id,
+            proyectos.nombre,
+            proyectos.descripcion,
+            proyectos.fecha_crea,
+            proyectos.fecha_termina,
+            array_to_json(array_agg(DISTINCT tags)) AS tags
+            FROM proyectos_trabajadores
+            INNER JOIN trabajadores ON 
+            trabajadores.id = proyectos_trabajadores.trabajadores_id
+            INNER JOIN proyectos ON 
+            proyectos.id = proyectos_trabajadores.proyectos_id
+            LEFT JOIN proyectos_tags ON 
+            proyectos_tags.proyectos_id = proyectos.id
+            LEFT JOIN tags ON tags.id = proyectos_tags.tags_id
+            WHERE proyectos.estado = FALSE AND 
+            trabajadores.usuarios_id=$1
+            GROUP BY proyectos.id`, [id]),
+      ]);
+
+      profile.idiomas = idiomas.rows;
+      profile.tags = tags.rows;
+      profile.redes = redes.rows;
+      profile.proyectos = proyectos.rows;
+
       return {perfil: profile};
     }
     // si el perfil es de un captador
