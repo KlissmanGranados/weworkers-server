@@ -152,15 +152,17 @@ exports.userProfile = async (req, res) => {
     return;
   }
   const codewarId = 3;
-  const [userCodewar] = profile.perfil
-      .redes.filter( (red) => red.id === codewarId );
+  if (profile.perfil
+      .redes) {
+    const [userCodewar] = profile.perfil
+        .redes.filter( (red) => red.id === codewarId );
 
-  if (userCodewar) { // si tiene codewars
-    const {codewars} = require('../../../services/');
-    const profileCodewars = await codewars.profile(userCodewar.direccion);
-    profile.codewars = profileCodewars;
+    if (userCodewar) { // si tiene codewars
+      const {codewars} = require('../../../services/');
+      const profileCodewars = await codewars.profile(userCodewar.direccion);
+      profile.codewars = profileCodewars;
+    }
   }
-
   response.success(res, profile);
 };
 /**
