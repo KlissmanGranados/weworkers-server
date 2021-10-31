@@ -311,14 +311,14 @@ exports.getUsers = (params)=>{
             (_idioma, index)=>{
               counterWhere++;
               const or = operators(index, params.idioma, 'or');
-              return ` ${or} idiomas.nombre_largo=$${counterWhere} `;
+              return ` ${or} idiomas.nombre_corto=$${counterWhere} `;
             },
         ).join(' ')+
         ')',
       );
     } else {
       counterWhere++;
-      wheres.push(`(idiomas.nombre_largo=$${counterWhere})`);
+      wheres.push(`(idiomas.nombre_corto=$${counterWhere})`);
     }
   }
 
