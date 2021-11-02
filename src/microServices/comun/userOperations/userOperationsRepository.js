@@ -7,7 +7,8 @@ const UsuarioTag = require('../../../entities/UsuarioTag');
  */
 exports.readProfile = async (id) => {
   return db.execute(async (conn) => {
-    const rowsProfile = await conn.query(`SELECT 
+    const rowsProfile = await conn.query(
+        `SELECT 
       usuarios.id, 
       usuarios.usuario, 
       usuarios.persona_id, 
@@ -19,11 +20,27 @@ exports.readProfile = async (id) => {
       personas.primer_apellido,
       personas.segundo_nombre,
       personas.segundo_apellido,
-      correos.direccion 
+      correos.direccion,
+      trabajadores.sueldo,
+      trabajadores.descripcion,
+      tipos_desarrollador.nombre AS tipo_desarrollador,
+      modalidades.nombre AS modalidad,
+      tipos_pago.nombre AS tipo_pago,
+      monedas.nombre_largo AS moneda_nombre_largo,
+      monedas.nombre_corto AS moneda_nombre_corto
       FROM usuarios
-      INNER JOIN personas ON (usuarios.persona_id=personas.id)
-      INNER JOIN correos ON (correos.usuarios_id=usuarios.id)
-      WHERE usuarios.id=$1`, [id]);
+      INNER JOIN trabajadores ON 
+      trabajadores.usuarios_id = usuarios.id
+      INNER JOIN personas ON 
+      (usuarios.persona_id=personas.id)
+      INNER JOIN correos ON 
+      (correos.usuarios_id=usuarios.id)
+      LEFT JOIN tipos_desarrollador ON 
+      tipos_desarrollador.id = trabajadores.tipo_desarrollador_id
+      LEFT JOIN modalidades ON modalidades.id = trabajadores.modalidad_id
+      LEFT JOIN tipos_pago ON tipos_pago.id = trabajadores.tipo_pago_id
+      LEFT JOIN monedas ON monedas.id = trabajadores.moneda_id
+      WHERE usuarios.estado = TRUE AND usuarios.id=$1`, [id]);
 
     const profile = rowsProfile.rows[0];
 
@@ -44,6 +61,7 @@ exports.readProfile = async (id) => {
         conn.query(`
           SELECT 
             redes.id,
+            redes_usuarios.id as red_usuario,
             redes.nombre,
             redes_direcciones.direccion
             FROM redes_usuarios
@@ -329,6 +347,10 @@ exports.getUsers = (params)=>{
     generalPreparedStatement.text = text.replace('{{wheres}}', ' ');
     return db.repage(generalPreparedStatement);
   }
+  // filtrar por estado
+  values = values.concat(true);
+  counterWhere++;
+  wheres.push(`(usuarios.estado=$${counterWhere})`);
 
   // agregar los filtros resultantes
   wheres = (

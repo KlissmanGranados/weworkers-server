@@ -23,6 +23,7 @@ module.exports = (function() {
         redes,
         modalidades,
         idiomas,
+        tiposDesarrollador,
       ] = await Promise.all(
           [
             conn.query(`select id,nombre from roles`),
@@ -32,6 +33,7 @@ module.exports = (function() {
             conn.query(`SELECT id, nombre, "timestamp" FROM redes`),
             conn.query(`SELECT id, nombre FROM modalidades`),
             conn.query(`SELECT id, nombre_largo, nombre_corto FROM idiomas`),
+            conn.query(`SELECT id,nombre,descripcion FROM tipos_desarrollador`),
           ],
       );
 
@@ -125,6 +127,14 @@ module.exports = (function() {
           },
           getById: (id) => {
             return idiomas.rows.filter( (lang) => lang.id == id )[0];
+          },
+        },
+        tiposDesarrollador: {
+          rows: tiposDesarrollador.rows,
+          rowCount: tiposDesarrollador.rowCount,
+          getById: (id) => {
+            return tiposDesarrollador
+                .rows.filter((tipo) => tipo.id == id)[0];
           },
         },
       };
