@@ -105,3 +105,13 @@ exports.redes = (req, res)=>{
 
   response.success(res, list);
 };
+
+exports.tiposDesarrollador = (req, res)=>{
+  const {id} = req.query;
+  if (id) {
+    response.success(res, consts().tiposDesarrollador.getById(id));
+    return true;
+  }
+
+  response.success(res, consts().tiposDesarrollador.rows);
+};

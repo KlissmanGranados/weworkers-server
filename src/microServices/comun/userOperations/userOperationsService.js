@@ -152,15 +152,13 @@ exports.userProfile = async (req, res) => {
     return;
   }
   const codewarId = 3;
-  if (profile.perfil
-      .redes) {
+  if (profile.perfil.redes) {
     const [userCodewar] = profile.perfil
         .redes.filter( (red) => red.id === codewarId );
-
     if (userCodewar) { // si tiene codewars
       const {codewars} = require('../../../services/');
-      const profileCodewars = await codewars.profile(userCodewar.direccion);
-      profile.codewars = profileCodewars;
+      const {honor} = await codewars.profile(userCodewar.direccion);
+      userCodewar.detalles = {honor};
     }
   }
   response.success(res, profile);

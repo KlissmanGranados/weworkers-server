@@ -34,4 +34,10 @@ module.exports = [
     handler: staticService.redes,
     middlewares: [],
   },
+  {
+    url: 'tipos-desarrollador/:query?',
+    method: 'get',
+    handler: staticService.tiposDesarrollador,
+    middlewares: [],
+  },
 ];
