@@ -166,12 +166,7 @@ exports.getProjects = (data)=>{
       wheres.push(`(proyectos.nombre like $${counterWhere}) `);
     }
   }
-  // filtrar por estado
-  if (paramns.estado) {
-    values = values.concat(paramns.estado);
-    counterWhere++;
-    wheres.push(`(proyectos.estado=$${counterWhere})`);
-  }
+
   // filtrar por modalidad
   if (paramns.modalidad) {
     values = values.concat(paramns.modalidad);
@@ -251,6 +246,11 @@ exports.getProjects = (data)=>{
       wheres.push(`(reclutadores.usuarios_id=$${counterWhere})`);
     }
   }
+
+  // filtrar por estado
+  values = values.concat(paramns.estado || true);
+  counterWhere++;
+  wheres.push(`(proyectos.estado=$${counterWhere})`);
 
   // agregar los filtros resultantes
   wheres = (
