@@ -29,7 +29,7 @@ exports.readProfile = async (id) => {
       monedas.nombre_largo AS moneda_nombre_largo,
       monedas.nombre_corto AS moneda_nombre_corto
       FROM usuarios
-      INNER JOIN trabajadores ON 
+      LEFT JOIN trabajadores ON 
       trabajadores.usuarios_id = usuarios.id
       INNER JOIN personas ON 
       (usuarios.persona_id=personas.id)
