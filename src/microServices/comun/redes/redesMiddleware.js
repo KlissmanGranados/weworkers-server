@@ -21,7 +21,7 @@ exports.AssociateNetwork = (req, res, next)=>{
   }
 
   if (!consts().redes.getById(redId)) {
-    response.warning_required_fields(res, {redId: redId});
+    response.warning_data_not_valid(res, {redId: redId});
     return;
   }
 
