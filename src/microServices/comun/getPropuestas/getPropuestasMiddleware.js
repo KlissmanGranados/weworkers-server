@@ -7,13 +7,13 @@ exports.typeCheck = async (req, res, next) => {
    * estructura base del objeto
    * {
    * idProyecto,
-   * perPage,
-   * page,
-   * idUsuario
+   * perPage (opcional),
+   * page (opcional),
    * }
    */
   if (!body.idProyecto) {
     response.warning_required_fields(res, ['idProyecto']);
+    return;
   }
   if (!Number(body.idProyecto)) {
     response.warning_data_not_valid(res, body.idProyecto);
