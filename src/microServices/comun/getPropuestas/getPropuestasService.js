@@ -77,8 +77,14 @@ const formatLast = (numberOfPages, BASE_URL, idProyecto, limit, page) => {
 };
 
 const formatProposal = (row) => {
+  const apiVersion = process.env.VERSION;
+  const serverHost = process.env.HOST || 'http://localhost';
+  const serverPort = process.env.PORT || 3000;
+  const perfil = `${serverHost}:${serverPort}${apiVersion}/comun/perfil/`;
+
   return {
     usuario: {
+      perfil: (perfil + row.usuariosid),
       id: row.usuariosid,
       usuario: row.usuario,
       persona: {

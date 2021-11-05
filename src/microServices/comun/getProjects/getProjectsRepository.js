@@ -3,6 +3,7 @@ const {db} = require('../../../../index');
 const selectProjects = `
   SELECT
   proyectos.id, 
+  count(DISTINCT proyectos_propuestas.id) as propuestas_cantidad,
   proyectos.nombre, 
   proyectos.descripcion, 
   proyectos.reclutadores_id, 
@@ -32,6 +33,8 @@ const selectProjects = `
   ON modalidades.id=proyectos.modalidades_id
   INNER JOIN reclutadores 
   ON reclutadores.id=proyectos.reclutadores_id
+  LEFT JOIN proyectos_propuestas 
+  ON proyectos_propuestas.proyectos_id = proyectos.id
   {{other_joins}}
   where {{wheres}}
   GROUP BY(proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre)
@@ -75,7 +78,7 @@ exports.getProjects = (data)=>{
     ].every((e)=>e)
   ) {
     generalPreparedStatement.text = generalPreparedStatement
-        .text.replace('{{wheres}}', '').replace('where', '');
+        .text.replace('{{wheres}}', ' proyectos.estado=TRUE ');
     return db.repage(generalPreparedStatement);
   }
 
@@ -166,12 +169,6 @@ exports.getProjects = (data)=>{
       wheres.push(`(proyectos.nombre like $${counterWhere}) `);
     }
   }
-  // filtrar por estado
-  if (paramns.estado) {
-    values = values.concat(paramns.estado);
-    counterWhere++;
-    wheres.push(`(proyectos.estado=$${counterWhere})`);
-  }
   // filtrar por modalidad
   if (paramns.modalidad) {
     values = values.concat(paramns.modalidad);
@@ -251,6 +248,9 @@ exports.getProjects = (data)=>{
       wheres.push(`(reclutadores.usuarios_id=$${counterWhere})`);
     }
   }
+  values = values.concat(paramns.estado || true);
+  counterWhere++;
+  wheres.push(`(proyectos.estado=$${counterWhere})`);
 
   // agregar los filtros resultantes
   wheres = (
