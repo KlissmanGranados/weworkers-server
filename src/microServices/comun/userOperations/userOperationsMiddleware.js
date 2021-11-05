@@ -138,7 +138,7 @@ exports.requiredFieldsUsuarioIdiomas = (req, res, next) =>{
 exports.prepareUsuarioIdiomas = (req, res, next) =>{
   const idioma = new Idioma();
 
-  idioma.nombreLargo = req.body.idioma;
+  idioma.nombreCorto = req.body.idioma;
 
   req.body.idioma = idioma;
 
@@ -147,9 +147,8 @@ exports.prepareUsuarioIdiomas = (req, res, next) =>{
 
 exports.idiomaExists = (req, res, next) =>{
 // verificando si el idioma existe
-
   const usuariosIdioma = consts()
-      .idiomas.getByLongName(req.body.idioma.nombreLargo);
+      .idiomas.getByShortName(req.body.idioma.nombreCorto);
 
   if (!usuariosIdioma) {
     response.warning_data_not_valid(res);

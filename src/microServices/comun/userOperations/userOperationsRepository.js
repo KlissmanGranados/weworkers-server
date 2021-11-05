@@ -432,7 +432,7 @@ exports.deleteUsuariosTag = async (usuariosTags) =>{
 exports.searchUsuariosIdiomas = async (idUsuario) =>{
   return db.execute(async (conn) =>{
     const usuariosIdiomasQuery = await conn.query(`
-    SELECT usuarios_idiomas.id, idiomas.nombre_largo
+    SELECT usuarios_idiomas.id, idiomas.nombre_corto
     FROM usuarios_idiomas INNER JOIN
     idiomas ON (idiomas.id=usuarios_idiomas.id_idioma) 
     WHERE usuarios_idiomas.id_usuario=$1;

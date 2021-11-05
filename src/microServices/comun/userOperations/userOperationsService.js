@@ -284,7 +284,6 @@ exports.newLanguage = async (req, res) => {
   const idioma = req.body.idioma;
   const usuariosIdiomas = await userOperationsRepository
       .searchUsuariosIdiomas(req.user.idusuario);
-
   /**
    * verificando si el idioma a agregar no existe ya
    * en el usuario
@@ -293,7 +292,7 @@ exports.newLanguage = async (req, res) => {
   let checkUserIdiomas = true;
 
   usuariosIdiomas.forEach((el) =>{
-    if (el.nombre_largo === idioma.nombre_largo) {
+    if (el.nombre_corto === idioma.nombre_corto) {
       checkUserIdiomas = false;
     }
   });
@@ -344,7 +343,7 @@ exports.deleteLanguage = async (req, res) => {
   let checkUserIdiomas = false;
 
   usuariosIdiomas.forEach((el) =>{
-    if (el.nombre_largo === idioma.nombre_largo) {
+    if (el.nombre_corto === idioma.nombre_corto) {
       checkUserIdiomas = true;
       idioma = el;
     }
