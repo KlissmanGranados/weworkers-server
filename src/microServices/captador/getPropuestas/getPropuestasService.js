@@ -7,7 +7,7 @@ exports.getPropuestas = async (req, res) =>{
       .countPropuestas(idProyecto);
 
   const HOST = req.get('host');
-  const BASE_URL = `${HOST}/comun/listar-propuestas?`;
+  const BASE_URL = `${HOST}/captador/listar-propuestas?`;
   const defaultLimit = 10;
   const defaultOffset = 1;
 
@@ -18,29 +18,12 @@ exports.getPropuestas = async (req, res) =>{
 
   const results = [];
 
-  const isInProject = await getPropuestasRepository
-      .isUserInProposals(req.user.idusuario, idProyecto);
-
-  let userProposal;
-
-  if (isInProject.id) {
-    userProposal = await getPropuestasRepository
-        .getUsuarioPropuesta(isInProject.id);
-    userProposal = formatProposal(userProposal);
-  }
-
   const getProposals = await getPropuestasRepository
-      .getPropuestas(idProyecto, userProposal && offset==1? limit-1:limit,
-          userProposal && offset!=1? ((offset-1)*limit)-1:(offset-1)*limit);
+      .getPropuestas(idProyecto, limit,
+          (offset-1)*limit);
 
   for (proposal of getProposals) {
-    if (proposal.propuestasid !== isInProject.id) {
-      results.push(formatProposal(proposal));
-    }
-  }
-
-  if (userProposal && offset == 1) {
-    results.unshift(userProposal);
+    results.push(formatProposal(proposal));
   }
 
 

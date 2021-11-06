@@ -8,8 +8,6 @@ const userOperationsRouter = require(`${MAIN}/userOperations/userOperationsRoute
 const redesRouter = require(`${MAIN}/redes/redesRouter`);
 const getProjectsRouter = require(`${MAIN}/getProjects/getProjectsRouter`);
 const cuestionario = require(`${MAIN}/cuestionario/cuestionarioRouter`);
-// eslint-disable-next-line max-len
-const getPropuestasRouter = require(`${MAIN}/getPropuestas/getPropuestasRouter`);
 
 /**
  * @description contiene las rutas concernientes al rol común
@@ -26,7 +24,6 @@ routes = routes.concat(userOperationsRouter);
 routes = routes.concat(redesRouter);
 routes = routes.concat(getProjectsRouter);
 routes = routes.concat(cuestionario);
-routes = routes.concat(getPropuestasRouter);
 
 // Exportando rutas
 module.exports = routes;
