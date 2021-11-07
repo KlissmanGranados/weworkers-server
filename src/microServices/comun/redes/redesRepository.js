@@ -40,7 +40,14 @@ exports.redExist = (redDireccion)=>{
  */
 exports.update = (redDireccion)=>{
   return db.execute(async (conn)=>{
+    const id = (await conn
+        .query(
+            `select redes_direcciones_id from redes_usuarios where id=$1`
+            , [redDireccion.id])).rows[0].redes_direcciones_id || 0;
+    const idRedUsuario = redDireccion.id;
+    redDireccion.id = id;
     const {rowCount} = await conn.query(redDireccion.update());
+    redDireccion.id = idRedUsuario;
     return rowCount > 0;
   });
 };
