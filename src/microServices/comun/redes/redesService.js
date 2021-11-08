@@ -32,12 +32,11 @@ exports.associateNetwork = async (req, res)=>{
       response.warning_data_not_valid(res);
       return;
     }
-  }
-
-  if (await redesRepository.checkOnlyOne(
-      onlyOneNet.codewars, registro.redUsuario.usuarioId)) {
-    response.warning_operation_not_available(res);
-    return;
+    if (await redesRepository.checkOnlyOne(
+        onlyOneNet.codewars, registro.redUsuario.usuarioId)) {
+      response.warning_operation_not_available(res);
+      return;
+    }
   }
 
   if (await redesRepository.redExist(registro.redDireccion)) {
