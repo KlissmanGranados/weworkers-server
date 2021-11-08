@@ -8,8 +8,8 @@
     "dev-local": "PROFILE=.env.local npx nodemon src/routes/index.js",
     "dev": "npx nodemon src/routes/index.js",
     "start": "node src/routes/index.js",
-    "lint": "npx eslint .  --ext .js",
-    "lint-fix": "eslint . --ext .js --fix",
+    "lint": "npx eslint ./src  --ext .js",
+    "lint-fix": "eslint ./src --ext .js --fix",
     "create-microservice": "node src/cli/createMicroServices.js"
   },
   "repository": {
