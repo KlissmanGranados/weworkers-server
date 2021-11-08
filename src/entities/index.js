@@ -20,3 +20,5 @@ exports.Pregunta = require('./Pregunta');
 exports.Respuesta = require('./Respuesta');
 exports.RespuestaCorrecta = require('./RespuestaCorrecta');
 exports.CuestionarioUsuario = require('./CuestionarioUsuario');
+exports.Chat = require('./Chat');
+exports.Mensaje = require('./Mensaje');
