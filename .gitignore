@@ -1,4 +1,5 @@
 # Logs
+.Trash-1000
 logs
 *.log
 npm-debug.log*
