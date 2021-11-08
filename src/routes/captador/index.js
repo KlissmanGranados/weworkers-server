@@ -4,8 +4,14 @@ const projectManagement = require(`${MAIN}/projectManagement/projectManagementRo
 const cuestionario = require(`${MAIN}/cuestionario/cuestionarioRouter`);
 // eslint-disable-next-line max-len
 const getPropuestasRouter = require(`${MAIN}/getPropuestas/getPropuestasRouter`);
+// eslint-disable-next-line max-len
+const adjudicarProyecto = require(`${MAIN}/adjudicarProyecto/adjudicarProyectoRouter`);
+
 let routes = [];
+
 routes = routes.concat(projectManagement);
 routes = routes.concat(cuestionario);
 routes = routes.concat(getPropuestasRouter);
+routes = routes.concat(adjudicarProyecto);
+
 module.exports = routes;
