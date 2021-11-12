@@ -19,5 +19,5 @@ exports.getProjects = async (req, res)=>{
  */
 exports.findBydId = async (req, res)=>{
   const {id} = req.params;
-  response.success(res, await getProjectsRepository.findBydId(id));
+  response.success(res, await getProjectsRepository.findBydId(id, req.user));
 };
