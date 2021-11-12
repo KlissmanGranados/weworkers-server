@@ -69,17 +69,19 @@ exports.getProjects = (data)=>{
   if (user.rolesid == roleCaptado) {
     generalPreparedStatement.text =
     selectProjects.replace('{{other_colums}}',
-        `(count(DISTINCT trabajadores.usuarios_id ) > 0) AS propuesta_usuario,
-     (count(DISTINCT cuestionarios_usuarios.id)>0) AS cuestionario_usuario,
-     (count(DISTINCT proyectos_trabajadores.id)>0) AS usuario_trabajando,`)
+        `(count(trabajadores.usuarios_id ) > 0) AS propuesta_usuario,
+     (count(cuestionarios_usuarios.id)>0) AS cuestionario_usuario,
+     (count(proyectos_trabajadores.id)>0) AS usuario_trabajando,`)
         .replace('{{other_joins}}',
             `LEFT JOIN trabajadores
-     ON trabajadores.id = proyectos_propuestas.trabajadores_id 
-     AND trabajadores.usuarios_id = ${user.idusuario}
-     LEFT JOIN proyectos_trabajadores 
-     ON proyectos_trabajadores.trabajadores_id = trabajadores.id
-     LEFT JOIN cuestionarios_usuarios 
-     ON cuestionarios_usuarios.usuarios_id = trabajadores.usuarios_id`);
+      ON trabajadores.id = proyectos_propuestas.trabajadores_id 
+      AND trabajadores.usuarios_id=${user.idusuario}
+      LEFT JOIN cuestionarios_usuarios 
+      ON cuestionarios_usuarios.cuestionarios_id = cuestionarios.id
+      AND cuestionarios_usuarios.usuarios_id = trabajadores.usuarios_id
+      LEFT JOIN proyectos_trabajadores 
+      ON proyectos_trabajadores.trabajadores_id = trabajadores.id AND 
+      proyectos_trabajadores.proyectos_id = proyectos.id `);
   } else {
     generalPreparedStatement.text =
     selectProjects.replace('{{other_colums}}', '')
@@ -308,17 +310,21 @@ exports.findBydId = (id, user)=>{
   if (user.rolesid == roleCaptado) {
     sql =
     selectProjects.replace('{{other_colums}}',
-        `(count(DISTINCT trabajadores.usuarios_id ) > 0) AS propuesta_usuario,
-     (count(DISTINCT cuestionarios_usuarios.id)>0) AS cuestionario_usuario,
-     (count(DISTINCT proyectos_trabajadores.id)>0) AS usuario_trabajando,`)
+        `(count(trabajadores.usuarios_id ) > 0) AS propuesta_usuario,
+     (count(cuestionarios_usuarios.id)>0) AS cuestionario_usuario,
+     (count(proyectos_trabajadores.id)>0) AS usuario_trabajando,`)
         .replace('{{other_joins}}',
-            `LEFT JOIN trabajadores
-     ON trabajadores.id = proyectos_propuestas.trabajadores_id 
-     AND trabajadores.usuarios_id = ${user.idusuario}
-     LEFT JOIN proyectos_trabajadores 
-     ON proyectos_trabajadores.trabajadores_id = trabajadores.id
-     LEFT JOIN cuestionarios_usuarios 
-     ON cuestionarios_usuarios.usuarios_id = trabajadores.usuarios_id`);
+            `
+      LEFT JOIN trabajadores
+      ON trabajadores.id = proyectos_propuestas.trabajadores_id 
+      AND trabajadores.usuarios_id=${user.idusuario}
+      LEFT JOIN cuestionarios_usuarios 
+      ON cuestionarios_usuarios.cuestionarios_id = cuestionarios.id
+      AND cuestionarios_usuarios.usuarios_id = trabajadores.usuarios_id
+      LEFT JOIN proyectos_trabajadores 
+      ON proyectos_trabajadores.trabajadores_id = trabajadores.id AND 
+      proyectos_trabajadores.proyectos_id = proyectos.id 
+      `);
   } else {
     sql = selectProjects.replace('{{other_colums}}', '')
         .replace('{{other_joins}}', '');

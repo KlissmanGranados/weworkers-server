@@ -95,3 +95,40 @@ exports.answerQuestionnaire = (cuestionarioUsuario)=>{
     return true;
   });
 };
+
+/**
+ *
+ * @param {BigInteger} cuestionarioId
+ * @param {BigInteger} usuarioId
+ * @return {Promise}
+ */
+exports.questionnaireResult = (cuestionarioId, usuarioId)=>{
+  return db.execute(async (conn)=>{
+    const query = {
+      text:
+      `SELECT 
+        count(DISTINCT respuestas_correctas.id) AS aciertos,
+        count(DISTINCT preguntas.id) AS preguntas_totales
+      FROM 
+        cuestionarios_usuarios 
+      INNER JOIN cuestionarios
+      ON cuestionarios.id = cuestionarios_usuarios.cuestionarios_id
+      INNER JOIN preguntas 
+      ON preguntas.cuestionarios_id = cuestionarios.id
+      INNER JOIN respuestas_correctas 
+      ON (respuestas_correctas.respuestas_id = cuestionarios_usuarios.respuestas_id)
+      WHERE 
+      cuestionarios_usuarios.cuestionarios_id=$1 
+      AND cuestionarios_usuarios.usuarios_id=$2
+      GROUP BY cuestionarios.id`,
+      values: [cuestionarioId, usuarioId],
+    };
+    const {rows,rowCount} = await conn.query(query);
+    if(rowCount == 0 ){
+      return `0%`;
+    }
+    const [result] = rows;
+    const total = (result.aciertos/result.preguntas_totales) * 100;
+    return `${total}%`;
+  });
+};
