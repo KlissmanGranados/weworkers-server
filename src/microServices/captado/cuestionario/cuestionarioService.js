@@ -35,5 +35,11 @@ exports.answerQuestionnaire = async (req, res)=>{
     response.error(res);
     return;
   }
-  response.success(res, respuestas);
+  const puntaje = await cuestionarioRepository
+      .questionnaireResult(cuestionariosId, idUsuario);
+
+  response.success(res, {
+    puntaje,
+    respuestas,
+  });
 };

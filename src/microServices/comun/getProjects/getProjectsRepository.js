@@ -1,9 +1,11 @@
 const {db} = require('../../../../index');
-
+const roleCaptado = 1;
 const selectProjects = `
   SELECT
-  proyectos.id, 
+  proyectos.id,
+  {{other_colums}} 
   count(DISTINCT proyectos_propuestas.id) as propuestas_cantidad,
+  (count(DISTINCT cuestionarios.id) >0) AS cuestionario_existe,
   proyectos.nombre, 
   proyectos.descripcion, 
   proyectos.reclutadores_id, 
@@ -19,7 +21,6 @@ const selectProjects = `
   monedas.nombre_largo AS moneda_nombre_largo,
   monedas.nombre_corto AS moneda_nombre_corto,
   json_agg(json_build_object('id',tags.id,'nombre', tags.nombre)) AS tags
-  {{other_colums}}
   FROM proyectos
   LEFT JOIN proyectos_tags 
     ON proyectos_tags.proyectos_id = proyectos.id
@@ -35,6 +36,8 @@ const selectProjects = `
   ON reclutadores.id=proyectos.reclutadores_id
   LEFT JOIN proyectos_propuestas 
   ON proyectos_propuestas.proyectos_id = proyectos.id
+  LEFT JOIN cuestionarios 
+  ON cuestionarios.proyectos_id = proyectos.id 
   {{other_joins}}
   where {{wheres}}
   GROUP BY(proyectos.id,monedas.id,tipos_pago.id,modalidades.nombre)
@@ -57,12 +60,33 @@ exports.getProjects = (data)=>{
       offset: page || 1,
       rowsLimit: perPage || 20,
     },
-    text: selectProjects.replace('{{other_colums}}', '')
-        .replace('{{other_joins}}', ''),
+    text: null,
     orderBy: 'proyectos.id',
     uri: '/comun/proyecto/',
     values: [],
   };
+  // se valuan los atributos correspondientes para cada rol
+  if (user.rolesid == roleCaptado) {
+    generalPreparedStatement.text =
+    selectProjects.replace('{{other_colums}}',
+        `(count(trabajadores.usuarios_id ) > 0) AS propuesta_usuario,
+     (count(cuestionarios_usuarios.id)>0) AS cuestionario_usuario,
+     (count(proyectos_trabajadores.id)>0) AS usuario_trabajando,`)
+        .replace('{{other_joins}}',
+            `LEFT JOIN trabajadores
+      ON trabajadores.id = proyectos_propuestas.trabajadores_id 
+      AND trabajadores.usuarios_id=${user.idusuario}
+      LEFT JOIN cuestionarios_usuarios 
+      ON cuestionarios_usuarios.cuestionarios_id = cuestionarios.id
+      AND cuestionarios_usuarios.usuarios_id = trabajadores.usuarios_id
+      LEFT JOIN proyectos_trabajadores 
+      ON proyectos_trabajadores.trabajadores_id = trabajadores.id AND 
+      proyectos_trabajadores.proyectos_id = proyectos.id `);
+  } else {
+    generalPreparedStatement.text =
+    selectProjects.replace('{{other_colums}}', '')
+        .replace('{{other_joins}}', '');
+  }
 
   if (
     [
@@ -277,11 +301,34 @@ exports.getProjects = (data)=>{
 /**
  * @description selecciona un proyecto
  * @param {Number} id
+ * @param {User} user
  * @return {Promise}
  */
-exports.findBydId = (id)=>{
-  const sql = selectProjects.
-      replace('{{other_colums}}', '').replace('{{other_joins}}', '');
+exports.findBydId = (id, user)=>{
+  let sql = '';
+  // se valuan los atributos correspondientes para cada rol
+  if (user.rolesid == roleCaptado) {
+    sql =
+    selectProjects.replace('{{other_colums}}',
+        `(count(trabajadores.usuarios_id ) > 0) AS propuesta_usuario,
+     (count(cuestionarios_usuarios.id)>0) AS cuestionario_usuario,
+     (count(proyectos_trabajadores.id)>0) AS usuario_trabajando,`)
+        .replace('{{other_joins}}',
+            `
+      LEFT JOIN trabajadores
+      ON trabajadores.id = proyectos_propuestas.trabajadores_id 
+      AND trabajadores.usuarios_id=${user.idusuario}
+      LEFT JOIN cuestionarios_usuarios 
+      ON cuestionarios_usuarios.cuestionarios_id = cuestionarios.id
+      AND cuestionarios_usuarios.usuarios_id = trabajadores.usuarios_id
+      LEFT JOIN proyectos_trabajadores 
+      ON proyectos_trabajadores.trabajadores_id = trabajadores.id AND 
+      proyectos_trabajadores.proyectos_id = proyectos.id 
+      `);
+  } else {
+    sql = selectProjects.replace('{{other_colums}}', '')
+        .replace('{{other_joins}}', '');
+  }
   return db.execute(async (conn)=>{
     return (await conn.query(
         sql.replace(
