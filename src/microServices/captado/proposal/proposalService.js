@@ -14,8 +14,7 @@ exports.createPropuesta = async (proyectoId, idusuario) => {
       .propuestaExists(idTrabajador, proyectoId);
 
   if (propuestaExists) {
-    response.warning_exist_regedit(res);
-    return;
+    return false;
   }
   const insert = await proposalRepository
       .insertPropuesta(idTrabajador, proyectoId);
