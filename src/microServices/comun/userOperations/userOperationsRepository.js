@@ -255,6 +255,7 @@ exports.getUsers = (params)=>{
     array_to_json(array_agg(DISTINCT tags)) AS tags
     FROM 
     usuarios
+    INNER JOIN trabajadores ON trabajadores.usuarios_id = usuarios.id 
     LEFT JOIN personas ON 
     usuarios.persona_id = personas.id
     LEFT JOIN usuarios_idiomas ON
@@ -276,6 +277,7 @@ exports.getUsers = (params)=>{
     counter: {
       text: `SELECT count(DISTINCT usuarios.id) AS count  FROM 
       usuarios
+      INNER JOIN trabajadores ON trabajadores.usuarios_id = usuarios.id 
       LEFT JOIN personas ON 
       usuarios.persona_id = personas.id
       LEFT JOIN usuarios_idiomas ON
@@ -350,11 +352,7 @@ exports.getUsers = (params)=>{
   // filtrar por estado
   values = values.concat(true);
   counterWhere++;
-  wheres.push(`(usuarios.estado=$${counterWhere})`);
-  values = values.concat(1);
-  // filtrar solo captados
-  counterWhere++;
-  wheres.push(`(usuarios.roles_id=${counterWhere})`);
+  wheres.push(` (usuarios.estado=$${counterWhere}) `);
 
   // agregar los filtros resultantes
   wheres = (
