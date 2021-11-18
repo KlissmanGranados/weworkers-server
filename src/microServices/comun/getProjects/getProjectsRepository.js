@@ -20,7 +20,7 @@ const selectProjects = `
   monedas.id AS moneda_id,
   monedas.nombre_largo AS moneda_nombre_largo,
   monedas.nombre_corto AS moneda_nombre_corto,
-  json_agg(json_build_object('id',tags.id,'nombre', tags.nombre)) AS tags
+  array_to_json(array_agg(DISTINCT tags)) AS tags
   FROM proyectos
   LEFT JOIN proyectos_tags 
     ON proyectos_tags.proyectos_id = proyectos.id
