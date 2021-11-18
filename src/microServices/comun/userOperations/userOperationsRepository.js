@@ -351,6 +351,10 @@ exports.getUsers = (params)=>{
   values = values.concat(true);
   counterWhere++;
   wheres.push(`(usuarios.estado=$${counterWhere})`);
+  values = values.concat(1);
+  // filtrar solo captados
+  counterWhere++;
+  wheres.push(`(usuarios.roles_id=${counterWhere})`);
 
   // agregar los filtros resultantes
   wheres = (

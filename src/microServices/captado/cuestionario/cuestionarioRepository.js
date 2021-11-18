@@ -123,12 +123,28 @@ exports.questionnaireResult = (cuestionarioId, usuarioId)=>{
       GROUP BY cuestionarios.id`,
       values: [cuestionarioId, usuarioId],
     };
-    const {rows,rowCount} = await conn.query(query);
-    if(rowCount == 0 ){
+    const {rows, rowCount} = await conn.query(query);
+    if (rowCount == 0 ) {
       return `0%`;
     }
     const [result] = rows;
     const total = (result.aciertos/result.preguntas_totales) * 100;
     return `${total}%`;
+  });
+};
+/**
+ *
+ * @param {BigInteger} questionnaireId
+ * @return {Promise}
+ */
+exports.findProjectByQuestionnaire = (questionnaireId)=>{
+  return db.execute(async (conn) => {
+    const result = await conn.query(`
+      SELECT id,proyectos_id FROM cuestionarios WHERE cuestionarios.id=$1 
+      `, [questionnaireId]);
+    if (result.rowCount == 0) {
+      return false;
+    }
+    return result.rows[0].proyectos_id;
   });
 };

@@ -107,8 +107,8 @@ exports.checkMounts = (value)=>{
  * @return {Date}
  */
 exports.isValidDate = (date)=>{
-  const _date = date.replaceAll('-','/');
-  if(!Date.parse(_date)) {
+  const _date = date.replaceAll('-', '/');
+  if (!Date.parse(_date)) {
     return undefined;
   }
   return new Date(_date);

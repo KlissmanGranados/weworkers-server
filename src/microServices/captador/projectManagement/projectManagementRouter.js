@@ -24,7 +24,7 @@ module.exports = [
   },
   {
     method: 'get',
-    url: '/evaluar-captado/:idProyecto',
+    url: '/evaluar-captados-propuestos/:proyectoId/:query',
     handler: projectManagementService.evaluationProcess,
     middlewares: [],
   },

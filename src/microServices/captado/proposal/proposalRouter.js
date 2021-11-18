@@ -6,12 +6,6 @@ module.exports = [
     Formato de los objetos de las rutas
   */
   {
-    method: 'post',
-    url: 'crear-propuesta',
-    handler: proposalService.createPropuesta,
-    middlewares: [proposalMiddleware.requiredFieldsInsert],
-  },
-  {
     method: 'put',
     url: 'actualizar-propuesta',
     handler: proposalService.updatePropuesta,

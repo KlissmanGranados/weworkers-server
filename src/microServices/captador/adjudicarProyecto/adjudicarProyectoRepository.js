@@ -29,7 +29,7 @@ exports.findTrabajadoresId = (idUsuario) => {
     const trabajadoresId = await conn.query(`
       SELECT trabajadores.id FROM trabajadores 
       INNER JOIN usuarios ON (usuarios.id=trabajadores.usuarios_id)
-      WHERE usuarios.id=39;`, []);
+      WHERE usuarios.id=$1`, [idUsuario]);
 
     return trabajadoresId.rows[0].id;
   });

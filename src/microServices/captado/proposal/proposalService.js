@@ -5,13 +5,11 @@ const proposalRepository = require('./proposalRepository');
  * @description crea una propuesta tomando en cuenta los casos no funcionales
  * @param {*} req
  * @param {*} res
- * @return {void}
+ * @return {Promise<Boolean}
  */
-exports.createPropuesta = async (req, res) => {
-  const {mensaje, proyectoId} = req.body;
-
+exports.createPropuesta = async (proyectoId, idusuario) => {
   const idTrabajador = await proposalRepository
-      .findTrabajadoresId(req.user.idusuario);
+      .findTrabajadoresId(idusuario);
   const propuestaExists = await proposalRepository
       .propuestaExists(idTrabajador, proyectoId);
 
@@ -20,14 +18,13 @@ exports.createPropuesta = async (req, res) => {
     return;
   }
   const insert = await proposalRepository
-      .insertPropuesta(mensaje, idTrabajador, proyectoId);
+      .insertPropuesta(idTrabajador, proyectoId);
 
   if (!insert) {
-    response.error(res);
-    return;
+    return false;
   }
 
-  response.success(res, insert.rows[0]);
+  return true;
 };
 /**
  * @description se actualiza una propuesta tomando en cuenta

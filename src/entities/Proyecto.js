@@ -1,5 +1,5 @@
 const Entity = require('./Entity');
-const {checkMounts,isValidDate} = require('../utils');
+const {checkMounts, isValidDate} = require('../utils');
 class Proyecto extends Entity {
   _id;
   _nombre;
@@ -16,7 +16,7 @@ class Proyecto extends Entity {
   constructor() {
     super('proyectos');
     this._fechaCrea = new Date();
-    this._estado = "TRUE";
+    this._estado = 'TRUE';
   }
 
   get tiposPagoId() {

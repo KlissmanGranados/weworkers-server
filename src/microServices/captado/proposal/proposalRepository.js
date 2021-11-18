@@ -2,18 +2,17 @@ const {db} = require('../../../../index');
 
 /**
  * @description inserta una propuesta a la base de datos
- * @param {String} mensaje
  * @param {Number} trabajadoresId
  * @param {Number} idProyecto
  * @return {Promise<Number>}
  */
-exports.insertPropuesta = async (mensaje, trabajadoresId, idProyecto) => {
+exports.insertPropuesta = async (trabajadoresId, idProyecto) => {
   return db.execute(async (conn) =>{
     const insert = await conn.query(`
     INSERT INTO proyectos_propuestas
-    (mensaje, trabajadores_id, proyectos_id, "timestamp")
-    VALUES($1, $2, $3, CURRENT_TIMESTAMP) RETURNING id;
-    `, [mensaje, trabajadoresId, idProyecto]);
+    (trabajadores_id, proyectos_id, "timestamp")
+    VALUES($1, $2, CURRENT_TIMESTAMP) RETURNING id;
+    `, [trabajadoresId, idProyecto]);
 
     return insert;
   });

@@ -122,7 +122,7 @@ exports.update = async (req, res)=>{
  * @param {Response} res
  */
 exports.evaluationProcess = async (req, res) =>{
-  const proyectoId = req.params.idProyecto;
+  const {proyectoId} = req.params;
   const captador = req.user;
 
   const isOwner = await verifyProjectOwnership(captador, proyectoId);
@@ -132,88 +132,60 @@ exports.evaluationProcess = async (req, res) =>{
     return;
   }
 
-  const totalPoints = async (proyectoId, captado, cuestionario) =>{
-    // fase 1: evaluar por tags
-    const tagPoints = await phaseOne(proyectoId, captado.id);
+  const propuestas = await projectManagementRepository.getWorkers(req);
+  const propuestasRepage = response.repage(req, propuestas);
 
-    // fase 2: evaluar respuestas del cuestionario
-    const surveyPoints = phaseTwo(captado.id, cuestionario);
+  propuestasRepage.records = propuestasRepage.records.map((propuesta) => {
+    const {
+      etiquetas,
+      preguntas_totales,
+      cuestionarios_aciertos,
+      idiomas,
+    } = propuesta;
 
-    // fase 3: evaluar si es biligüe
-    const languagePoints = await phaseThree(captado.id);
+    let score = phaseOne(etiquetas);
+    score += phaseTwo(preguntas_totales, cuestionarios_aciertos);
+    score += phaseThree(idiomas);
 
-    // totalizar puntaje
-    const total = tagPoints + surveyPoints + languagePoints;
+    // eliminar atributos de objeto
+    delete propuesta.preguntas_totales;
+    delete propuesta.cuestionarios_aciertos;
+    delete propuesta.etiquetas;
+    delete propuesta.idiomas;
 
-    return total>=0? total:0;
-  };
+    propuesta.score = score;
+    return propuesta;
+  });
+  // ordenando elementos
+  propuestasRepage.records = propuestasRepage.records.sort((a, b)=>{
+    return b.score - a.score;
+  });
 
-  // prueba de consulta de propuestas
-
-  const propuestas = await projectManagementRepository
-      .searchPropuestas(proyectoId);
-
-  const cuestionario = await projectManagementRepository
-      .cuestionarioRespuestasCaptados(proyectoId);
-
-  const propuestasOrdered = [];
-  let points = 0;
-
-  for (propuesta of propuestas) {
-    points = await totalPoints(proyectoId, propuesta, cuestionario);
-    propuestasOrdered.push({propuesta: propuesta, puntos: points});
-  }
-
-  propuestasOrdered.sort((pointsA, pointsB) => pointsB.puntos-pointsA.puntos);
-
-  response.success(res, propuestasOrdered);
+  return response.success(res, propuestasRepage);
 };
 /**
- * @description puntaje por etiquetas en
- * relación a las del usuario y las del proyecto
- * @param {BigInteger} proyectoId
- * @param {BigInteger} captadoId
- * @return {Promise<BigInteger>}
+ * @description cada etiqueta que concuerde entre
+ * el proyecto y usuario es multiplicado por 10.
+ * @return {BigInteger} puntaje por etiqueta
  */
-const phaseOne = async (proyectoId, captadoId) =>{
-  return (
-    await projectManagementRepository
-        .tagPoints(proyectoId, captadoId)
-  );
-};
+const phaseOne = (tagsCounter) => tagsCounter*10;
 /**
  * @description evaluar respuestas del captado
  * en relación al cuestionario del proyecto
- * @param {Bigint} captadoId
- * @param {*} cuestionario
- * @return {BigInteger} puntaje
+ * @param {Bigint} preguntasTotales
+ * @param {Bigint} aciertos
+ * @return {BigInteger} puntaje del cuestionario
  */
-const phaseTwo = (captadoId, cuestionario) =>{
-  const respuestasCaptado = cuestionario
-      .filter((el) => el.usuarios_id==captadoId);
-
-  if (respuestasCaptado.length === 0) {
-    return 0;
-  }
-
-  let counter = 0;
-
-  for (respuesta of respuestasCaptado) {
-    if (respuesta.respuestas_id) {
-      counter+=10;
-    } else {
-      counter-=10;
-    }
-  }
-  return counter;
+const phaseTwo = (preguntasTotales, aciertos) =>{
+  const fallos = (preguntasTotales - aciertos) * 10;
+  const total = (aciertos*10) - fallos;
+  return total > 0 ? total:0;
 };
 /**
  * @description evaluar si sabe más de un idioma
  * @param {BigInteger} captadoId
- * @return {Promise<BigInteger>} puntaje
+ * @return {BigInteger} puntaje
  */
-const phaseThree = async (captadoId) =>{
-  return (
-    await projectManagementRepository.languagePoints(captadoId)
-  );
+const phaseThree = (idiomasCounter) =>{
+  return idiomasCounter>=2? 100:0;
 };

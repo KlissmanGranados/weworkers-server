@@ -225,3 +225,67 @@ exports.cuestionarioRespuestasCaptados = (proyectoId) =>{
     return respuestas.rows;
   });
 };
+/**
+ *
+ * @param {BigInteger} idProyecto identificador del proyecto
+ * @param {Request} req
+ * @return {Promise}
+ */
+exports.getWorkers = async (req)=>{
+  const {page, perPage} = req.query;
+  const {proyectoId} = req.params;
+  const sql = `
+  SELECT 
+    proyectos_propuestas.id,
+    proyectos_propuestas."timestamp",
+    usuarios.id AS usuario_id,
+    tipos_identificacion.tipo AS tipo_identificacion,
+    personas.identificacion ,
+    personas.primer_nombre,
+    personas.primer_apellido,
+    personas.segundo_nombre,
+    personas.segundo_apellido,
+    count (DISTINCT preguntas.id) AS preguntas_totales,
+    count(DISTINCT respuestas_correctas.id) AS cuestionarios_aciertos,
+    count(DISTINCT proyectos_tags.tags_id) AS etiquetas,
+    count(DISTINCT usuarios_idiomas.id) idiomas
+    FROM proyectos_propuestas
+    JOIN trabajadores 
+    ON trabajadores.id = proyectos_propuestas.trabajadores_id
+    JOIN usuarios 
+    ON usuarios.id = trabajadores.usuarios_id
+    JOIN personas 
+    ON personas.id = usuarios.persona_id
+    JOIN tipos_identificacion 
+    ON tipos_identificacion.id = personas.id_tipo_identificacion
+    JOIN cuestionarios ON cuestionarios.proyectos_id = proyectos_propuestas.proyectos_id
+    JOIN preguntas ON preguntas.cuestionarios_id = cuestionarios.id
+		JOIN cuestionarios_usuarios ON cuestionarios_usuarios.cuestionarios_id = cuestionarios.id AND 
+	cuestionarios_usuarios.usuarios_id = usuarios.id 
+	JOIN respuestas ON respuestas.id = cuestionarios_usuarios.respuestas_id 
+	LEFT JOIN respuestas_correctas ON respuestas_correctas.respuestas_id = respuestas.id AND
+  respuestas_correctas.cuestionarios_id = cuestionarios.id
+	LEFT JOIN usuarios_tags ON usuarios_tags.id_usuario = usuarios.id 
+	LEFT JOIN proyectos_tags ON (proyectos_tags.tags_id=usuarios_tags.id_tag)
+	LEFT JOIN usuarios_idiomas ON usuarios_idiomas.id_usuario = usuarios.id 
+  WHERE proyectos_propuestas.proyectos_id=$1
+  GROUP BY personas.id, usuarios.id,proyectos_propuestas.id,tipos_identificacion.id`;
+
+  const counter = `
+    SELECT count(proyectos_propuestas.id)
+    FROM proyectos_propuestas
+    WHERE proyectos_propuestas.proyectos_id=$1`;
+
+  return await db.repage({
+    limit: {offset: page || 1, rowsLimit: perPage || 20},
+    uri: '/comun/perfil/',
+    text: sql,
+    values: [proyectoId],
+    groupBy: 'personas.id, usuarios.id,proyectos_propuestas.id,tipos_identificacion.id',
+    counter: {
+      text: counter,
+      values: [proyectoId],
+    },
+    key: 'usuario_id',
+  });
+};
