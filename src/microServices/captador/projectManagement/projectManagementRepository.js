@@ -248,7 +248,8 @@ exports.getWorkers = async (req)=>{
     count (DISTINCT preguntas.id) AS preguntas_totales,
     count(DISTINCT respuestas_correctas.id) AS cuestionarios_aciertos,
     count(DISTINCT proyectos_tags.tags_id) AS etiquetas,
-    count(DISTINCT usuarios_idiomas.id) idiomas
+    count(DISTINCT usuarios_idiomas.id) idiomas,
+    (count(DISTINCT proyectos_trabajadores.id)>0) AS usuario_participando
     FROM proyectos_propuestas
     JOIN trabajadores 
     ON trabajadores.id = proyectos_propuestas.trabajadores_id
@@ -268,6 +269,9 @@ exports.getWorkers = async (req)=>{
 	LEFT JOIN usuarios_tags ON usuarios_tags.id_usuario = usuarios.id 
 	LEFT JOIN proyectos_tags ON (proyectos_tags.tags_id=usuarios_tags.id_tag)
 	LEFT JOIN usuarios_idiomas ON usuarios_idiomas.id_usuario = usuarios.id 
+  LEFT JOIN proyectos_trabajadores ON 
+	proyectos_trabajadores.trabajadores_id = proyectos_propuestas.trabajadores_id AND 
+	proyectos_trabajadores.proyectos_id = proyectos_propuestas.proyectos_id
   WHERE proyectos_propuestas.proyectos_id=$1
   GROUP BY personas.id, usuarios.id,proyectos_propuestas.id,tipos_identificacion.id`;
 

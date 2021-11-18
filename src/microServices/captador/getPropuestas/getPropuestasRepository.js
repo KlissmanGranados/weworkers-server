@@ -15,7 +15,6 @@ exports.getPropuestas = async (req) => {
     text: `
     SELECT 
     proyectos_propuestas.id,
-    proyectos_propuestas.mensaje,
     proyectos_propuestas."timestamp",
     usuarios.id AS usuario_id,
     tipos_identificacion.tipo AS tipo_identificacion,

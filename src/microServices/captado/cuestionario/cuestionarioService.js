@@ -15,16 +15,7 @@ exports.answerQuestionnaire = async (req, res)=>{
     });
     return;
   }
-
-  const createPropuesta = await proposalService
-      .createPropuesta(proyectoId, idUsuario);
-  if (!createPropuesta) {
-    response.error(res, {
-      proyectoId,
-      idUsuario,
-    });
-    return;
-  }
+  
   const verifyAnswersId = await cuestionarioRepository
       .verifyAnswersId(respuestas);
 
@@ -56,6 +47,9 @@ exports.answerQuestionnaire = async (req, res)=>{
   }
   const puntaje = await cuestionarioRepository
       .questionnaireResult(cuestionariosId, idUsuario);
+
+  await proposalService
+  .createPropuesta(proyectoId, idUsuario);
 
   response.success(res, {
     puntaje,
