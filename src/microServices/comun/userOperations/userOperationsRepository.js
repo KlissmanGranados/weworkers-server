@@ -85,7 +85,7 @@ exports.readProfile = async (id) => {
             LEFT JOIN proyectos_tags ON 
             proyectos_tags.proyectos_id = proyectos.id
             LEFT JOIN tags ON tags.id = proyectos_tags.tags_id
-            WHERE proyectos.estado = FALSE AND 
+            WHERE proyectos.estado = TRUE AND 
             trabajadores.usuarios_id=$1
             GROUP BY proyectos.id`, [id]),
       ]);
