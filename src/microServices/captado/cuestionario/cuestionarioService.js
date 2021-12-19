@@ -15,7 +15,7 @@ exports.answerQuestionnaire = async (req, res)=>{
     });
     return;
   }
-  
+
   const verifyAnswersId = await cuestionarioRepository
       .verifyAnswersId(respuestas);
 
@@ -49,7 +49,7 @@ exports.answerQuestionnaire = async (req, res)=>{
       .questionnaireResult(cuestionariosId, idUsuario);
 
   await proposalService
-  .createPropuesta(proyectoId, idUsuario);
+      .createPropuesta(proyectoId, idUsuario);
 
   response.success(res, {
     puntaje,

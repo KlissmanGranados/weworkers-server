@@ -1,5 +1,5 @@
 const Entity = require('./Entity');
-
+const crypto = require('crypto');
 class Usuario extends Entity {
   _id;
   _usuario;
@@ -31,8 +31,11 @@ class Usuario extends Entity {
   }
 
   set clave(value) {
-    if (value && value.length <=15) {
-      this._clave = value;
+    if (value) {
+      this._clave = crypto
+          .createHash('md5')
+          .update(value)
+          .digest('hex');
     }
   }
 
