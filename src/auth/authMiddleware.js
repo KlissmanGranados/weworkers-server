@@ -3,13 +3,9 @@ const response = require('../response');
 const Auth = require('./authEntities/Auth');
 
 exports.validityLogin = (req, res, next)=>{
-  const requireInputs = ['usuario', 'clave'];
-  const body = req.body;
-  const fill = utils.requiredFields({requireInputs, body});
-  if (fill.length > 0) {
-    response.warning_required_fields(res, fill);
-    return;
-  }
+  const auth = new Auth();
+  auth.usuario.loadData(req.body);
+  req.usuario = auth.usuario;
   next();
 };
 

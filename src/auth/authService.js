@@ -26,8 +26,7 @@ exports.getIposIdentificacion = (req, res)=>{
  * @return {Promise<void>}
  */
 exports.login = async (req, res)=>{
-  const inputs = req.body;
-  const checkLogin = await authRepository.login(inputs);
+  const checkLogin = await authRepository.login(req.usuario);
   if (!checkLogin) {
     response.forbidden_invalid_login(res);
     return;
