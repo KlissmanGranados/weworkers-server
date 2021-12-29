@@ -32,10 +32,14 @@ class Usuario extends Entity {
 
   set clave(value) {
     if (value) {
-      this._clave = crypto
-          .createHash('md5')
-          .update(value)
-          .digest('hex');
+      const key = process.env.PRIVATE_KEY;
+      const passwordHash = crypto.createHash('md5')
+          .update(key, 'utf-8')
+          .digest('hex')
+          .toUpperCase();
+      const iv = new Buffer.alloc(16);
+      const cipher = crypto.createCipheriv('aes-256-cbc', passwordHash, iv);
+      this._clave = cipher.update(value, 'utf8', 'hex') + cipher.final('hex');
     }
   }
 
