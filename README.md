@@ -1,6 +1,3 @@
-# cliente
-[weworkers-client](https://klissmangranados.github.io/weworkers-client/)
-
 # weworkers-server
 Desarrollo de servicio rest para weworkers
 
